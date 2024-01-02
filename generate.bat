@@ -1,0 +1,1 @@
+ClangSharpPInvokeGenerator @SharpLSL.rsp

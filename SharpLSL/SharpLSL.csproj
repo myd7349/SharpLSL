@@ -1,0 +1,36 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFrameworks>net35;netcoreapp3.1;net6.0</TargetFrameworks>
+    <!--
+    <ImplicitUsings>enable</ImplicitUsings>
+    <Nullable>enable</Nullable>
+    -->
+    <EnableNETAnalyzers>true</EnableNETAnalyzers>
+    <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
+    <PackageId>SharpLSL</PackageId>
+    <PackageVersion>1.0.0</PackageVersion>
+    <Authors>myd7349</Authors>
+    <Description>SharpLSL is a cross-platform C# binding of Lab Streaming Layer.</Description>
+    <Copyright>© myd7349. All rights reserved.</Copyright>
+    <PackageProjectUrl>https://github.com/myd7349/SharpLSL</PackageProjectUrl>
+    <PackageReadmeFile>README.md</PackageReadmeFile>
+    <RepositoryUrl>https://github.com/myd7349/SharpLSL.git</RepositoryUrl>
+    <RepositoryType>git</RepositoryType>
+    <PackageTags>labstreaminglayer;lsl;liblsl</PackageTags>
+    <PackageReleaseNotes></PackageReleaseNotes>
+    <PackageLicenseExpression>MIT</PackageLicenseExpression>
+    <PublishRepositoryUrl>true</PublishRepositoryUrl>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <None Include="..\README.md" Pack="true" PackagePath="\" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <PackageReference Include="Nerdbank.GitVersioning" Version="3.6.133">
+      <PrivateAssets>all</PrivateAssets>
+      <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
+    </PackageReference>
+  </ItemGroup>
+</Project>
