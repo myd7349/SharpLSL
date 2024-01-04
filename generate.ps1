@@ -8,8 +8,14 @@ ClangSharpPInvokeGenerator `
     --libraryPath lsl `
     --language c++ `
     --methodClassName Common `
-    --namespace SharpLSL.Interop `
-    --output ./SharpLSL/Interop
+    --namespace SharpLSL `
+    --output ./SharpLSL `
+    --remap `
+    lsl_channel_format_t=LslChannelFormat `
+    lsl_error_code_t=LslErrorCode `
+    lsl_processing_options_t=LslProcessingOptions `
+    lsl_transport_options_t=LslTransportOptions
+
 
 # common.h: regenerate functions & macros
 ClangSharpPInvokeGenerator `
@@ -27,7 +33,12 @@ ClangSharpPInvokeGenerator `
     lsl_channel_format_t `
     lsl_processing_options_t `
     lsl_error_code_t `
-    lsl_transport_options_t
+    lsl_transport_options_t `
+    --remap `
+    lsl_channel_format_t=LslChannelFormat `
+    lsl_error_code_t=LslErrorCode `
+    lsl_processing_options_t=LslProcessingOptions `
+    lsl_transport_options_t=LslTransportOptions
 
 # inlet.h
 ClangSharpPInvokeGenerator `
@@ -83,7 +94,10 @@ ClangSharpPInvokeGenerator `
     --methodClassName LSL `
     --namespace SharpLSL.Interop `
     --output ./SharpLSL/Interop/StreamInfo.cs `
-    --remap lsl_streaminfo=IntPtr lsl_xml_ptr=IntPtr
+    --remap `
+    lsl_streaminfo=IntPtr `
+    lsl_xml_ptr=IntPtr `
+    const char *=
 
 # xml.h
 ClangSharpPInvokeGenerator `
@@ -105,3 +119,6 @@ ClangSharpPInvokeGenerator `
 # [How to split long commands over multiple lines in PowerShell](https://stackoverflow.com/questions/2608144/how-to-split-long-commands-over-multiple-lines-in-powershell)
 # [Structure fields with char* or char[x] do not get translated to string](https://github.com/dotnet/ClangSharp/issues/250)
 # [Unclear how --traverse is meant to work](https://github.com/dotnet/ClangSharp/issues/432)
+# [Why can't I return a char* string from C++ to C# in a Release build?](https://stackoverflow.com/questions/6300093/why-cant-i-return-a-char-string-from-c-to-c-sharp-in-a-release-build)
+# [Returning a string from PInvoke?](https://stackoverflow.com/questions/5298268/returning-a-string-from-pinvoke)
+# [Annotating primitive mappings?](https://github.com/dotnet/ClangSharp/issues/428)
