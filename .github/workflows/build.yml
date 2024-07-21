@@ -38,6 +38,8 @@ jobs:
         run: dotnet --list-sdks
       - name: Build SharpLSL
         run: dotnet build ./Source/SharpLSL/SharpLSL.csproj -c Release
+      - name: Run unit tests
+        run: dotnet test -c Release
       - name: Pack SharpLSL
         run: dotnet pack ./Source/SharpLSL/SharpLSL.csproj -c Release --no-build
       - name: Upload artifacts

@@ -2,7 +2,7 @@ using SharpLSL.Interop;
 
 namespace SharpLSL
 {
-    public enum LslChannelFormat
+    public enum LslChannelFormat : int
     {
         Float = lsl_channel_format_t.cft_float32,
         Double = lsl_channel_format_t.cft_double64,
