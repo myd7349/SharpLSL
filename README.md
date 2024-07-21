@@ -17,6 +17,7 @@ SharpLSL is a cross-platform C# binding of [**L**ab **S**treaming **L**ayer](htt
 - [labstreaminglayer](https://github.com/sccn/labstreaminglayer)
 - [liblsl](https://github.com/sccn/liblsl)
 - [liblsl-Csharp](https://github.com/labstreaminglayer/liblsl-Csharp)
+- [lsl](https://github.com/emotional-cities/lsl)
 - [LSL4Unity](https://github.com/labstreaminglayer/LSL4Unity)
 - [LibLSL](https://github.com/Diademics-Pty-Ltd/LibLSL)
 - [lsl_archived](https://github.com/sccn/lsl_archived)
