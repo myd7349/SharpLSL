@@ -3,7 +3,7 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio Version 17
 VisualStudioVersion = 17.4.33213.308
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "SharpLSL", "SharpLSL\SharpLSL.csproj", "{710048D2-5125-4BF9-8594-0B88B8FBE82A}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "SharpLSL", "Source\SharpLSL\SharpLSL.csproj", "{0229C461-321D-4662-BC00-C01C0B75C334}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -11,10 +11,10 @@ Global
 		Release|Any CPU = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(ProjectConfigurationPlatforms) = postSolution
-		{710048D2-5125-4BF9-8594-0B88B8FBE82A}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{710048D2-5125-4BF9-8594-0B88B8FBE82A}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{710048D2-5125-4BF9-8594-0B88B8FBE82A}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{710048D2-5125-4BF9-8594-0B88B8FBE82A}.Release|Any CPU.Build.0 = Release|Any CPU
+		{0229C461-321D-4662-BC00-C01C0B75C334}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{0229C461-321D-4662-BC00-C01C0B75C334}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{0229C461-321D-4662-BC00-C01C0B75C334}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{0229C461-321D-4662-BC00-C01C0B75C334}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

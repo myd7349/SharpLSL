@@ -9,7 +9,7 @@ ClangSharpPInvokeGenerator `
     --language c++ `
     --methodClassName Common `
     --namespace SharpLSL.Interop `
-    --output ./SharpLSL/Interop
+    --output ../Source/SharpLSL/Interop
 
 # common.h: regenerate functions & macros
 ClangSharpPInvokeGenerator `
@@ -22,7 +22,7 @@ ClangSharpPInvokeGenerator `
     --language c++ `
     --methodClassName LSL `
     --namespace SharpLSL.Interop `
-    --output ./SharpLSL/Interop/Common.cs `
+    --output ../Source/SharpLSL/Interop/Common.cs `
     --remap `
     sbyte*=IntPtr `
     --exclude `
@@ -42,7 +42,7 @@ ClangSharpPInvokeGenerator `
     --language c++ `
     --methodClassName LSL `
     --namespace SharpLSL.Interop `
-    --output ./SharpLSL/Interop/Inlet.cs `
+    --output ../Source/SharpLSL/Interop/Inlet.cs `
     --remap `
     lsl_inlet=IntPtr `
     lsl_streaminfo=IntPtr
@@ -58,7 +58,7 @@ ClangSharpPInvokeGenerator `
     --language c++ `
     --methodClassName LSL `
     --namespace SharpLSL.Interop `
-    --output ./SharpLSL/Interop/Outlet.cs `
+    --output ../Source/SharpLSL/Interop/Outlet.cs `
     --remap `
     lsl_outlet=IntPtr `
     lsl_streaminfo=IntPtr
@@ -74,7 +74,7 @@ ClangSharpPInvokeGenerator `
     --language c++ `
     --methodClassName LSL `
     --namespace SharpLSL.Interop `
-    --output ./SharpLSL/Interop/Resolver.cs `
+    --output ../Source/SharpLSL/Interop/Resolver.cs `
     --remap `
     lsl_continuous_resolver=IntPtr `
     lsl_streaminfo=IntPtr
@@ -90,7 +90,7 @@ ClangSharpPInvokeGenerator `
     --language c++ `
     --methodClassName LSL `
     --namespace SharpLSL.Interop `
-    --output ./SharpLSL/Interop/StreamInfo.cs `
+    --output ../Source/SharpLSL/Interop/StreamInfo.cs `
     --remap `
     lsl_streaminfo=IntPtr `
     lsl_xml_ptr=IntPtr sbyte*=IntPtr
@@ -106,7 +106,7 @@ ClangSharpPInvokeGenerator `
     --language c++ `
     --methodClassName LSL `
     --namespace SharpLSL.Interop `
-    --output ./SharpLSL/Interop/XML.cs `
+    --output ../Source/SharpLSL/Interop/XML.cs `
     --remap `
     lsl_xml_ptr=IntPtr
 

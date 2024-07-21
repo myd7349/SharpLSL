@@ -1,4 +1,8 @@
-# [SharpLSL](https://github.com/myd7349/SharpLSL) [![NuGet](https://img.shields.io/nuget/v/SharpLSL.svg)](https://www.nuget.org/packages/SharpLSL/) ![Build](https://github.com/myd7349/SharpLSL/actions/workflows/build.yml/badge.svg)
+# [SharpLSL](https://github.com/myd7349/SharpLSL)
+
+[![NuGet](https://img.shields.io/nuget/v/SharpLSL.svg)](https://www.nuget.org/packages/SharpLSL/) [![Downloads](https://img.shields.io/nuget/dt/SharpLSL)](https://www.nuget.org/packages/SharpLSL) [![Build](https://github.com/myd7349/SharpLSL/workflows/Build/badge.svg?branch=main)](https://github.com/myd7349/SharpLSL/actions)
+
+[![Build History](https://buildstats.info/github/chart/myd7349/SharpLSL?branch=main&includeBuildsFromPullRequest=false)](https://github.com/myd7349/SharpLSL/actions)
 
 SharpLSL is a cross-platform C# binding of [**L**ab **S**treaming **L**ayer](https://github.com/sccn/labstreaminglayer).
 
