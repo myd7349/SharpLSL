@@ -2,10 +2,9 @@ name: SharpLSL
 
 on:
   push:
-    # This prevents tag pushes from triggering this workflow.
-    branches: [ '*' ]
   pull_request:
     types: [ opened, ready_for_review, reopened, synchronize ]
+  workflow_dispatch:
 
 env:
   DOTNET_VERSION: 6.0.x
