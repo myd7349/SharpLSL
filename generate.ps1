@@ -43,7 +43,9 @@ ClangSharpPInvokeGenerator `
     --methodClassName LSL `
     --namespace SharpLSL.Interop `
     --output ./SharpLSL/Interop/Inlet.cs `
-    --remap lsl_inlet=IntPtr lsl_streaminfo=IntPtr
+    --remap `
+    lsl_inlet=IntPtr `
+    lsl_streaminfo=IntPtr
 
 # outlet.h
 ClangSharpPInvokeGenerator `
@@ -57,7 +59,9 @@ ClangSharpPInvokeGenerator `
     --methodClassName LSL `
     --namespace SharpLSL.Interop `
     --output ./SharpLSL/Interop/Outlet.cs `
-    --remap lsl_outlet=IntPtr lsl_streaminfo=IntPtr
+    --remap `
+    lsl_outlet=IntPtr `
+    lsl_streaminfo=IntPtr
 
 # resolver.h
 ClangSharpPInvokeGenerator `
@@ -71,7 +75,9 @@ ClangSharpPInvokeGenerator `
     --methodClassName LSL `
     --namespace SharpLSL.Interop `
     --output ./SharpLSL/Interop/Resolver.cs `
-    --remap lsl_continuous_resolver=IntPtr lsl_streaminfo=IntPtr
+    --remap `
+    lsl_continuous_resolver=IntPtr `
+    lsl_streaminfo=IntPtr
 
 # streaminfo.h
 ClangSharpPInvokeGenerator `
@@ -85,7 +91,9 @@ ClangSharpPInvokeGenerator `
     --methodClassName LSL `
     --namespace SharpLSL.Interop `
     --output ./SharpLSL/Interop/StreamInfo.cs `
-    --remap lsl_streaminfo=IntPtr lsl_xml_ptr=IntPtr sbyte*=IntPtr
+    --remap `
+    lsl_streaminfo=IntPtr `
+    lsl_xml_ptr=IntPtr sbyte*=IntPtr
 
 # xml.h
 ClangSharpPInvokeGenerator `
@@ -99,7 +107,8 @@ ClangSharpPInvokeGenerator `
     --methodClassName LSL `
     --namespace SharpLSL.Interop `
     --output ./SharpLSL/Interop/XML.cs `
-    --remap lsl_xml_ptr=IntPtr
+    --remap `
+    lsl_xml_ptr=IntPtr
 
 
 # References:
