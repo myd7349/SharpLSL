@@ -8,14 +8,8 @@ ClangSharpPInvokeGenerator `
     --libraryPath lsl `
     --language c++ `
     --methodClassName Common `
-    --namespace SharpLSL `
-    --output ./SharpLSL `
-    --remap `
-    lsl_channel_format_t=LslChannelFormat `
-    lsl_error_code_t=LslErrorCode `
-    lsl_processing_options_t=LslProcessingOptions `
-    lsl_transport_options_t=LslTransportOptions
-
+    --namespace SharpLSL.Interop `
+    --output ./SharpLSL/Interop
 
 # common.h: regenerate functions & macros
 ClangSharpPInvokeGenerator `
@@ -29,16 +23,13 @@ ClangSharpPInvokeGenerator `
     --methodClassName LSL `
     --namespace SharpLSL.Interop `
     --output ./SharpLSL/Interop/Common.cs `
+    --remap `
+    sbyte*=IntPtr `
     --exclude `
     lsl_channel_format_t `
     lsl_processing_options_t `
     lsl_error_code_t `
-    lsl_transport_options_t `
-    --remap `
-    lsl_channel_format_t=LslChannelFormat `
-    lsl_error_code_t=LslErrorCode `
-    lsl_processing_options_t=LslProcessingOptions `
-    lsl_transport_options_t=LslTransportOptions
+    lsl_transport_options_t
 
 # inlet.h
 ClangSharpPInvokeGenerator `
@@ -94,10 +85,7 @@ ClangSharpPInvokeGenerator `
     --methodClassName LSL `
     --namespace SharpLSL.Interop `
     --output ./SharpLSL/Interop/StreamInfo.cs `
-    --remap `
-    lsl_streaminfo=IntPtr `
-    lsl_xml_ptr=IntPtr `
-    const char *=
+    --remap lsl_streaminfo=IntPtr lsl_xml_ptr=IntPtr sbyte*=IntPtr
 
 # xml.h
 ClangSharpPInvokeGenerator `
@@ -122,3 +110,4 @@ ClangSharpPInvokeGenerator `
 # [Why can't I return a char* string from C++ to C# in a Release build?](https://stackoverflow.com/questions/6300093/why-cant-i-return-a-char-string-from-c-to-c-sharp-in-a-release-build)
 # [Returning a string from PInvoke?](https://stackoverflow.com/questions/5298268/returning-a-string-from-pinvoke)
 # [Annotating primitive mappings?](https://github.com/dotnet/ClangSharp/issues/428)
+# [Support for new LibraryImport attribute](https://github.com/dotnet/ClangSharp/issues/427)

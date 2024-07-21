@@ -4,15 +4,16 @@
  * If changes are necessary, modify generate.ps1 and regenerate the file.
  */
 
+using System;
 using System.Runtime.InteropServices;
 
 namespace SharpLSL.Interop
 {
-    public static unsafe partial class LSL
+    public static partial class LSL
     {
         [DllImport("lsl", CallingConvention = CallingConvention.Cdecl, ExactSpelling = true)]
         [return: NativeTypeName("const char *")]
-        public static extern sbyte* lsl_last_error();
+        public static extern IntPtr lsl_last_error();
 
         [DllImport("lsl", CallingConvention = CallingConvention.Cdecl, ExactSpelling = true)]
         [return: NativeTypeName("int32_t")]
@@ -24,13 +25,13 @@ namespace SharpLSL.Interop
 
         [DllImport("lsl", CallingConvention = CallingConvention.Cdecl, ExactSpelling = true)]
         [return: NativeTypeName("const char *")]
-        public static extern sbyte* lsl_library_info();
+        public static extern IntPtr lsl_library_info();
 
         [DllImport("lsl", CallingConvention = CallingConvention.Cdecl, ExactSpelling = true)]
         public static extern double lsl_local_clock();
 
         [DllImport("lsl", CallingConvention = CallingConvention.Cdecl, ExactSpelling = true)]
-        public static extern void lsl_destroy_string([NativeTypeName("char *")] sbyte* s);
+        public static extern void lsl_destroy_string([NativeTypeName("char *")] IntPtr s);
 
         [NativeTypeName("#define LSL_IRREGULAR_RATE 0.0")]
         public const double LSL_IRREGULAR_RATE = 0.0;
