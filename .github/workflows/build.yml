@@ -63,7 +63,7 @@ jobs:
           name: nuget-packages
       - name: Push NuGet packages
         run: |
-          dotnet nuget push **/*.nupkg --api-key ${{ secrets.NUGET_API_KEY }} --source https://api.nuget.org/v3/index.json
+          dotnet nuget push **/*.nupkg --skip-duplicate --api-key ${{ secrets.NUGET_API_KEY }} --source https://api.nuget.org/v3/index.json
       - name: Release
         uses: softprops/action-gh-release@v2
         env:
