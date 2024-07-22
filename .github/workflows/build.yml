@@ -37,11 +37,11 @@ jobs:
       - name: List installed .NET SDKs
         run: dotnet --list-sdks
       - name: Build SharpLSL
-        run: dotnet build ./Source/SharpLSL/SharpLSL.csproj -c Release
+        run: dotnet build ./SharpLSL.Full.sln -c Release
       - name: Run unit tests
         run: dotnet test -c Release
       - name: Pack SharpLSL
-        run: dotnet pack ./Source/SharpLSL/SharpLSL.csproj -c Release --no-build
+        run: dotnet pack ./Source/SharpLSL.sln -c Release --no-build
       - name: Upload artifacts
         if: ${{ runner.os == 'Windows' }}
         uses: actions/upload-artifact@v4

@@ -1,4 +1,4 @@
-<Project Sdk="Microsoft.NET.Sdk" InitialTargets="DownloadNativeAssets">
+﻿<Project Sdk="Microsoft.NET.Sdk" InitialTargets="DownloadNativeAssets">
 
   <PropertyGroup>
     <RID>win-x64</RID>
@@ -13,19 +13,13 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <None Include="$(BaseIntermediateOutputPath)bin/$(LSLAssetFile)"
-          Link="runtimes/$(RID)/native/$(LSLAssetFile)">
+    <NativeLibs Include="$(BaseIntermediateOutputPath)bin/**/*.dll" />
+    <None Include="@(NativeLibs)">
       <Pack>true</Pack>
       <PackagePath>runtimes/$(RID)/native</PackagePath>
+      <Link>%(RecursiveDir)%(FileName)%(Extension)</Link>
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
-  </ItemGroup>
-
-  <ItemGroup Condition="$([MSBuild]::IsOsPlatform('Windows')) AND $(RidArch) == 'x64'">
-    <None Include="$(BaseIntermediateOutputPath)bin/$(LSLAssetFile)"
-          Link="%(Filename)%(Extension)"
-          CopyToOutputDirectory="PreserveNewest"
-          Condition="Exists('$(BaseIntermediateOutputPath)bin/$(LSLAssetFile)')" />
   </ItemGroup>
 
   <Target Name="DownloadNativeAssets" Condition="$(SkipLocalBuild) != true">
