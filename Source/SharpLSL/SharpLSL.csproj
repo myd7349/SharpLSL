@@ -7,29 +7,11 @@
     <Nullable>enable</Nullable>
     -->
     <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
-    <EnableNETAnalyzers>true</EnableNETAnalyzers>
-    <GeneratePackageOnBuild>false</GeneratePackageOnBuild>
     <PackageId>SharpLSL</PackageId>
-    <PackageVersion>0.0.1</PackageVersion>
-    <Version>0.0.1</Version>
-    <Authors>myd7349</Authors>
     <Description>SharpLSL is a cross-platform C# binding of Lab Streaming Layer.</Description>
-    <Copyright>© myd7349. All rights reserved.</Copyright>
-    <PackageProjectUrl>https://github.com/myd7349/SharpLSL</PackageProjectUrl>
-    <PackageReadmeFile>README.md</PackageReadmeFile>
-    <RepositoryUrl>https://github.com/myd7349/SharpLSL.git</RepositoryUrl>
-    <RepositoryType>git</RepositoryType>
-    <PackageTags>labstreaminglayer;lsl;liblsl</PackageTags>
-    <PackageReleaseNotes></PackageReleaseNotes>
     <PackageLicenseExpression>MIT</PackageLicenseExpression>
-    <PublishRepositoryUrl>true</PublishRepositoryUrl>
     <IncludeSymbols>true</IncludeSymbols>
     <SymbolPackageFormat>snupkg</SymbolPackageFormat>
-    <EmbedUntrackedSources>true</EmbedUntrackedSources>
-  </PropertyGroup>
-
-  <PropertyGroup Condition="'$(GITHUB_ACTIONS)' == 'true'">
-    <ContinuousIntegrationBuild>true</ContinuousIntegrationBuild>
   </PropertyGroup>
 
   <ItemGroup>
@@ -37,13 +19,6 @@
   </ItemGroup>
 
   <ItemGroup>
-    <PackageReference Include="GitVersion.MsBuild" Version="5.12.0">
-      <PrivateAssets>all</PrivateAssets>
-      <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
-    </PackageReference>
-    <PackageReference Include="Microsoft.SourceLink.GitHub" Version="8.0.0">
-      <PrivateAssets>all</PrivateAssets>
-      <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
-    </PackageReference>
+
   </ItemGroup>
 </Project>

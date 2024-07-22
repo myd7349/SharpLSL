@@ -7,6 +7,10 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "SharpLSL", "Source\SharpLSL
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "SharpLSL.Test", "Tests\SharpLSL.Test\SharpLSL.Test.csproj", "{3B7B2CE6-36CE-4CD5-BF7B-B9C5AACF47F5}"
 EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "SharpLSL.Native.win-x86", "Source\SharpLSL.Native\SharpLSL.Native.win-x86.csproj", "{90129B6E-A393-4E10-BE70-9F083DA1FEE3}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "SharpLSL.Native.win-x64", "Source\SharpLSL.Native\SharpLSL.Native.win-x64.csproj", "{CA51C9A5-AE7A-4A1C-968B-6C82E2E7AE7F}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -21,6 +25,14 @@ Global
 		{3B7B2CE6-36CE-4CD5-BF7B-B9C5AACF47F5}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{3B7B2CE6-36CE-4CD5-BF7B-B9C5AACF47F5}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{3B7B2CE6-36CE-4CD5-BF7B-B9C5AACF47F5}.Release|Any CPU.Build.0 = Release|Any CPU
+		{90129B6E-A393-4E10-BE70-9F083DA1FEE3}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{90129B6E-A393-4E10-BE70-9F083DA1FEE3}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{90129B6E-A393-4E10-BE70-9F083DA1FEE3}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{90129B6E-A393-4E10-BE70-9F083DA1FEE3}.Release|Any CPU.Build.0 = Release|Any CPU
+		{CA51C9A5-AE7A-4A1C-968B-6C82E2E7AE7F}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{CA51C9A5-AE7A-4A1C-968B-6C82E2E7AE7F}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{CA51C9A5-AE7A-4A1C-968B-6C82E2E7AE7F}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{CA51C9A5-AE7A-4A1C-968B-6C82E2E7AE7F}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

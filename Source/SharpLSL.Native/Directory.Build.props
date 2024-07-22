@@ -1,0 +1,27 @@
+<Project>
+
+  <Import Project="$([MSBuild]::GetPathOfFileAbove('Directory.Build.props', '$(MSBuildThisFileDirectory)../'))" />
+
+  <PropertyGroup Label="Build">
+    <TargetFramework>net6.0</TargetFramework>
+    <GenerateAssemblyInfo>false</GenerateAssemblyInfo>
+    <AppendTargetFrameworkToOutputPath>false</AppendTargetFrameworkToOutputPath>
+  </PropertyGroup>
+
+  <PropertyGroup Label="Package">
+    <PackageLicenseFile>LICENSE</PackageLicenseFile>
+  </PropertyGroup>
+
+  <PropertyGroup>
+    <RidArch Condition="'$([System.Runtime.InteropServices.RuntimeInformation]::OSArchitecture)' == 'Arm'">arm</RidArch>
+    <RidArch Condition="'$([System.Runtime.InteropServices.RuntimeInformation]::OSArchitecture)' == 'Arm64'">arm64</RidArch>
+    <RidArch Condition="'$([System.Runtime.InteropServices.RuntimeInformation]::OSArchitecture)' == 'X64'">x64</RidArch>
+    <RidArch Condition="'$([System.Runtime.InteropServices.RuntimeInformation]::OSArchitecture)' == 'X86'">x86</RidArch>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <None Include="./LICENSE" Pack="true" PackagePath="/" />
+    <None Include="./README.md" Pack="true" PackagePath="/" />
+  </ItemGroup>
+
+</Project>

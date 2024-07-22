@@ -1,0 +1,54 @@
+<Project>
+
+  <PropertyGroup Label="Build">
+    <AnalysisLevel>latest</AnalysisLevel>
+    <EnableNETAnalyzers>true</EnableNETAnalyzers>
+    <EnforceCodeStyleInBuild>true</EnforceCodeStyleInBuild>
+    <GeneratePackageOnBuild>false</GeneratePackageOnBuild>
+    <TreatWarningsAsErrors>true</TreatWarningsAsErrors>
+  </PropertyGroup>
+
+  <PropertyGroup Condition="'$(GITHUB_ACTIONS)' == 'true'">
+    <ContinuousIntegrationBuild>true</ContinuousIntegrationBuild>
+  </PropertyGroup>
+
+  <PropertyGroup Label="Source Link">
+    <!-- Optional: Declare that the Repository URL can be published to NuSpec -->
+    <PublishRepositoryUrl>true</PublishRepositoryUrl>
+    <!-- Optional: Embed source files that are not tracked by the source control manager to the PDB -->
+    <EmbedUntrackedSources>true</EmbedUntrackedSources>
+    <!-- Optional: Include PDB in the built .nupkg -->
+    <AllowedOutputExtensionsInPackageBuildOutputFolder>$(AllowedOutputExtensionsInPackageBuildOutputFolder);.pdb</AllowedOutputExtensionsInPackageBuildOutputFolder>
+  </PropertyGroup>
+
+  <PropertyGroup Label="Package">
+    <LSLTagVersion>1.16.2</LSLTagVersion>
+    <PackageVersion>$(LSLTagVersion)</PackageVersion>
+    <Version>$(LSLTagVersion)</Version>
+    <Authors>myd7349</Authors>
+    <Company>myd7349</Company>
+    <Copyright>Copyright © myd7349. All rights Reserved</Copyright>
+    <PackageRequireLicenseAcceptance>true</PackageRequireLicenseAcceptance>
+    <PackageProjectUrl>https://github.com/myd7349/SharpLSL</PackageProjectUrl>
+    <!--
+    <PackageIcon>Icon.png</PackageIcon>
+    -->
+    <PackageReadmeFile>README.md</PackageReadmeFile>
+    <PackageTags>labstreaminglayer;lsl;liblsl</PackageTags>
+    <RepositoryUrl>https://github.com/myd7349/SharpLSL.git</RepositoryUrl>
+    <RepositoryType>git</RepositoryType>
+    <PackageReleaseNotes>https://github.com/myd7349/SharpLSL/releases</PackageReleaseNotes>
+  </PropertyGroup>
+
+  <ItemGroup Label="Package References">
+    <PackageReference Include="GitVersion.MsBuild" Version="5.12.0">
+      <PrivateAssets>all</PrivateAssets>
+      <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
+    </PackageReference>
+    <PackageReference Include="Microsoft.SourceLink.GitHub" Version="8.0.0">
+      <PrivateAssets>all</PrivateAssets>
+      <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
+    </PackageReference>
+  </ItemGroup>
+
+</Project>

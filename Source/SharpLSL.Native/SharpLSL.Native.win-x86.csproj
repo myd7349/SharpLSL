@@ -1,0 +1,43 @@
+﻿<Project Sdk="Microsoft.NET.Sdk" InitialTargets="DownloadNativeAssets">
+
+  <PropertyGroup>
+    <RID>win-x86</RID>
+    <LSLAssetArchive>liblsl-$(LSLTagVersion)-Win_i386.zip</LSLAssetArchive>
+    <LSLAssetFile>lsl.dll</LSLAssetFile>
+    <LSLAssetUrl>https://github.com/sccn/liblsl/releases/download/v$(LSLTagVersion)/$(LSLAssetArchive)</LSLAssetUrl>
+  </PropertyGroup>
+
+  <PropertyGroup>
+    <PackageId>SharpLSL.Native.$(RID)</PackageId>
+    <Description>liblsl native assets for $(RID).</Description>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <None Include="$(BaseIntermediateOutputPath)bin/$(LSLAssetFile)"
+          Link="runtimes/$(RID)/native/$(LSLAssetFile)">
+      <Pack>true</Pack>
+      <PackagePath>runtimes/$(RID)/native</PackagePath>
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+  </ItemGroup>
+
+  <ItemGroup Condition="$([MSBuild]::IsOsPlatform('Windows')) AND $(RidArch) == 'x86'">
+    <None Include="$(BaseIntermediateOutputPath)bin/$(LSLAssetFile)"
+          Link="%(Filename)%(Extension)"
+          CopyToOutputDirectory="PreserveNewest"
+          Condition="Exists('$(BaseIntermediateOutputPath)bin/$(LSLAssetFile)')" />
+  </ItemGroup>
+  
+  <Target Name="DownloadNativeAssets" Condition="$(SkipLocalBuild) != true">
+    <DownloadFile SourceUrl="$(LSLAssetUrl)"
+                  DestinationFolder="$(BaseIntermediateOutputPath)"
+                  DestinationFileName="$(LSLAssetArchive)"
+                  Condition="!Exists('$(BaseIntermediateOutputPath)$(LSLAssetArchive)')" />
+
+    <Unzip SourceFiles="$(BaseIntermediateOutputPath)$(LSLAssetArchive)"
+           DestinationFolder="$(BaseIntermediateOutputPath)"
+           OverwriteReadOnlyFiles="true"
+           Condition="!Exists('$(BaseIntermediateOutputPath)bin/$(LSLAssetFile)')" />
+  </Target>
+
+</Project>
