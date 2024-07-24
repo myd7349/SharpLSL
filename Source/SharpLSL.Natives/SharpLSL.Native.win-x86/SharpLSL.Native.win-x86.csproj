@@ -10,8 +10,6 @@
   <PropertyGroup>
     <PackageId>SharpLSL.Native.$(RID)</PackageId>
     <Description>liblsl native assets for $(RID).</Description>
-    <IncludeBuildOutput>false</IncludeBuildOutput>
-    <BuildOutputTargetFolder>runtimes</BuildOutputTargetFolder>
     <TargetsForTfmSpecificContentInPackage>$(TargetsForTfmSpecificContentInPackage);_IncludeAdditionalTfmSpecificPackageFiles</TargetsForTfmSpecificContentInPackage>
   </PropertyGroup>
 
