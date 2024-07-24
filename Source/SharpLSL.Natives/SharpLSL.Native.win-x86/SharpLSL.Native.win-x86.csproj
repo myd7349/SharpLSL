@@ -22,13 +22,6 @@
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
   </ItemGroup>
-
-  <ItemGroup>
-    <PackageReference Include="NuGet.Build.Tasks.Pack" Version="6.10.1">
-      <PrivateAssets>all</PrivateAssets>
-      <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
-    </PackageReference>
-  </ItemGroup>
   
   <Target Name="DownloadNativeAssets" Condition="$(SkipLocalBuild) != true">
     <DownloadFile SourceUrl="$(LSLAssetUrl)" DestinationFolder="$(BaseIntermediateOutputPath)" DestinationFileName="$(LSLAssetArchive)" Condition="!Exists('$(BaseIntermediateOutputPath)$(LSLAssetArchive)')" />
