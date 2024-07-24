@@ -10,7 +10,9 @@
   <PropertyGroup>
     <PackageId>SharpLSL.Native.$(RID)</PackageId>
     <Description>liblsl native assets for $(RID).</Description>
-    <TargetsForTfmSpecificContentInPackage>$(TargetsForTfmSpecificContentInPackage);IncludeAdditionalTfmSpecificPackageFiles</TargetsForTfmSpecificContentInPackage>
+    <IncludeBuildOutput>false</IncludeBuildOutput>
+    <BuildOutputTargetFolder>runtimes</BuildOutputTargetFolder>
+    <TargetsForTfmSpecificContentInPackage>$(TargetsForTfmSpecificContentInPackage);_IncludeAdditionalTfmSpecificPackageFiles</TargetsForTfmSpecificContentInPackage>
   </PropertyGroup>
 
   <ItemGroup>
@@ -22,46 +24,47 @@
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
   </ItemGroup>
+
+  <ItemGroup>
+    <PackageReference Include="NuGet.Build.Tasks.Pack" Version="6.10.1">
+      <PrivateAssets>all</PrivateAssets>
+      <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
+    </PackageReference>
+  </ItemGroup>
   
   <Target Name="DownloadNativeAssets" Condition="$(SkipLocalBuild) != true">
-    <DownloadFile SourceUrl="$(LSLAssetUrl)"
-                  DestinationFolder="$(BaseIntermediateOutputPath)"
-                  DestinationFileName="$(LSLAssetArchive)"
-                  Condition="!Exists('$(BaseIntermediateOutputPath)$(LSLAssetArchive)')" />
+    <DownloadFile SourceUrl="$(LSLAssetUrl)" DestinationFolder="$(BaseIntermediateOutputPath)" DestinationFileName="$(LSLAssetArchive)" Condition="!Exists('$(BaseIntermediateOutputPath)$(LSLAssetArchive)')" />
 
-    <Unzip SourceFiles="$(BaseIntermediateOutputPath)$(LSLAssetArchive)"
-           DestinationFolder="$(BaseIntermediateOutputPath)"
-           OverwriteReadOnlyFiles="true"
-           Condition="!Exists('$(BaseIntermediateOutputPath)bin/$(LSLAssetFile)')" />
+    <Unzip SourceFiles="$(BaseIntermediateOutputPath)$(LSLAssetArchive)" DestinationFolder="$(BaseIntermediateOutputPath)" OverwriteReadOnlyFiles="true" Condition="!Exists('$(BaseIntermediateOutputPath)bin/$(LSLAssetFile)')" />
   </Target>
 
-  <Target Name="IncludeAdditionalTfmSpecificPackageFilesPrepare">
-    <GetNuGetShortFolderName TargetFrameworkMoniker="$(TargetFrameworkMoniker)"
-                             TargetPlatformMoniker="$(TargetPlatformMoniker)">
+  <Target Name="_IncludePlaceholders" AfterTargets="_IncludeAdditionalTfmSpecificPackageFilesPrepare">
+    <Touch Files="$(IntermediateOutputPath)_._" AlwaysCreate="True" />
+    <ItemGroup>
+      <FileWrites Include="$(IntermediateOutputPath)_._" />
+      <TfmSpecificPackageFile Include="$(IntermediateOutputPath)_._" PackagePath="lib\$(NuGetShortFolderName)\_._" />
+    </ItemGroup>
+  </Target>
+
+  <Target Name="_IncludeAdditionalTfmSpecificPackageFilesPrepare">
+    <GetNuGetShortFolderName TargetFrameworkMoniker="$(TargetFrameworkMoniker)" TargetPlatformMoniker="$(TargetPlatformMoniker)">
       <Output TaskParameter="NuGetShortFolderName" PropertyName="NuGetShortFolderName" />
     </GetNuGetShortFolderName>
   </Target>
 
   <PropertyGroup>
-    <IncludeAdditionalTfmSpecificPackageFilesDependsOn>
-      IncludeAdditionalTfmSpecificPackageFilesPrepare;
-    </IncludeAdditionalTfmSpecificPackageFilesDependsOn>
+    <_IncludeAdditionalTfmSpecificPackageFilesDependsOn>
+      _IncludeAdditionalTfmSpecificPackageFilesPrepare;
+      IncludeAdditionalTfmSpecificPackageFiles;
+    </_IncludeAdditionalTfmSpecificPackageFilesDependsOn>
   </PropertyGroup>
 
-  <Target Name="IncludePlaceholders" AfterTargets="IncludeAdditionalTfmSpecificPackageFilesPrepare">
-    <Touch Files="$(IntermediateOutputPath)_._" AlwaysCreate="True" />
-    <ItemGroup>
-      <FileWrites Include="$(IntermediateOutputPath)_._" />
-      <TfmSpecificPackageFile Include="$(IntermediateOutputPath)_._"
-                              PackagePath="lib\$(NuGetShortFolderName)\_._" />
-    </ItemGroup>
-  </Target>
+  <Target Name="_IncludeAdditionalTfmSpecificPackageFiles" DependsOnTargets="$(_IncludeAdditionalTfmSpecificPackageFilesDependsOn)" />
 
-  <Target Name="IncludeAdditionalTfmSpecificPackageFiles"
-          DependsOnTargets="$(IncludeAdditionalTfmSpecificPackageFilesDependsOn)">
+  <Target Name="IncludeAdditionalTfmSpecificPackageFiles">
     <ItemGroup Condition=" '$(TargetFramework)' == 'net35' ">
-      <TfmSpecificPackageFile Include="$(MSBuildThisFileDirectory)build\net35\$(PackageId).targets"
-                              PackagePath="build\net35\$(PackageId).targets" />
+      <TfmSpecificPackageFile Include="$(MSBuildThisFileDirectory)build\net35\$(PackageId).targets" PackagePath="build\net35\$(PackageId).targets" />
+      <TfmSpecificPackageFile Include="$(MSBuildThisFileDirectory)build\net35\$(PackageId).targets" PackagePath="buildTransitive\net35\$(PackageId).targets" />
     </ItemGroup>
   </Target>
 

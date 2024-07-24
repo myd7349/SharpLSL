@@ -7,7 +7,6 @@
     <!--
     <AppendTargetFrameworkToOutputPath>false</AppendTargetFrameworkToOutputPath>
     -->
-    <IncludeBuildOutput>false</IncludeBuildOutput>
     <SuppressDependenciesWhenPacking>true</SuppressDependenciesWhenPacking>
     <DebugType>None</DebugType>
     <DebugSymbols>false</DebugSymbols>

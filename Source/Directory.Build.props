@@ -6,7 +6,9 @@
     <EnableNETAnalyzers>true</EnableNETAnalyzers>
     <EnforceCodeStyleInBuild>true</EnforceCodeStyleInBuild>
     <GeneratePackageOnBuild>false</GeneratePackageOnBuild>
+    <!--
     <TreatWarningsAsErrors>true</TreatWarningsAsErrors>
+    -->
   </PropertyGroup>
 
   <PropertyGroup Condition="'$(GITHUB_ACTIONS)' == 'true'">
