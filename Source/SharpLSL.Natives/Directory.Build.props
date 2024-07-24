@@ -7,11 +7,11 @@
     <!--
     <AppendTargetFrameworkToOutputPath>false</AppendTargetFrameworkToOutputPath>
     -->
-    <IncludeBuildOutput>false</IncludeBuildOutput>
-    <!--
+    <IncludeBuildOutput>true</IncludeBuildOutput>
     <BuildOutputTargetFolder>runtimes</BuildOutputTargetFolder>
-    -->
+    <!--
     <SuppressDependenciesWhenPacking>true</SuppressDependenciesWhenPacking>
+    -->
     <DebugType>None</DebugType>
     <DebugSymbols>false</DebugSymbols>
   </PropertyGroup>
