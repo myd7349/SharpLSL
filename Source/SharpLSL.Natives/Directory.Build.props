@@ -9,6 +9,10 @@
     -->
     <IncludeBuildOutput>true</IncludeBuildOutput>
     <BuildOutputTargetFolder>runtimes</BuildOutputTargetFolder>
+    <CopyBuildOutputToOutputDirectory>false</CopyBuildOutputToOutputDirectory>
+    <CopyOutputSymbolsToOutputDirectory>false</CopyOutputSymbolsToOutputDirectory>
+    <CopyBuildOutputToPublishDirectory>false</CopyBuildOutputToPublishDirectory>
+    <CopyOutputSymbolsToPublishDirectory>false</CopyOutputSymbolsToPublishDirectory>
     <!--
     <SuppressDependenciesWhenPacking>true</SuppressDependenciesWhenPacking>
     -->
