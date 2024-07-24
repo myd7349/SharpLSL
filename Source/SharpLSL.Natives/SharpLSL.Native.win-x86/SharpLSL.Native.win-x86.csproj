@@ -1,4 +1,4 @@
-﻿<Project Sdk="Microsoft.Build.NoTargets/1.0.26" InitialTargets="DownloadNativeAssets">
+﻿<Project Sdk="Microsoft.NET.Sdk" InitialTargets="DownloadNativeAssets">
 
   <PropertyGroup>
     <RID>win-x86</RID>
@@ -59,4 +59,17 @@
     </ItemGroup>
   </Target>
 
+  <Target Name="_IncludeRuntimesPackageFiles" BeforeTargets="_GetPackageFiles">
+    <ItemGroup>
+      <_CompletedNativeWindowsPackageFile
+          Include="@(_NativeWindowsPackageFileToUse)"
+          TargetFramework="%(RuntimeIdentifier)"
+          TargetPath="%(Folder)\%(Filename)%(Extension)"
+          PackagePath="runtimes\%(RuntimeIdentifier)\%(Folder)\%(Filename)%(Extension)" />
+      <_BuildOutputInPackage Remove="@(_BuildOutputInPackage)" />
+      <_BuildOutputInPackage Include="@(_CompletedNativeWindowsPackageFile)" Condition="'%(Extension)' != '.pdb'" />
+      <_TargetPathsToSymbols Remove="@(_TargetPathsToSymbols)" />
+      <_TargetPathsToSymbols Include="@(_CompletedNativeWindowsPackageFile)" Condition="'%(Extension)' == '.pdb'" />
+    </ItemGroup>
+  </Target>
 </Project>

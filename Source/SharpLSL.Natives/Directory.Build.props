@@ -7,8 +7,9 @@
     <!--
     <AppendTargetFrameworkToOutputPath>false</AppendTargetFrameworkToOutputPath>
     -->
-    <IncludeBuildOutput>false</IncludeBuildOutput>
+    <IncludeBuildOutput>true</IncludeBuildOutput>
     <BuildOutputTargetFolder>runtimes</BuildOutputTargetFolder>
+    <ExcludeSymbolsFromPackage>false</ExcludeSymbolsFromPackage>
     <!--
     <SuppressDependenciesWhenPacking>true</SuppressDependenciesWhenPacking>
     -->
