@@ -1,4 +1,4 @@
-﻿<Project Sdk="Microsoft.NET.Sdk" InitialTargets="DownloadNativeAssets">
+﻿<Project Sdk="Microsoft.Build.NoTargets/1.0.26" InitialTargets="DownloadNativeAssets">
 
   <PropertyGroup>
     <RID>win-x86</RID>
