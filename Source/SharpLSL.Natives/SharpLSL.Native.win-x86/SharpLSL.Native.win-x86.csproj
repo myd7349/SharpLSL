@@ -24,16 +24,23 @@
   </ItemGroup>
   
   <Target Name="DownloadNativeAssets" Condition="$(SkipLocalBuild) != true">
-    <DownloadFile SourceUrl="$(LSLAssetUrl)" DestinationFolder="$(BaseIntermediateOutputPath)" DestinationFileName="$(LSLAssetArchive)" Condition="!Exists('$(BaseIntermediateOutputPath)$(LSLAssetArchive)')" />
+    <DownloadFile SourceUrl="$(LSLAssetUrl)"
+                  DestinationFolder="$(BaseIntermediateOutputPath)"
+                  DestinationFileName="$(LSLAssetArchive)"
+                  Condition="!Exists('$(BaseIntermediateOutputPath)$(LSLAssetArchive)')" />
 
-    <Unzip SourceFiles="$(BaseIntermediateOutputPath)$(LSLAssetArchive)" DestinationFolder="$(BaseIntermediateOutputPath)" OverwriteReadOnlyFiles="true" Condition="!Exists('$(BaseIntermediateOutputPath)bin/$(LSLAssetFile)')" />
+    <Unzip SourceFiles="$(BaseIntermediateOutputPath)$(LSLAssetArchive)"
+           DestinationFolder="$(BaseIntermediateOutputPath)"
+           OverwriteReadOnlyFiles="true"
+           Condition="!Exists('$(BaseIntermediateOutputPath)bin/$(LSLAssetFile)')" />
   </Target>
 
   <Target Name="_IncludePlaceholders" AfterTargets="_IncludeAdditionalTfmSpecificPackageFilesPrepare">
     <Touch Files="$(IntermediateOutputPath)_._" AlwaysCreate="True" />
     <ItemGroup>
       <FileWrites Include="$(IntermediateOutputPath)_._" />
-      <TfmSpecificPackageFile Include="$(IntermediateOutputPath)_._" PackagePath="lib\$(NuGetShortFolderName)\_._" />
+      <TfmSpecificPackageFile Include="$(IntermediateOutputPath)_._"
+                              PackagePath="lib\$(NuGetShortFolderName)\_._" />
     </ItemGroup>
   </Target>
 
@@ -54,22 +61,10 @@
 
   <Target Name="IncludeAdditionalTfmSpecificPackageFiles">
     <ItemGroup Condition=" '$(TargetFramework)' == 'net35' ">
-      <TfmSpecificPackageFile Include="$(MSBuildThisFileDirectory)build\net35\$(PackageId).targets" PackagePath="build\net35\$(PackageId).targets" />
-      <TfmSpecificPackageFile Include="$(MSBuildThisFileDirectory)build\net35\$(PackageId).targets" PackagePath="buildTransitive\net35\$(PackageId).targets" />
-    </ItemGroup>
-  </Target>
-
-  <Target Name="_IncludeRuntimesPackageFiles" BeforeTargets="_GetPackageFiles">
-    <ItemGroup>
-      <_CompletedNativeWindowsPackageFile
-          Include="@(_NativeWindowsPackageFileToUse)"
-          TargetFramework="%(RuntimeIdentifier)"
-          TargetPath="%(Folder)\%(Filename)%(Extension)"
-          PackagePath="runtimes\%(RuntimeIdentifier)\%(Folder)\%(Filename)%(Extension)" />
-      <_BuildOutputInPackage Remove="@(_BuildOutputInPackage)" />
-      <_BuildOutputInPackage Include="@(_CompletedNativeWindowsPackageFile)" Condition="'%(Extension)' != '.pdb'" />
-      <_TargetPathsToSymbols Remove="@(_TargetPathsToSymbols)" />
-      <_TargetPathsToSymbols Include="@(_CompletedNativeWindowsPackageFile)" Condition="'%(Extension)' == '.pdb'" />
+      <TfmSpecificPackageFile Include="$(MSBuildThisFileDirectory)build\net35\$(PackageId).targets"
+                              PackagePath="build\net35\$(PackageId).targets" />
+      <TfmSpecificPackageFile Include="$(MSBuildThisFileDirectory)build\net35\$(PackageId).targets"
+                              PackagePath="buildTransitive\net35\$(PackageId).targets" />
     </ItemGroup>
   </Target>
 </Project>

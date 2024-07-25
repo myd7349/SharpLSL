@@ -3,22 +3,16 @@
   <Import Project="$([MSBuild]::GetPathOfFileAbove('Directory.Build.props', '$(MSBuildThisFileDirectory)../'))" />
 
   <PropertyGroup Label="Build">
-    <GenerateAssemblyInfo>false</GenerateAssemblyInfo>
-    <!--
-    <AppendTargetFrameworkToOutputPath>false</AppendTargetFrameworkToOutputPath>
-    -->
-    <IncludeBuildOutput>true</IncludeBuildOutput>
-    <BuildOutputTargetFolder>runtimes</BuildOutputTargetFolder>
-    <ExcludeSymbolsFromPackage>false</ExcludeSymbolsFromPackage>
-    <!--
-    <SuppressDependenciesWhenPacking>true</SuppressDependenciesWhenPacking>
-    -->
     <DebugType>None</DebugType>
     <DebugSymbols>false</DebugSymbols>
+    <GenerateAssemblyInfo>false</GenerateAssemblyInfo>
   </PropertyGroup>
 
   <PropertyGroup Label="Package">
+    <ExcludeSymbolsFromPackage>false</ExcludeSymbolsFromPackage>
+    <IncludeBuildOutput>false</IncludeBuildOutput>
     <PackageLicenseFile>LICENSE</PackageLicenseFile>
+    <SuppressDependenciesWhenPacking>false</SuppressDependenciesWhenPacking>
   </PropertyGroup>
 
   <ItemGroup>

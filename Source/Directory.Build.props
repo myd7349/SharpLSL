@@ -3,12 +3,11 @@
   <PropertyGroup Label="Build">
     <TargetFrameworks>net35;netcoreapp3.1;net6.0</TargetFrameworks>
     <AnalysisLevel>latest</AnalysisLevel>
+    <AppendTargetFrameworkToOutputPath>true</AppendTargetFrameworkToOutputPath>
     <EnableNETAnalyzers>true</EnableNETAnalyzers>
     <EnforceCodeStyleInBuild>true</EnforceCodeStyleInBuild>
     <GeneratePackageOnBuild>false</GeneratePackageOnBuild>
-    <!--
     <TreatWarningsAsErrors>true</TreatWarningsAsErrors>
-    -->
   </PropertyGroup>
 
   <PropertyGroup Condition="'$(GITHUB_ACTIONS)' == 'true'">
