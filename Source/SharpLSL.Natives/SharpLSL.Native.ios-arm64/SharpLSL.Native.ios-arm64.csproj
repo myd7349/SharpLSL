@@ -15,7 +15,7 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <NativeLibs Include="$(BaseIntermediateOutputPath)lib/**/$(LSLAssetFile)" />
+    <NativeLibs Include="$(ProjectDir)$(BaseIntermediateOutputPath)lib/**/$(LSLAssetFile)" />
     <None Include="@(NativeLibs)">
       <Pack>true</Pack>
       <PackagePath>runtimes/$(RID)/native</PackagePath>
@@ -26,13 +26,13 @@
   
   <Target Name="DownloadNativeAssets" Condition="$(SkipLocalBuild) != true">
     <DownloadFile SourceUrl="$(LSLAssetUrl)"
-                  DestinationFolder="$(BaseIntermediateOutputPath)"
+                  DestinationFolder="$(ProjectDir)$(BaseIntermediateOutputPath)"
                   DestinationFileName="$(LSLAssetArchive)"
-                  Condition="!Exists('$(BaseIntermediateOutputPath)$(LSLAssetArchive)')" />
+                  Condition="!Exists('$(ProjectDir)$(BaseIntermediateOutputPath)$(LSLAssetArchive)')" />
 
-    <Unzip SourceFiles="$(BaseIntermediateOutputPath)$(LSLAssetArchive)"
-           DestinationFolder="$(BaseIntermediateOutputPath)"
+    <Unzip SourceFiles="$(ProjectDir)$(BaseIntermediateOutputPath)$(LSLAssetArchive)"
+           DestinationFolder="$(ProjectDir)$(BaseIntermediateOutputPath)"
            OverwriteReadOnlyFiles="true"
-           Condition="!Exists('$(BaseIntermediateOutputPath)bin/$(LSLAssetFile)')" />
+           Condition="!Exists('$(ProjectDir)$(BaseIntermediateOutputPath)bin/$(LSLAssetFile)')" />
   </Target>
 </Project>
