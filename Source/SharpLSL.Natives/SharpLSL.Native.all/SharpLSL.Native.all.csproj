@@ -1,5 +1,7 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
   <PropertyGroup>
+    <PackageId>SharpLSL.Native.all</PackageId>
+    <Description>liblsl native assets for all supported platforms.</Description>
     <SuppressDependenciesWhenPacking>false</SuppressDependenciesWhenPacking>
     <TargetsForTfmSpecificContentInPackage>$(TargetsForTfmSpecificContentInPackage);_IncludeAdditionalTfmSpecificPackageFiles</TargetsForTfmSpecificContentInPackage>
   </PropertyGroup>
