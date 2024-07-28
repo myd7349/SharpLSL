@@ -25,8 +25,8 @@
 
   <PropertyGroup Label="Package">
     <LSLTagVersion>1.16.2</LSLTagVersion>
-    <PackageVersion>$(LSLTagVersion)</PackageVersion>
-    <Version>$(LSLTagVersion)</Version>
+    <PackageVersion>$(LSLTagVersion).0</PackageVersion>
+    <Version>$(LSLTagVersion).0</Version>
     <Authors>myd7349</Authors>
     <Company>myd7349</Company>
     <Copyright>Copyright © myd7349. All rights Reserved</Copyright>

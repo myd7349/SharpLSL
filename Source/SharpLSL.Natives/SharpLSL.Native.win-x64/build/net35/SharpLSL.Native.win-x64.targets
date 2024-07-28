@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="utf-8"?>
+<Project xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <Import Condition="'$(MSBuildThisFileFullPath)' != '' And Exists('$(MSBuildThisFileFullPath).user')"
+          Project="$(MSBuildThisFileFullPath).user" />
+
+  <PropertyGroup>
+    <ShouldCopyLSLNativeLibs Condition=" '$(ShouldCopyLSLNativeLibs)' == '' ">True</ShouldCopyLSLNativeLibs>
+  </PropertyGroup>
+
+  <ItemGroup Condition="'$(ShouldCopyLSLNativeLibs)' != 'False'">
+    <LSLNativeLibs Include="$(MSBuildThisFileDirectory)..\..\runtimes\win-x64\native\*">
+      <Dir>x64\</Dir>
+    </LSLNativeLibs>
+
+    <None Include="@(LSLNativeLibs)">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+      <Link>%(Dir)%(Filename)%(Extension)</Link>
+      <Visible>False</Visible>
+    </None>
+  </ItemGroup>
+</Project>

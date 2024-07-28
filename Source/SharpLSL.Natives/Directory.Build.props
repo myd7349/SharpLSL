@@ -9,10 +9,10 @@
   </PropertyGroup>
 
   <PropertyGroup Label="Package">
+    <LSLBuildCITagVersion>2024.07.28</LSLBuildCITagVersion>
     <ExcludeSymbolsFromPackage>false</ExcludeSymbolsFromPackage>
     <IncludeBuildOutput>false</IncludeBuildOutput>
     <PackageLicenseFile>LICENSE</PackageLicenseFile>
-    <SuppressDependenciesWhenPacking>false</SuppressDependenciesWhenPacking>
   </PropertyGroup>
 
   <ItemGroup>

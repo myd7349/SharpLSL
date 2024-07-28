@@ -2,14 +2,16 @@
 
   <PropertyGroup>
     <RID>win-x64</RID>
-    <LSLAssetArchive>liblsl-$(LSLTagVersion)-Win_amd64.zip</LSLAssetArchive>
+    <LSLAssetArchive>liblsl-v$(LSLTagVersion)-$(RID)-dynamic.zip</LSLAssetArchive>
     <LSLAssetFile>lsl.dll</LSLAssetFile>
-    <LSLAssetUrl>https://github.com/sccn/liblsl/releases/download/v$(LSLTagVersion)/$(LSLAssetArchive)</LSLAssetUrl>
+    <LSLAssetUrl>https://github.com/myd7349/liblsl-ci-build/releases/download/$(LSLBuildCITagVersion)/$(LSLAssetArchive)</LSLAssetUrl>
   </PropertyGroup>
 
   <PropertyGroup>
     <PackageId>SharpLSL.Native.$(RID)</PackageId>
     <Description>liblsl native assets for $(RID).</Description>
+    <SuppressDependenciesWhenPacking>false</SuppressDependenciesWhenPacking>
+    <TargetsForTfmSpecificContentInPackage>$(TargetsForTfmSpecificContentInPackage);_IncludeAdditionalTfmSpecificPackageFiles</TargetsForTfmSpecificContentInPackage>
   </PropertyGroup>
 
   <ItemGroup>
@@ -21,7 +23,7 @@
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
   </ItemGroup>
-
+  
   <Target Name="DownloadNativeAssets" Condition="$(SkipLocalBuild) != true">
     <DownloadFile SourceUrl="$(LSLAssetUrl)"
                   DestinationFolder="$(BaseIntermediateOutputPath)"
@@ -34,4 +36,37 @@
            Condition="!Exists('$(BaseIntermediateOutputPath)bin/$(LSLAssetFile)')" />
   </Target>
 
+  <Target Name="_IncludePlaceholders" AfterTargets="_IncludeAdditionalTfmSpecificPackageFilesPrepare">
+    <Touch Files="$(IntermediateOutputPath)_._" AlwaysCreate="True" />
+    <ItemGroup>
+      <FileWrites Include="$(IntermediateOutputPath)_._" />
+      <TfmSpecificPackageFile Include="$(IntermediateOutputPath)_._"
+                              PackagePath="lib\$(NuGetShortFolderName)\_._" />
+    </ItemGroup>
+  </Target>
+
+  <Target Name="_IncludeAdditionalTfmSpecificPackageFilesPrepare">
+    <GetNuGetShortFolderName TargetFrameworkMoniker="$(TargetFrameworkMoniker)" TargetPlatformMoniker="$(TargetPlatformMoniker)">
+      <Output TaskParameter="NuGetShortFolderName" PropertyName="NuGetShortFolderName" />
+    </GetNuGetShortFolderName>
+  </Target>
+
+  <PropertyGroup>
+    <_IncludeAdditionalTfmSpecificPackageFilesDependsOn>
+      _IncludeAdditionalTfmSpecificPackageFilesPrepare;
+      IncludeAdditionalTfmSpecificPackageFiles;
+    </_IncludeAdditionalTfmSpecificPackageFilesDependsOn>
+  </PropertyGroup>
+
+  <Target Name="_IncludeAdditionalTfmSpecificPackageFiles"
+          DependsOnTargets="$(_IncludeAdditionalTfmSpecificPackageFilesDependsOn)" />
+
+  <Target Name="IncludeAdditionalTfmSpecificPackageFiles">
+    <ItemGroup Condition=" '$(TargetFramework)' == 'net35' ">
+      <TfmSpecificPackageFile Include="$(MSBuildThisFileDirectory)build\net35\$(PackageId).targets"
+                              PackagePath="build\net35\$(PackageId).targets" />
+      <TfmSpecificPackageFile Include="$(MSBuildThisFileDirectory)build\net35\$(PackageId).targets"
+                              PackagePath="buildTransitive\net35\$(PackageId).targets" />
+    </ItemGroup>
+  </Target>
 </Project>

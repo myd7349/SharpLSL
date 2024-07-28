@@ -1,0 +1,37 @@
+﻿<Project Sdk="Microsoft.NET.Sdk" InitialTargets="DownloadNativeAssets">
+
+  <PropertyGroup>
+    <RID>linux-x64</RID>
+    <LSLAssetArchive>liblsl-v$(LSLTagVersion)-$(RID)-dynamic.zip</LSLAssetArchive>
+    <LSLAssetFile>liblsl.so</LSLAssetFile>
+    <LSLAssetUrl>https://github.com/myd7349/liblsl-ci-build/releases/download/$(LSLBuildCITagVersion)/$(LSLAssetArchive)</LSLAssetUrl>
+  </PropertyGroup>
+
+  <PropertyGroup>
+    <PackageId>SharpLSL.Native.$(RID)</PackageId>
+    <Description>liblsl native assets for $(RID).</Description>
+    <SuppressDependenciesWhenPacking>true</SuppressDependenciesWhenPacking>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <NativeLibs Include="$(BaseIntermediateOutputPath)lib/**/*.so" />
+    <None Include="@(NativeLibs)">
+      <Pack>true</Pack>
+      <PackagePath>runtimes/$(RID)/native</PackagePath>
+      <Link>%(RecursiveDir)%(FileName)%(Extension)</Link>
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+  </ItemGroup>
+  
+  <Target Name="DownloadNativeAssets" Condition="$(SkipLocalBuild) != true">
+    <DownloadFile SourceUrl="$(LSLAssetUrl)"
+                  DestinationFolder="$(BaseIntermediateOutputPath)"
+                  DestinationFileName="$(LSLAssetArchive)"
+                  Condition="!Exists('$(BaseIntermediateOutputPath)$(LSLAssetArchive)')" />
+
+    <Unzip SourceFiles="$(BaseIntermediateOutputPath)$(LSLAssetArchive)"
+           DestinationFolder="$(BaseIntermediateOutputPath)"
+           OverwriteReadOnlyFiles="true"
+           Condition="!Exists('$(BaseIntermediateOutputPath)bin/$(LSLAssetFile)')" />
+  </Target>
+</Project>
