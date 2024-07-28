@@ -1,8 +1,7 @@
 <Project>
 
   <PropertyGroup Label="Build">
-    <SharpLSLTargetFrameworks>net35;netcoreapp3.1;net6.0</SharpLSLTargetFrameworks>
-    <SharpLSLNativeTargetFrameworks>net6.0</SharpLSLNativeTargetFrameworks>
+    <TargetFrameworks>net35;netcoreapp3.1;net6.0</TargetFrameworks>
     <AnalysisLevel>latest</AnalysisLevel>
     <AppendTargetFrameworkToOutputPath>true</AppendTargetFrameworkToOutputPath>
     <EnableNETAnalyzers>true</EnableNETAnalyzers>
