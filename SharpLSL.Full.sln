@@ -35,6 +35,10 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "SharpLSL.Native.osx-x64", "
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "SharpLSL.Native.all", "Source\SharpLSL.Natives\SharpLSL.Native.all\SharpLSL.Native.all.csproj", "{532D997C-B29A-484B-AADC-8F1AD4835199}"
 EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Examples", "Examples", "{6D86CC19-E8B3-4C47-89CE-452D1BC2F3BB}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "LSLVer", "Examples\LSLVer\LSLVer.csproj", "{D0579532-FD2C-41EB-9F2E-FFC602631313}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -105,9 +109,16 @@ Global
 		{532D997C-B29A-484B-AADC-8F1AD4835199}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{532D997C-B29A-484B-AADC-8F1AD4835199}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{532D997C-B29A-484B-AADC-8F1AD4835199}.Release|Any CPU.Build.0 = Release|Any CPU
+		{D0579532-FD2C-41EB-9F2E-FFC602631313}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{D0579532-FD2C-41EB-9F2E-FFC602631313}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{D0579532-FD2C-41EB-9F2E-FFC602631313}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{D0579532-FD2C-41EB-9F2E-FFC602631313}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(NestedProjects) = preSolution
+		{D0579532-FD2C-41EB-9F2E-FFC602631313} = {6D86CC19-E8B3-4C47-89CE-452D1BC2F3BB}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {DC951642-0519-4898-B040-D6869C5CF3B2}
