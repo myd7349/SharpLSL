@@ -3,6 +3,7 @@
   <Import Project="$([MSBuild]::GetPathOfFileAbove('Directory.Build.props', '$(MSBuildThisFileDirectory)../'))" />
 
   <PropertyGroup Label="Build">
+    <BuildInParallel>false</BuildInParallel>
     <DebugType>None</DebugType>
     <DebugSymbols>false</DebugSymbols>
     <GenerateAssemblyInfo>false</GenerateAssemblyInfo>
