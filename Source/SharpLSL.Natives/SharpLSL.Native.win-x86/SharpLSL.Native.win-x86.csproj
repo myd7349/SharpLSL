@@ -19,7 +19,7 @@
     <None Include="@(NativeLibs)">
       <Pack>true</Pack>
       <PackagePath>runtimes/$(RID)/native</PackagePath>
-      <Link>%(RecursiveDir)%(FileName)%(Extension)</Link>
+      <Link>runtimes/$(RID)/native/%(FileName)%(Extension)</Link>
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
   </ItemGroup>
