@@ -8,6 +8,7 @@
   </PropertyGroup>
 
   <PropertyGroup>
+    <TargetFrameworks>$(SharpLSLNativeTargetFrameworks)</TargetFrameworks>
     <PackageId>SharpLSL.Native.$(RID)</PackageId>
     <Description>liblsl native assets for $(RID).</Description>
     <SuppressDependenciesWhenPacking>true</SuppressDependenciesWhenPacking>

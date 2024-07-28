@@ -8,7 +8,9 @@
   </PropertyGroup>
 
   <PropertyGroup>
+    <TargetFrameworks>$(SharpLSLTargetFrameworks)</TargetFrameworks>
     <PackageId>SharpLSL.Native.$(RID)</PackageId>
+    <BuildInParallel>false</BuildInParallel>
     <Description>liblsl native assets for $(RID).</Description>
     <SuppressDependenciesWhenPacking>false</SuppressDependenciesWhenPacking>
     <TargetsForTfmSpecificContentInPackage>$(TargetsForTfmSpecificContentInPackage);_IncludeAdditionalTfmSpecificPackageFiles</TargetsForTfmSpecificContentInPackage>
