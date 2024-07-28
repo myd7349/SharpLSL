@@ -1,4 +1,4 @@
-﻿<Project Sdk="Microsoft.NET.Sdk" InitialTargets="DownloadNativeAssets">
+﻿<Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
     <RID>osx-x64</RID>
@@ -24,7 +24,7 @@
     </None>
   </ItemGroup>
   
-  <Target Name="DownloadNativeAssets" Condition="$(SkipLocalBuild) != true">
+  <Target Name="DownloadNativeAssets" BeforeTargets="Build">
     <DownloadFile SourceUrl="$(LSLAssetUrl)"
                   DestinationFolder="$(ProjectDir)$(BaseIntermediateOutputPath)"
                   DestinationFileName="$(LSLAssetArchive)"
