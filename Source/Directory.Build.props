@@ -1,11 +1,5 @@
 <Project>
 
-  <PropertyGroup>
-    <Version>0.0.3</Version>
-    <PackageVersion>$(Version)</PackageVersion>
-    <LSLTagVersion>1.16.2</LSLTagVersion>
-  </PropertyGroup>
-
   <PropertyGroup Label="Build">
     <TargetFrameworks>net35;netcoreapp3.1;net6.0</TargetFrameworks>
     <AnalysisLevel>latest</AnalysisLevel>
@@ -33,7 +27,9 @@
     <Authors>myd7349</Authors>
     <Company>myd7349</Company>
     <Copyright>Copyright © myd7349. All rights Reserved</Copyright>
+    <!--
     <PackageRequireLicenseAcceptance>true</PackageRequireLicenseAcceptance>
+    -->
     <PackageProjectUrl>https://github.com/myd7349/SharpLSL</PackageProjectUrl>
     <!--
     <PackageIcon>Icon.png</PackageIcon>

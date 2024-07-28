@@ -2,11 +2,9 @@
 
   <Import Project="$([MSBuild]::GetPathOfFileAbove('Directory.Build.props', '$(MSBuildThisFileDirectory)../'))" />
 
-  <ItemGroup Label="Package References">
-    <PackageReference Include="GitVersion.MsBuild" Version="5.12.0">
-      <PrivateAssets>all</PrivateAssets>
-      <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
-    </PackageReference>
-  </ItemGroup>
+  <PropertyGroup>
+    <Version>0.0.3</Version>
+    <PackageVersion>0.0.3</PackageVersion>
+  </PropertyGroup>
 
 </Project>

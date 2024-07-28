@@ -2,6 +2,12 @@
 
   <Import Project="$([MSBuild]::GetPathOfFileAbove('Directory.Build.props', '$(MSBuildThisFileDirectory)../'))" />
 
+  <PropertyGroup>
+    <LSLTagVersion>1.16.2</LSLTagVersion>
+    <Version>$(LSLTagVersion)</Version>
+    <PackageVersion>$(LSLTagVersion)</PackageVersion>
+  </PropertyGroup>
+
   <PropertyGroup Label="Build">
     <BuildInParallel>false</BuildInParallel>
     <DebugType>None</DebugType>
