@@ -8,7 +8,10 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\..\Source\SharpLSL.Natives\SharpLSL.Native.all\SharpLSL.Native.all.csproj" />
+    <PackageReference Include="SharpLSL.Native.all" Version="1.16.2" />
+  </ItemGroup>
+
+  <ItemGroup>
     <ProjectReference Include="..\..\Source\SharpLSL\SharpLSL.csproj" />
   </ItemGroup>
 
