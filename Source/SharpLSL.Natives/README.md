@@ -48,6 +48,8 @@ The following NuGet packages contain pre-compiled binaries of [liblsl](https://g
 [SharpLSL.Native.win-x86-badge]: https://img.shields.io/nuget/v/SharpLSL.Native.win-x86.svg
 [SharpLSL.Native.win-x86-nuget]: https://www.nuget.org/packages/SharpLSL.Native.win-x86
 
+During the packaging process, liblsl binary archives are automatically downloaded from the [liblsl-ci-build](https://github.com/myd7349/liblsl-ci-build) release page and then packed into the corresponding NuGet packages named `SharpLSL.Native.[rid]`.
+
 # License
 
 These packages only bundle the dynamic libraries of [liblsl](https://github.com/sccn/liblsl), thus using the same licensing agreement as liblsl. Please refer to the [LICENSE](./LICENSE) file for more information.
