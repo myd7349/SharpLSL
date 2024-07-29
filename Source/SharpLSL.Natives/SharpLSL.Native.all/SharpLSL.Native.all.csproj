@@ -30,7 +30,7 @@
   <Target Name="_IncludeAdditionalTfmSpecificPackageFiles"
           DependsOnTargets="$(_IncludeAdditionalTfmSpecificPackageFilesDependsOn)" />
   
-  <ItemGroup>
+  <ItemGroup Condition=" '$(TargetFramework)' != 'net35' ">
     <ProjectReference Include="..\SharpLSL.Native.android-arm64\SharpLSL.Native.android-arm64.csproj" />
     <ProjectReference Include="..\SharpLSL.Native.android-arm\SharpLSL.Native.android-arm.csproj" />
     <ProjectReference Include="..\SharpLSL.Native.android-x64\SharpLSL.Native.android-x64.csproj" />
@@ -42,6 +42,9 @@
     <ProjectReference Include="..\SharpLSL.Native.osx-arm64\SharpLSL.Native.osx-arm64.csproj" />
     <ProjectReference Include="..\SharpLSL.Native.osx-x64\SharpLSL.Native.osx-x64.csproj" />
     <ProjectReference Include="..\SharpLSL.Native.win-arm64\SharpLSL.Native.win-arm64.csproj" />
+  </ItemGroup>
+
+  <ItemGroup>
     <ProjectReference Include="..\SharpLSL.Native.win-x64\SharpLSL.Native.win-x64.csproj" />
     <ProjectReference Include="..\SharpLSL.Native.win-x86\SharpLSL.Native.win-x86.csproj" />
   </ItemGroup>
