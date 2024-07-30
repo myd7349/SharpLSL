@@ -9,6 +9,7 @@ ClangSharpPInvokeGenerator `
     --language c++ `
     --methodClassName Common `
     --namespace SharpLSL.Interop `
+    --additional -m64 `
     --output ../Source/SharpLSL/Interop
 
 Move-Item -Path ../Source/SharpLSL/Interop/Common.cs -Destination ../Source/SharpLSL/Interop/Common.g.cs -Force
@@ -29,6 +30,7 @@ ClangSharpPInvokeGenerator `
     --language c++ `
     --methodClassName LSL `
     --namespace SharpLSL.Interop `
+    --additional -m64 `
     --output ../Source/SharpLSL/Interop/Common.g.cs `
     --remap `
     sbyte*=IntPtr `
@@ -49,6 +51,7 @@ ClangSharpPInvokeGenerator `
     --language c++ `
     --methodClassName LSL `
     --namespace SharpLSL.Interop `
+    --additional -m64 `
     --output ../Source/SharpLSL/Interop/Inlet.g.cs `
     --remap `
     lsl_inlet=IntPtr `
@@ -65,6 +68,7 @@ ClangSharpPInvokeGenerator `
     --language c++ `
     --methodClassName LSL `
     --namespace SharpLSL.Interop `
+    --additional -m64 `
     --output ../Source/SharpLSL/Interop/Outlet.g.cs `
     --remap `
     lsl_outlet=IntPtr `
@@ -81,6 +85,7 @@ ClangSharpPInvokeGenerator `
     --language c++ `
     --methodClassName LSL `
     --namespace SharpLSL.Interop `
+    --additional -m64 `
     --output ../Source/SharpLSL/Interop/Resolver.g.cs `
     --remap `
     lsl_continuous_resolver=IntPtr `
@@ -97,6 +102,7 @@ ClangSharpPInvokeGenerator `
     --language c++ `
     --methodClassName LSL `
     --namespace SharpLSL.Interop `
+    --additional -m64 `
     --output ../Source/SharpLSL/Interop/StreamInfo.g.cs `
     --remap `
     lsl_streaminfo=IntPtr `
@@ -113,7 +119,8 @@ ClangSharpPInvokeGenerator `
     --language c++ `
     --methodClassName LSL `
     --namespace SharpLSL.Interop `
-    --output ../Source/SharpLSL/Interop/Xml.g.cs `
+    --additional -m64 `
+    --output ../Source/SharpLSL/Interop/XML.g.cs `
     --remap `
     lsl_xml_ptr=IntPtr
 
