@@ -7,3 +7,17 @@
 //     the code is regenerated.
 // </auto-generated>
 //------------------------------------------------------------------------------
+
+namespace SharpLSL.Interop
+{
+    public enum lsl_processing_options_t
+    {
+        proc_none = 0,
+        proc_clocksync = 1,
+        proc_dejitter = 2,
+        proc_monotonize = 4,
+        proc_threadsafe = 8,
+        proc_ALL = 1 | 2 | 4 | 8,
+        _proc_maxval = 0x7f000000,
+    }
+}

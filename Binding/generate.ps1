@@ -11,6 +11,13 @@ ClangSharpPInvokeGenerator `
     --namespace SharpLSL.Interop `
     --output ../Source/SharpLSL/Interop
 
+Move-Item -Path ../Source/SharpLSL/Interop/Common.cs -Destination ../Source/SharpLSL/Interop/Common.g.cs -Force
+Move-Item -Path ../Source/SharpLSL/Interop/lsl_channel_format_t.cs -Destination ../Source/SharpLSL/Interop/lsl_channel_format_t.g.cs -Force
+Move-Item -Path ../Source/SharpLSL/Interop/lsl_error_code_t.cs -Destination ../Source/SharpLSL/Interop/lsl_error_code_t.g.cs -Force
+Move-Item -Path ../Source/SharpLSL/Interop/lsl_processing_options_t.cs -Destination ../Source/SharpLSL/Interop/lsl_processing_options_t.g.cs -Force
+Move-Item -Path ../Source/SharpLSL/Interop/lsl_transport_options_t.cs -Destination ../Source/SharpLSL/Interop/lsl_transport_options_t.g.cs -Force
+Move-Item -Path ../Source/SharpLSL/Interop/NativeTypeNameAttribute.cs -Destination ../Source/SharpLSL/Interop/NativeTypeNameAttribute.g.cs -Force
+
 # common.h: regenerate functions & macros
 ClangSharpPInvokeGenerator `
     --config generate-macro-bindings log-exclusions log-visited-files windows-types `
@@ -22,7 +29,7 @@ ClangSharpPInvokeGenerator `
     --language c++ `
     --methodClassName LSL `
     --namespace SharpLSL.Interop `
-    --output ../Source/SharpLSL/Interop/Common.cs `
+    --output ../Source/SharpLSL/Interop/Common.g.cs `
     --remap `
     sbyte*=IntPtr `
     --exclude `
@@ -42,7 +49,7 @@ ClangSharpPInvokeGenerator `
     --language c++ `
     --methodClassName LSL `
     --namespace SharpLSL.Interop `
-    --output ../Source/SharpLSL/Interop/Inlet.cs `
+    --output ../Source/SharpLSL/Interop/Inlet.g.cs `
     --remap `
     lsl_inlet=IntPtr `
     lsl_streaminfo=IntPtr
@@ -58,7 +65,7 @@ ClangSharpPInvokeGenerator `
     --language c++ `
     --methodClassName LSL `
     --namespace SharpLSL.Interop `
-    --output ../Source/SharpLSL/Interop/Outlet.cs `
+    --output ../Source/SharpLSL/Interop/Outlet.g.cs `
     --remap `
     lsl_outlet=IntPtr `
     lsl_streaminfo=IntPtr
@@ -74,7 +81,7 @@ ClangSharpPInvokeGenerator `
     --language c++ `
     --methodClassName LSL `
     --namespace SharpLSL.Interop `
-    --output ../Source/SharpLSL/Interop/Resolver.cs `
+    --output ../Source/SharpLSL/Interop/Resolver.g.cs `
     --remap `
     lsl_continuous_resolver=IntPtr `
     lsl_streaminfo=IntPtr
@@ -90,7 +97,7 @@ ClangSharpPInvokeGenerator `
     --language c++ `
     --methodClassName LSL `
     --namespace SharpLSL.Interop `
-    --output ../Source/SharpLSL/Interop/StreamInfo.cs `
+    --output ../Source/SharpLSL/Interop/StreamInfo.g.cs `
     --remap `
     lsl_streaminfo=IntPtr `
     lsl_xml_ptr=IntPtr sbyte*=IntPtr
@@ -106,7 +113,7 @@ ClangSharpPInvokeGenerator `
     --language c++ `
     --methodClassName LSL `
     --namespace SharpLSL.Interop `
-    --output ../Source/SharpLSL/Interop/XML.cs `
+    --output ../Source/SharpLSL/Interop/Xml.g.cs `
     --remap `
     lsl_xml_ptr=IntPtr
 
@@ -120,3 +127,7 @@ ClangSharpPInvokeGenerator `
 # [Returning a string from PInvoke?](https://stackoverflow.com/questions/5298268/returning-a-string-from-pinvoke)
 # [Annotating primitive mappings?](https://github.com/dotnet/ClangSharp/issues/428)
 # [Support for new LibraryImport attribute](https://github.com/dotnet/ClangSharp/issues/427)
+# [What's the best way to determine the location of the current PowerShell script?](https://stackoverflow.com/questions/5466329/whats-the-best-way-to-determine-the-location-of-the-current-powershell-script)
+# [Spaces cause split in path with PowerShell](https://stackoverflow.com/questions/18537098/spaces-cause-split-in-path-with-powershell)
+# [How to add a suffix to all the files](https://stackoverflow.com/questions/57041671/how-to-add-a-suffix-to-all-the-files)
+# [rename-item and override if filename exists](https://stackoverflow.com/questions/32311875/rename-item-and-override-if-filename-exists)
