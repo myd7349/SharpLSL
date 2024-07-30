@@ -1,15 +1,20 @@
 using Xunit;
 
-using SharpLSL.Interop;
+using static SharpLSL.Interop.LSL;
 
 namespace SharpLSL.Test;
 
 public class CommonTest
 {
     [Fact]
-    public void Given_When_Then()
+    public void TestVersion()
     {
-        Assert.Equal(4, sizeof(LslChannelFormat));
-        Assert.Equal(114, LSL.LIBLSL_COMPILE_HEADER_VERSION);
+        Assert.Equal(114, LIBLSL_COMPILE_HEADER_VERSION);
+    }
+
+    [Fact]
+    public void TestChannelFormat()
+    {
+        Assert.Equal(4, sizeof(ChannelFormat));
     }
 }
