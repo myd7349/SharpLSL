@@ -12,7 +12,15 @@ namespace SharpLSL.Interop
             lsl_xml_ptr e, [MarshalAs(UnmanagedType.LPStr)] string rhs);
 
         [DllImport("lsl", CallingConvention = CallingConvention.Cdecl, ExactSpelling = true)]
+        public static extern int lsl_set_value(
+            lsl_xml_ptr e, [MarshalAs(UnmanagedType.LPStr)] string rhs);
+
+        [DllImport("lsl", CallingConvention = CallingConvention.Cdecl, ExactSpelling = true)]
         public static extern lsl_xml_ptr lsl_child(
+            lsl_xml_ptr e, [MarshalAs(UnmanagedType.LPStr)] string name);
+
+        [DllImport("lsl", CallingConvention = CallingConvention.Cdecl, ExactSpelling = true)]
+        public static extern lsl_xml_ptr lsl_child_value_n(
             lsl_xml_ptr e, [MarshalAs(UnmanagedType.LPStr)] string name);
 
         [DllImport("lsl", CallingConvention = CallingConvention.Cdecl, ExactSpelling = true)]
@@ -24,33 +32,28 @@ namespace SharpLSL.Interop
             lsl_xml_ptr e, [MarshalAs(UnmanagedType.LPStr)] string name);
 
         [DllImport("lsl", CallingConvention = CallingConvention.Cdecl, ExactSpelling = true)]
-        public static extern lsl_xml_ptr lsl_child_value_n(lsl_xml_ptr e, [MarshalAs(UnmanagedType.LPStr)] string name);
+        public static extern lsl_xml_ptr lsl_append_child_value(
+            lsl_xml_ptr e, [MarshalAs(UnmanagedType.LPStr)] string name, [MarshalAs(UnmanagedType.LPStr)] string value);
 
         [DllImport("lsl", CallingConvention = CallingConvention.Cdecl, ExactSpelling = true)]
-        public static extern lsl_xml_ptr lsl_append_child_value(lsl_xml_ptr e, [MarshalAs(UnmanagedType.LPStr)] string name, [MarshalAs(UnmanagedType.LPStr)] string value);
+        public static extern lsl_xml_ptr lsl_prepend_child_value(
+            lsl_xml_ptr e, [MarshalAs(UnmanagedType.LPStr)] string name, [MarshalAs(UnmanagedType.LPStr)] string value);
 
         [DllImport("lsl", CallingConvention = CallingConvention.Cdecl, ExactSpelling = true)]
-        public static extern lsl_xml_ptr lsl_prepend_child_value(lsl_xml_ptr e, [MarshalAs(UnmanagedType.LPStr)] string name, [MarshalAs(UnmanagedType.LPStr)] string value);
+        public static extern int lsl_set_child_value(
+            lsl_xml_ptr e, [MarshalAs(UnmanagedType.LPStr)] string name, [MarshalAs(UnmanagedType.LPStr)] string value);
+
+        
+        [DllImport("lsl", CallingConvention = CallingConvention.Cdecl, ExactSpelling = true)]
+        public static extern lsl_xml_ptr lsl_append_child(
+            lsl_xml_ptr e, [MarshalAs(UnmanagedType.LPStr)] string name);
 
         [DllImport("lsl", CallingConvention = CallingConvention.Cdecl, ExactSpelling = true)]
-        public static extern int lsl_set_child_value(lsl_xml_ptr e, [MarshalAs(UnmanagedType.LPStr)] string name, [MarshalAs(UnmanagedType.LPStr)] string value);
+        public static extern lsl_xml_ptr lsl_prepend_child(
+            lsl_xml_ptr e, [MarshalAs(UnmanagedType.LPStr)] string name);
 
         [DllImport("lsl", CallingConvention = CallingConvention.Cdecl, ExactSpelling = true)]
-        public static extern int lsl_set_value(lsl_xml_ptr e, [MarshalAs(UnmanagedType.LPStr)] string rhs);
-
-        [DllImport("lsl", CallingConvention = CallingConvention.Cdecl, ExactSpelling = true)]
-        public static extern lsl_xml_ptr lsl_append_child(lsl_xml_ptr e, [MarshalAs(UnmanagedType.LPStr)] string name);
-
-        [DllImport("lsl", CallingConvention = CallingConvention.Cdecl, ExactSpelling = true)]
-        public static extern lsl_xml_ptr lsl_prepend_child(lsl_xml_ptr e, [MarshalAs(UnmanagedType.LPStr)] string name);
-
-        [DllImport("lsl", CallingConvention = CallingConvention.Cdecl, ExactSpelling = true)]
-        public static extern void lsl_remove_child_n(lsl_xml_ptr e, [MarshalAs(UnmanagedType.LPStr)] string name);
-
-        /*
- 
-        [DllImport("lsl", CallingConvention = CallingConvention.Cdecl, ExactSpelling = true)]
-        public static extern void lsl_remove_child([NativeTypeName("lsl_xml_ptr")] IntPtr e, [NativeTypeName("lsl_xml_ptr")] IntPtr e2);
-        */
+        public static extern void lsl_remove_child_n(
+            lsl_xml_ptr e, [MarshalAs(UnmanagedType.LPStr)] string name);
     }
 }
