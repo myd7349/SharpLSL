@@ -2,6 +2,7 @@
 using System.Runtime.InteropServices;
 
 using static SharpLSL.Interop.LSL;
+using static SharpLSL.LSL;
 
 namespace SharpLSL
 {
@@ -46,7 +47,85 @@ namespace SharpLSL
             get
             {
                 ThrowIfInvalid();
-                return lsl_empty(handle_) != 0;
+                return Convert.ToBoolean(lsl_empty(handle_));
+            }
+        }
+
+        /// <summary>
+        /// Gets a value indicating whether this element is a text body (instead of
+        /// an XML element). True both for plain char data and CData.
+        /// </summary>
+        /// <exception cref="InvalidOperationException">
+        /// Thrown when the handle is invalid.
+        /// </exception>
+        public bool IsText
+        {
+            get
+            {
+                ThrowIfInvalid();
+                return Convert.ToBoolean(lsl_is_text(handle_));
+            }
+        }
+
+        /// <summary>
+        /// Gets or sets the name of the element.
+        /// </summary>
+        /// <exception cref="InvalidOperationException">
+        /// Thrown when the handle is invalid.
+        /// </exception>
+        /// <exception cref="LSLException">
+        /// Thrown if setting name of the element fails.
+        /// </exception>
+        public string Name
+        {
+            get
+            {
+                ThrowIfInvalid();
+                
+                unsafe
+                {
+                    return PtrToXmlString((IntPtr)lsl_name(handle_));
+                }
+            }
+
+            set
+            {
+                ThrowIfInvalid();
+
+                var result = Convert.ToBoolean(lsl_set_name(handle_, value));
+                if (!result)
+                    throw new LSLException($"Failed to set name of element to {value}.");
+            }
+        }
+
+        /// <summary>
+        /// Gets or sets the value of the element.
+        /// </summary>
+        /// <exception cref="InvalidOperationException">
+        /// Thrown when the handle is invalid.
+        /// </exception>
+        /// <exception cref="LSLException">
+        /// Thrown if setting value of the element fails.
+        /// </exception>
+        public string Value
+        {
+            get
+            {
+                ThrowIfInvalid();
+
+                unsafe
+                {
+                    return PtrToXmlString((IntPtr)lsl_value(handle_));
+                }
+            }
+
+            set
+            {
+                ThrowIfInvalid();
+
+                var result = Convert.ToBoolean(lsl_set_value(handle_, value));
+                if (!result)
+                    throw new LSLException($"Failed to set value of element to {value}.");
             }
         }
 
@@ -114,6 +193,28 @@ namespace SharpLSL
         }
 
         /// <summary>
+        /// Gets a child of the element with the specified name.
+        /// </summary>
+        /// <param name="name">The name of the child.</param>
+        /// <returns>
+        /// A child of the element with the specified name, or <see cref="Null"/>
+        /// if no such child exists.
+        /// </returns>
+        /// <exception cref="InvalidOperationException">
+        /// Thrown if current element is invalid.
+        /// </exception>
+        public XMLElement Child(string name)
+        {
+            ThrowIfInvalid();
+
+            var node = lsl_child(handle_, name);
+            if (node != IntPtr.Zero)
+                return new XMLElement(node);
+
+            return Null;
+        }
+
+        /// <summary>
         /// Gets the next sibling of the element.
         /// </summary>
         /// <returns>
@@ -128,6 +229,28 @@ namespace SharpLSL
             ThrowIfInvalid();
             
             var node = lsl_next_sibling(handle_);
+            if (node != IntPtr.Zero)
+                return new XMLElement(node);
+
+            return Null;
+        }
+
+        /// <summary>
+        /// Get the next sibling of the element with the specified name.
+        /// </summary>
+        /// <param name="name">The name of the sibling.</param>
+        /// <returns>
+        /// The next sibling of the element with the specified name, or <see cref="Null"/>
+        /// if no such sibling exists.
+        /// </returns>
+        /// <exception cref="InvalidOperationException">
+        /// Thrown if current element is invalid.
+        /// </exception>
+        public XMLElement NextSibling(string name)
+        {
+            ThrowIfInvalid();
+
+            var node = lsl_next_sibling_n(handle_, name);
             if (node != IntPtr.Zero)
                 return new XMLElement(node);
 
@@ -155,23 +278,28 @@ namespace SharpLSL
             return Null;
         }
 
-        
-        public XMLElement Child(string name)
+        /// <summary>
+        /// Get the previous sibling of the element with the specified name.
+        /// </summary>
+        /// <param name="name">The name of the sibling.</param>
+        /// <returns>
+        /// The previous sibling of the element with the specified name, or <see cref="Null"/>
+        /// if no such sibling exists.
+        /// </returns>
+        /// <exception cref="InvalidOperationException">
+        /// Thrown if current element is invalid.
+        /// </exception>
+        public XMLElement PreviousSibling(string name)
         {
-            
-            return new XMLElement(lsl_child(handle_, name));
+            ThrowIfInvalid();
+
+            var node = lsl_previous_sibling_n(handle_, name);
+            if (node != IntPtr.Zero)
+                return new XMLElement(node);
+
+            return Null;
         }
-
-        public XMLElement NextSibling(string name) => new XMLElement(lsl_next_sibling_n(handle_, name));
-
-        public XMLElement PreviousSibling(string name) => new XMLElement(lsl_previous_sibling_n(handle_, name));
-
-        public bool IsText => lsl_is_text(handle_) != 0;
-
-        public unsafe string Name => Marshal.PtrToStringAnsi((IntPtr)lsl_name(handle_));
-
-        public unsafe string Value => Marshal.PtrToStringAnsi((IntPtr)lsl_value(handle_));
-
+        
         public unsafe string ChildValue() => Marshal.PtrToStringAnsi((IntPtr)lsl_child_value(handle_));
 
         public unsafe string ChildValue(string name) => Marshal.PtrToStringAnsi((IntPtr)lsl_child_value_n(handle_, name));
@@ -189,16 +317,6 @@ namespace SharpLSL
         public int SetChildValue(string name, string value)
         {
             return lsl_set_child_value(handle_, name, value);
-        }
-
-        public int SetName(string name)
-        {
-            return lsl_set_name(handle_, name);
-        }
-
-        public int SetValue(string value)
-        {
-            return lsl_set_value(handle_, value);
         }
 
         public XMLElement AppendChild(string name)
