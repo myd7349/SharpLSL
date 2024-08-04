@@ -7,9 +7,14 @@ namespace SharpLSL.Test;
 public class CommonTest
 {
     [Fact]
-    public void Given_When_Then()
+    public void TestVersion()
+    {
+        Assert.Equal(114, LIBLSL_COMPILE_HEADER_VERSION);
+    }
+    
+    [Fact]
+    public void TestChannelFormat()
     {
         Assert.Equal(4, sizeof(ChannelFormat));
-        Assert.Equal(114, LIBLSL_COMPILE_HEADER_VERSION);
     }
 }
