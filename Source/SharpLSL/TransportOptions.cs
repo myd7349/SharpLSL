@@ -1,3 +1,5 @@
+using System;
+
 using SharpLSL.Interop;
 
 namespace SharpLSL
@@ -5,6 +7,7 @@ namespace SharpLSL
     /// <summary>
     /// Specifies the transport options for stream inlets and outlets.
     /// </summary>
+    [Flags]
     public enum TransportOptions
     {
         // TODO: argument name & see also

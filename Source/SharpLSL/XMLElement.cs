@@ -81,7 +81,7 @@ namespace SharpLSL
             get
             {
                 ThrowIfInvalid();
-                
+
                 unsafe
                 {
                     return PtrToXmlString((IntPtr)lsl_name(handle_));
@@ -163,7 +163,7 @@ namespace SharpLSL
         public XMLElement FindFirstChild()
         {
             ThrowIfInvalid();
-            
+
             var node = lsl_first_child(handle_);
             if (node != IntPtr.Zero)
                 return new XMLElement(node);
@@ -273,7 +273,7 @@ namespace SharpLSL
         public void SetChildValue(string name, string value)
         {
             ThrowIfInvalid();
-            
+
             var result = Convert.ToBoolean(lsl_set_child_value(handle_, name, value));
             if (!result)
                 throw new LSLException($"Failed to set child value: {name}={value}.");
@@ -292,7 +292,7 @@ namespace SharpLSL
         public XMLElement FindNextSibling()
         {
             ThrowIfInvalid();
-            
+
             var node = lsl_next_sibling(handle_);
             if (node != IntPtr.Zero)
                 return new XMLElement(node);
@@ -378,11 +378,11 @@ namespace SharpLSL
         public XMLElement AppendChild(string name)
         {
             ThrowIfInvalid();
-            
+
             var node = lsl_append_child(handle_, name);
             if (node != IntPtr.Zero)
                 return new XMLElement(node);
-            
+
             throw new LSLException($"Failed to append child with name {name}.");
         }
 
@@ -541,7 +541,7 @@ namespace SharpLSL
                 throw new ArgumentNullException(nameof(element));
 
             element.ThrowIfInvalid();
-            
+
             lsl_remove_child(handle_, element.handle_);
         }
 

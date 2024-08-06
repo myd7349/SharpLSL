@@ -1,10 +1,15 @@
 using System;
 using System.Runtime.InteropServices;
 
+using lsl_inlet = System.IntPtr;
+
 namespace SharpLSL.Interop
 {
     public static unsafe partial class LSL
     {
+        [DllImport("lsl", CallingConvention = CallingConvention.Cdecl, ExactSpelling = true)]
+        public static extern lsl_inlet lsl_get_fullinfo(lsl_inlet @in, double timeout, ref int ec);
+
         [DllImport("lsl", CallingConvention = CallingConvention.Cdecl, ExactSpelling = true)]
         public static extern void lsl_open_stream([NativeTypeName("lsl_inlet")] IntPtr @in, double timeout, ref int ec);
 

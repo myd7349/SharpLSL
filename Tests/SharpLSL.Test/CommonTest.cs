@@ -11,7 +11,7 @@ public class CommonTest
     {
         Assert.Equal(114, LIBLSL_COMPILE_HEADER_VERSION);
     }
-    
+
     [Fact]
     public void TestChannelFormat()
     {
