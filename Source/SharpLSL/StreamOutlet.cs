@@ -97,7 +97,7 @@ namespace SharpLSL
         }
 
         /// <summary>
-        /// Pushes a sample into the outlet. Handles type checking & conversion.
+        /// Pushes a sample into the outlet. Handles type checking and conversion.
         /// </summary>
         /// <param name="sample">
         /// The sample data to push.
@@ -121,7 +121,7 @@ namespace SharpLSL
         }
 
         /// <summary>
-        /// Pushes a sample into the outlet. Handles type checking & conversion.
+        /// Pushes a sample into the outlet. Handles type checking and conversion.
         /// </summary>
         /// <param name="sample">
         /// The sample data to push.
@@ -145,7 +145,7 @@ namespace SharpLSL
         }
 
         /// <summary>
-        /// Pushes a sample into the outlet. Handles type checking & conversion.
+        /// Pushes a sample into the outlet. Handles type checking and conversion.
         /// </summary>
         /// <param name="sample">
         /// The sample data to push.
@@ -169,7 +169,7 @@ namespace SharpLSL
         }
 
         /// <summary>
-        /// Pushes a sample into the outlet. Handles type checking & conversion.
+        /// Pushes a sample into the outlet. Handles type checking and conversion.
         /// </summary>
         /// <param name="sample">
         /// The sample data to push.
@@ -193,7 +193,7 @@ namespace SharpLSL
         }
 
         /// <summary>
-        /// Pushes a sample into the outlet. Handles type checking & conversion.
+        /// Pushes a sample into the outlet. Handles type checking and conversion.
         /// </summary>
         /// <param name="sample">
         /// The sample data to push.
@@ -217,7 +217,7 @@ namespace SharpLSL
         }
 
         /// <summary>
-        /// Pushes a sample into the outlet. Handles type checking & conversion.
+        /// Pushes a sample into the outlet. Handles type checking and conversion.
         /// </summary>
         /// <param name="sample">
         /// The sample data to push.
@@ -241,7 +241,7 @@ namespace SharpLSL
         }
 
         /// <summary>
-        /// Pushes a sample into the outlet. Handles type checking & conversion.
+        /// Pushes a sample into the outlet. Handles type checking and conversion.
         /// </summary>
         /// <param name="sample">
         /// The sample data to push.
@@ -267,7 +267,7 @@ namespace SharpLSL
         // TODO: lsl_push_sample_v
 
         /// <summary>
-        /// Pushes a sample into the outlet. Handles type checking & conversion.
+        /// Pushes a sample into the outlet. Handles type checking and conversion.
         /// </summary>
         /// <param name="sample">
         /// The sample data to push.
@@ -295,7 +295,7 @@ namespace SharpLSL
         }
 
         /// <summary>
-        /// Pushes a sample into the outlet. Handles type checking & conversion.
+        /// Pushes a sample into the outlet. Handles type checking and conversion.
         /// </summary>
         /// <param name="sample">
         /// The sample data to push.
@@ -323,7 +323,7 @@ namespace SharpLSL
         }
 
         /// <summary>
-        /// Pushes a sample into the outlet. Handles type checking & conversion.
+        /// Pushes a sample into the outlet. Handles type checking and conversion.
         /// </summary>
         /// <param name="sample">
         /// The sample data to push.
@@ -351,7 +351,7 @@ namespace SharpLSL
         }
 
         /// <summary>
-        /// Pushes a sample into the outlet. Handles type checking & conversion.
+        /// Pushes a sample into the outlet. Handles type checking and conversion.
         /// </summary>
         /// <param name="sample">
         /// The sample data to push.
@@ -379,7 +379,7 @@ namespace SharpLSL
         }
 
         /// <summary>
-        /// Pushes a sample into the outlet. Handles type checking & conversion.
+        /// Pushes a sample into the outlet. Handles type checking and conversion.
         /// </summary>
         /// <param name="sample">
         /// The sample data to push.
@@ -407,7 +407,7 @@ namespace SharpLSL
         }
 
         /// <summary>
-        /// Pushes a sample into the outlet. Handles type checking & conversion.
+        /// Pushes a sample into the outlet. Handles type checking and conversion.
         /// </summary>
         /// <param name="sample">
         /// The sample data to push.
@@ -435,7 +435,7 @@ namespace SharpLSL
         }
 
         /// <summary>
-        /// Pushes a sample into the outlet. Handles type checking & conversion.
+        /// Pushes a sample into the outlet. Handles type checking and conversion.
         /// </summary>
         /// <param name="sample">
         /// The sample data to push.
@@ -463,7 +463,7 @@ namespace SharpLSL
         }
 
         /// <summary>
-        /// Pushes a sample into the outlet. Handles type checking & conversion.
+        /// Pushes a sample into the outlet. Handles type checking and conversion.
         /// </summary>
         /// <param name="sample">
         /// The sample data to push.
@@ -496,7 +496,7 @@ namespace SharpLSL
         }
 
         /// <summary>
-        /// Pushes a sample into the outlet. Handles type checking & conversion.
+        /// Pushes a sample into the outlet. Handles type checking and conversion.
         /// </summary>
         /// <param name="sample">
         /// The sample data to push.
@@ -529,7 +529,7 @@ namespace SharpLSL
         }
 
         /// <summary>
-        /// Pushes a sample into the outlet. Handles type checking & conversion.
+        /// Pushes a sample into the outlet. Handles type checking and conversion.
         /// </summary>
         /// <param name="sample">
         /// The sample data to push.
@@ -562,7 +562,7 @@ namespace SharpLSL
         }
 
         /// <summary>
-        /// Pushes a sample into the outlet. Handles type checking & conversion.
+        /// Pushes a sample into the outlet. Handles type checking and conversion.
         /// </summary>
         /// <param name="sample">
         /// The sample data to push.
@@ -595,7 +595,7 @@ namespace SharpLSL
         }
 
         /// <summary>
-        /// Pushes a sample into the outlet. Handles type checking & conversion.
+        /// Pushes a sample into the outlet. Handles type checking and conversion.
         /// </summary>
         /// <param name="sample">
         /// The sample data to push.
@@ -628,7 +628,7 @@ namespace SharpLSL
         }
 
         /// <summary>
-        /// Pushes a sample into the outlet. Handles type checking & conversion.
+        /// Pushes a sample into the outlet. Handles type checking and conversion.
         /// </summary>
         /// <param name="sample">
         /// The sample data to push.
@@ -661,7 +661,7 @@ namespace SharpLSL
         }
 
         /// <summary>
-        /// Pushes a sample into the outlet. Handles type checking & conversion.
+        /// Pushes a sample into the outlet. Handles type checking and conversion.
         /// </summary>
         /// <param name="sample">
         /// The sample data to push.
@@ -695,7 +695,7 @@ namespace SharpLSL
 
         /// <summary>
         /// Pushes a chunk of multiplexed samples into the outlet. Handles type
-        /// checking & conversion.
+        /// checking and conversion.
         /// </summary>
         /// <param name="chunk">
         /// A buffer of channel values holding the data for zero or more successive
@@ -720,7 +720,7 @@ namespace SharpLSL
 
         /// <summary>
         /// Pushes a chunk of multiplexed samples into the outlet. Handles type
-        /// checking & conversion.
+        /// checking and conversion.
         /// </summary>
         /// <param name="chunk">
         /// A buffer of channel values holding the data for zero or more successive
@@ -745,7 +745,7 @@ namespace SharpLSL
 
         /// <summary>
         /// Pushes a chunk of multiplexed samples into the outlet. Handles type
-        /// checking & conversion.
+        /// checking and conversion.
         /// </summary>
         /// <param name="chunk">
         /// A buffer of channel values holding the data for zero or more successive
@@ -770,7 +770,7 @@ namespace SharpLSL
 
         /// <summary>
         /// Pushes a chunk of multiplexed samples into the outlet. Handles type
-        /// checking & conversion.
+        /// checking and conversion.
         /// </summary>
         /// <param name="chunk">
         /// A buffer of channel values holding the data for zero or more successive
@@ -795,7 +795,7 @@ namespace SharpLSL
 
         /// <summary>
         /// Pushes a chunk of multiplexed samples into the outlet. Handles type
-        /// checking & conversion.
+        /// checking and conversion.
         /// </summary>
         /// <param name="chunk">
         /// A buffer of channel values holding the data for zero or more successive
@@ -820,7 +820,7 @@ namespace SharpLSL
 
         /// <summary>
         /// Pushes a chunk of multiplexed samples into the outlet. Handles type
-        /// checking & conversion.
+        /// checking and conversion.
         /// </summary>
         /// <param name="chunk">
         /// A buffer of channel values holding the data for zero or more successive
@@ -845,7 +845,7 @@ namespace SharpLSL
 
         /// <summary>
         /// Pushes a chunk of multiplexed samples into the outlet. Handles type
-        /// checking & conversion.
+        /// checking and conversion.
         /// </summary>
         /// <param name="chunk">
         /// A buffer of channel values holding the data for zero or more successive
@@ -870,7 +870,7 @@ namespace SharpLSL
 
         /// <summary>
         /// Pushes a chunk of multiplexed samples into the outlet. Handles type
-        /// checking & conversion.
+        /// checking and conversion.
         /// </summary>
         /// <param name="chunk">
         /// A buffer of channel values holding the data for zero or more successive
@@ -895,7 +895,7 @@ namespace SharpLSL
 
         /// <summary>
         /// Pushes a chunk of multiplexed samples into the outlet. Handles type
-        /// checking & conversion.
+        /// checking and conversion.
         /// </summary>
         /// <param name="chunk">
         /// A buffer of channel values holding the data for zero or more successive
@@ -920,7 +920,7 @@ namespace SharpLSL
 
         /// <summary>
         /// Pushes a chunk of multiplexed samples into the outlet. Handles type
-        /// checking & conversion.
+        /// checking and conversion.
         /// </summary>
         /// <param name="chunk">
         /// A buffer of channel values holding the data for zero or more successive
@@ -945,7 +945,7 @@ namespace SharpLSL
 
         /// <summary>
         /// Pushes a chunk of multiplexed samples into the outlet. Handles type
-        /// checking & conversion.
+        /// checking and conversion.
         /// </summary>
         /// <param name="chunk">
         /// A buffer of channel values holding the data for zero or more successive
@@ -970,7 +970,7 @@ namespace SharpLSL
 
         /// <summary>
         /// Pushes a chunk of multiplexed samples into the outlet. Handles type
-        /// checking & conversion.
+        /// checking and conversion.
         /// </summary>
         /// <param name="chunk">
         /// A buffer of channel values holding the data for zero or more successive
@@ -995,7 +995,7 @@ namespace SharpLSL
 
         /// <summary>
         /// Pushes a chunk of multiplexed samples into the outlet. Handles type
-        /// checking & conversion.
+        /// checking and conversion.
         /// </summary>
         /// <param name="chunk">
         /// A buffer of channel values holding the data for zero or more successive
@@ -1020,7 +1020,7 @@ namespace SharpLSL
 
         /// <summary>
         /// Pushes a chunk of multiplexed samples into the outlet. Handles type
-        /// checking & conversion.
+        /// checking and conversion.
         /// </summary>
         /// <param name="chunk">
         /// A buffer of channel values holding the data for zero or more successive
@@ -1045,7 +1045,7 @@ namespace SharpLSL
 
         /// <summary>
         /// Pushes a chunk of multiplexed samples into the outlet. Handles type
-        /// checking & conversion.
+        /// checking and conversion.
         /// </summary>
         /// <param name="chunk">
         /// A buffer of channel values holding the data for zero or more successive
@@ -1076,7 +1076,7 @@ namespace SharpLSL
 
         /// <summary>
         /// Pushes a chunk of multiplexed samples into the outlet. Handles type
-        /// checking & conversion.
+        /// checking and conversion.
         /// </summary>
         /// <param name="chunk">
         /// A buffer of channel values holding the data for zero or more successive
@@ -1107,7 +1107,7 @@ namespace SharpLSL
 
         /// <summary>
         /// Pushes a chunk of multiplexed samples into the outlet. Handles type
-        /// checking & conversion.
+        /// checking and conversion.
         /// </summary>
         /// <param name="chunk">
         /// A buffer of channel values holding the data for zero or more successive
@@ -1138,7 +1138,7 @@ namespace SharpLSL
 
         /// <summary>
         /// Pushes a chunk of multiplexed samples into the outlet. Handles type
-        /// checking & conversion.
+        /// checking and conversion.
         /// </summary>
         /// <param name="chunk">
         /// A buffer of channel values holding the data for zero or more successive
@@ -1169,7 +1169,7 @@ namespace SharpLSL
 
         /// <summary>
         /// Pushes a chunk of multiplexed samples into the outlet. Handles type
-        /// checking & conversion.
+        /// checking and conversion.
         /// </summary>
         /// <param name="chunk">
         /// A buffer of channel values holding the data for zero or more successive
@@ -1200,7 +1200,7 @@ namespace SharpLSL
 
         /// <summary>
         /// Pushes a chunk of multiplexed samples into the outlet. Handles type
-        /// checking & conversion.
+        /// checking and conversion.
         /// </summary>
         /// <param name="chunk">
         /// A buffer of channel values holding the data for zero or more successive
@@ -1231,7 +1231,7 @@ namespace SharpLSL
 
         /// <summary>
         /// Pushes a chunk of multiplexed samples into the outlet. Handles type
-        /// checking & conversion.
+        /// checking and conversion.
         /// </summary>
         /// <param name="chunk">
         /// A buffer of channel values holding the data for zero or more successive
@@ -1262,7 +1262,7 @@ namespace SharpLSL
 
         /// <summary>
         /// Pushes a chunk of multiplexed samples into the outlet. Handles type
-        /// checking & conversion.
+        /// checking and conversion.
         /// </summary>
         /// <param name="chunk">
         /// A buffer of channel values holding the data for zero or more successive
@@ -1293,7 +1293,7 @@ namespace SharpLSL
 
         /// <summary>
         /// Pushes a chunk of multiplexed samples into the outlet. Handles type
-        /// checking & conversion.
+        /// checking and conversion.
         /// </summary>
         /// <param name="chunk">
         /// A buffer of channel values holding the data for zero or more successive
@@ -1324,7 +1324,7 @@ namespace SharpLSL
 
         /// <summary>
         /// Pushes a chunk of multiplexed samples into the outlet. Handles type
-        /// checking & conversion.
+        /// checking and conversion.
         /// </summary>
         /// <param name="chunk">
         /// A buffer of channel values holding the data for zero or more successive
@@ -1355,7 +1355,7 @@ namespace SharpLSL
 
         /// <summary>
         /// Pushes a chunk of multiplexed samples into the outlet. Handles type
-        /// checking & conversion.
+        /// checking and conversion.
         /// </summary>
         /// <param name="chunk">
         /// A buffer of channel values holding the data for zero or more successive
@@ -1386,7 +1386,7 @@ namespace SharpLSL
 
         /// <summary>
         /// Pushes a chunk of multiplexed samples into the outlet. Handles type
-        /// checking & conversion.
+        /// checking and conversion.
         /// </summary>
         /// <param name="chunk">
         /// A buffer of channel values holding the data for zero or more successive
@@ -1417,7 +1417,7 @@ namespace SharpLSL
 
         /// <summary>
         /// Pushes a chunk of multiplexed samples into the outlet. Handles type
-        /// checking & conversion.
+        /// checking and conversion.
         /// </summary>
         /// <param name="chunk">
         /// A buffer of channel values holding the data for zero or more successive
@@ -1448,7 +1448,7 @@ namespace SharpLSL
 
         /// <summary>
         /// Pushes a chunk of multiplexed samples into the outlet. Handles type
-        /// checking & conversion.
+        /// checking and conversion.
         /// </summary>
         /// <param name="chunk">
         /// A buffer of channel values holding the data for zero or more successive
@@ -1479,7 +1479,7 @@ namespace SharpLSL
 
         /// <summary>
         /// Pushes a chunk of multiplexed samples into the outlet. Handles type
-        /// checking & conversion.
+        /// checking and conversion.
         /// </summary>
         /// <param name="chunk">
         /// A buffer of channel values holding the data for zero or more successive
@@ -1515,7 +1515,7 @@ namespace SharpLSL
 
         /// <summary>
         /// Pushes a chunk of multiplexed samples into the outlet. Handles type
-        /// checking & conversion.
+        /// checking and conversion.
         /// </summary>
         /// <param name="chunk">
         /// A buffer of channel values holding the data for zero or more successive
@@ -1551,7 +1551,7 @@ namespace SharpLSL
 
         /// <summary>
         /// Pushes a chunk of multiplexed samples into the outlet. Handles type
-        /// checking & conversion.
+        /// checking and conversion.
         /// </summary>
         /// <param name="chunk">
         /// A buffer of channel values holding the data for zero or more successive
@@ -1587,7 +1587,7 @@ namespace SharpLSL
 
         /// <summary>
         /// Pushes a chunk of multiplexed samples into the outlet. Handles type
-        /// checking & conversion.
+        /// checking and conversion.
         /// </summary>
         /// <param name="chunk">
         /// A buffer of channel values holding the data for zero or more successive
@@ -1623,7 +1623,7 @@ namespace SharpLSL
 
         /// <summary>
         /// Pushes a chunk of multiplexed samples into the outlet. Handles type
-        /// checking & conversion.
+        /// checking and conversion.
         /// </summary>
         /// <param name="chunk">
         /// A buffer of channel values holding the data for zero or more successive
@@ -1659,7 +1659,7 @@ namespace SharpLSL
 
         /// <summary>
         /// Pushes a chunk of multiplexed samples into the outlet. Handles type
-        /// checking & conversion.
+        /// checking and conversion.
         /// </summary>
         /// <param name="chunk">
         /// A buffer of channel values holding the data for zero or more successive
@@ -1695,7 +1695,7 @@ namespace SharpLSL
 
         /// <summary>
         /// Pushes a chunk of multiplexed samples into the outlet. Handles type
-        /// checking & conversion.
+        /// checking and conversion.
         /// </summary>
         /// <param name="chunk">
         /// A buffer of channel values holding the data for zero or more successive
@@ -1731,7 +1731,7 @@ namespace SharpLSL
 
         /// <summary>
         /// Pushes a chunk of multiplexed samples into the outlet. Handles type
-        /// checking & conversion.
+        /// checking and conversion.
         /// </summary>
         /// <param name="chunk">
         /// A buffer of channel values holding the data for zero or more successive
@@ -1767,7 +1767,7 @@ namespace SharpLSL
 
         /// <summary>
         /// Pushes a chunk of multiplexed samples into the outlet. Handles type
-        /// checking & conversion.
+        /// checking and conversion.
         /// </summary>
         /// <param name="chunk">
         /// A buffer of channel values holding the data for zero or more successive
@@ -1803,7 +1803,7 @@ namespace SharpLSL
 
         /// <summary>
         /// Pushes a chunk of multiplexed samples into the outlet. Handles type
-        /// checking & conversion.
+        /// checking and conversion.
         /// </summary>
         /// <param name="chunk">
         /// A buffer of channel values holding the data for zero or more successive
@@ -1839,7 +1839,7 @@ namespace SharpLSL
 
         /// <summary>
         /// Pushes a chunk of multiplexed samples into the outlet. Handles type
-        /// checking & conversion.
+        /// checking and conversion.
         /// </summary>
         /// <param name="chunk">
         /// A buffer of channel values holding the data for zero or more successive
@@ -1875,7 +1875,7 @@ namespace SharpLSL
 
         /// <summary>
         /// Pushes a chunk of multiplexed samples into the outlet. Handles type
-        /// checking & conversion.
+        /// checking and conversion.
         /// </summary>
         /// <param name="chunk">
         /// A buffer of channel values holding the data for zero or more successive
@@ -1911,7 +1911,7 @@ namespace SharpLSL
 
         /// <summary>
         /// Pushes a chunk of multiplexed samples into the outlet. Handles type
-        /// checking & conversion.
+        /// checking and conversion.
         /// </summary>
         /// <param name="chunk">
         /// A buffer of channel values holding the data for zero or more successive
@@ -1947,7 +1947,7 @@ namespace SharpLSL
 
         /// <summary>
         /// Pushes a chunk of multiplexed samples into the outlet. Handles type
-        /// checking & conversion.
+        /// checking and conversion.
         /// </summary>
         /// <param name="chunk">
         /// A buffer of channel values holding the data for zero or more successive
@@ -1983,7 +1983,7 @@ namespace SharpLSL
 
         /// <summary>
         /// Pushes a chunk of multiplexed samples into the outlet. Handles type
-        /// checking & conversion.
+        /// checking and conversion.
         /// </summary>
         /// <param name="chunk">
         /// A buffer of channel values holding the data for zero or more successive
@@ -2014,7 +2014,7 @@ namespace SharpLSL
 
         /// <summary>
         /// Pushes a chunk of multiplexed samples into the outlet. Handles type
-        /// checking & conversion.
+        /// checking and conversion.
         /// </summary>
         /// <param name="chunk">
         /// A buffer of channel values holding the data for zero or more successive
@@ -2045,7 +2045,7 @@ namespace SharpLSL
 
         /// <summary>
         /// Pushes a chunk of multiplexed samples into the outlet. Handles type
-        /// checking & conversion.
+        /// checking and conversion.
         /// </summary>
         /// <param name="chunk">
         /// A buffer of channel values holding the data for zero or more successive
@@ -2076,7 +2076,7 @@ namespace SharpLSL
 
         /// <summary>
         /// Pushes a chunk of multiplexed samples into the outlet. Handles type
-        /// checking & conversion.
+        /// checking and conversion.
         /// </summary>
         /// <param name="chunk">
         /// A buffer of channel values holding the data for zero or more successive
@@ -2107,7 +2107,7 @@ namespace SharpLSL
 
         /// <summary>
         /// Pushes a chunk of multiplexed samples into the outlet. Handles type
-        /// checking & conversion.
+        /// checking and conversion.
         /// </summary>
         /// <param name="chunk">
         /// A buffer of channel values holding the data for zero or more successive
@@ -2138,7 +2138,7 @@ namespace SharpLSL
 
         /// <summary>
         /// Pushes a chunk of multiplexed samples into the outlet. Handles type
-        /// checking & conversion.
+        /// checking and conversion.
         /// </summary>
         /// <param name="chunk">
         /// A buffer of channel values holding the data for zero or more successive
@@ -2169,7 +2169,7 @@ namespace SharpLSL
 
         /// <summary>
         /// Pushes a chunk of multiplexed samples into the outlet. Handles type
-        /// checking & conversion.
+        /// checking and conversion.
         /// </summary>
         /// <param name="chunk">
         /// A buffer of channel values holding the data for zero or more successive
@@ -2200,7 +2200,7 @@ namespace SharpLSL
 
         /// <summary>
         /// Pushes a chunk of multiplexed samples into the outlet. Handles type
-        /// checking & conversion.
+        /// checking and conversion.
         /// </summary>
         /// <param name="chunk">
         /// A buffer of channel values holding the data for zero or more successive
@@ -2231,7 +2231,7 @@ namespace SharpLSL
 
         /// <summary>
         /// Pushes a chunk of multiplexed samples into the outlet. Handles type
-        /// checking & conversion.
+        /// checking and conversion.
         /// </summary>
         /// <param name="chunk">
         /// A buffer of channel values holding the data for zero or more successive
@@ -2262,7 +2262,7 @@ namespace SharpLSL
 
         /// <summary>
         /// Pushes a chunk of multiplexed samples into the outlet. Handles type
-        /// checking & conversion.
+        /// checking and conversion.
         /// </summary>
         /// <param name="chunk">
         /// A buffer of channel values holding the data for zero or more successive
@@ -2293,7 +2293,7 @@ namespace SharpLSL
 
         /// <summary>
         /// Pushes a chunk of multiplexed samples into the outlet. Handles type
-        /// checking & conversion.
+        /// checking and conversion.
         /// </summary>
         /// <param name="chunk">
         /// A buffer of channel values holding the data for zero or more successive
@@ -2324,7 +2324,7 @@ namespace SharpLSL
 
         /// <summary>
         /// Pushes a chunk of multiplexed samples into the outlet. Handles type
-        /// checking & conversion.
+        /// checking and conversion.
         /// </summary>
         /// <param name="chunk">
         /// A buffer of channel values holding the data for zero or more successive
@@ -2355,7 +2355,7 @@ namespace SharpLSL
 
         /// <summary>
         /// Pushes a chunk of multiplexed samples into the outlet. Handles type
-        /// checking & conversion.
+        /// checking and conversion.
         /// </summary>
         /// <param name="chunk">
         /// A buffer of channel values holding the data for zero or more successive
@@ -2386,7 +2386,7 @@ namespace SharpLSL
 
         /// <summary>
         /// Pushes a chunk of multiplexed samples into the outlet. Handles type
-        /// checking & conversion.
+        /// checking and conversion.
         /// </summary>
         /// <param name="chunk">
         /// A buffer of channel values holding the data for zero or more successive
@@ -2417,7 +2417,7 @@ namespace SharpLSL
 
         /// <summary>
         /// Pushes a chunk of multiplexed samples into the outlet. Handles type
-        /// checking & conversion.
+        /// checking and conversion.
         /// </summary>
         /// <param name="chunk">
         /// A buffer of channel values holding the data for zero or more successive
@@ -2453,7 +2453,7 @@ namespace SharpLSL
 
         /// <summary>
         /// Pushes a chunk of multiplexed samples into the outlet. Handles type
-        /// checking & conversion.
+        /// checking and conversion.
         /// </summary>
         /// <param name="chunk">
         /// A buffer of channel values holding the data for zero or more successive
@@ -2489,7 +2489,7 @@ namespace SharpLSL
 
         /// <summary>
         /// Pushes a chunk of multiplexed samples into the outlet. Handles type
-        /// checking & conversion.
+        /// checking and conversion.
         /// </summary>
         /// <param name="chunk">
         /// A buffer of channel values holding the data for zero or more successive
@@ -2525,7 +2525,7 @@ namespace SharpLSL
 
         /// <summary>
         /// Pushes a chunk of multiplexed samples into the outlet. Handles type
-        /// checking & conversion.
+        /// checking and conversion.
         /// </summary>
         /// <param name="chunk">
         /// A buffer of channel values holding the data for zero or more successive
@@ -2561,7 +2561,7 @@ namespace SharpLSL
 
         /// <summary>
         /// Pushes a chunk of multiplexed samples into the outlet. Handles type
-        /// checking & conversion.
+        /// checking and conversion.
         /// </summary>
         /// <param name="chunk">
         /// A buffer of channel values holding the data for zero or more successive
@@ -2597,7 +2597,7 @@ namespace SharpLSL
 
         /// <summary>
         /// Pushes a chunk of multiplexed samples into the outlet. Handles type
-        /// checking & conversion.
+        /// checking and conversion.
         /// </summary>
         /// <param name="chunk">
         /// A buffer of channel values holding the data for zero or more successive
@@ -2633,7 +2633,7 @@ namespace SharpLSL
 
         /// <summary>
         /// Pushes a chunk of multiplexed samples into the outlet. Handles type
-        /// checking & conversion.
+        /// checking and conversion.
         /// </summary>
         /// <param name="chunk">
         /// A buffer of channel values holding the data for zero or more successive
@@ -2669,7 +2669,7 @@ namespace SharpLSL
 
         /// <summary>
         /// Pushes a chunk of multiplexed samples into the outlet. Handles type
-        /// checking & conversion.
+        /// checking and conversion.
         /// </summary>
         /// <param name="chunk">
         /// A buffer of channel values holding the data for zero or more successive
@@ -2705,7 +2705,7 @@ namespace SharpLSL
 
         /// <summary>
         /// Pushes a chunk of multiplexed samples into the outlet. Handles type
-        /// checking & conversion.
+        /// checking and conversion.
         /// </summary>
         /// <param name="chunk">
         /// A buffer of channel values holding the data for zero or more successive
@@ -2741,7 +2741,7 @@ namespace SharpLSL
 
         /// <summary>
         /// Pushes a chunk of multiplexed samples into the outlet. Handles type
-        /// checking & conversion.
+        /// checking and conversion.
         /// </summary>
         /// <param name="chunk">
         /// A buffer of channel values holding the data for zero or more successive
@@ -2777,7 +2777,7 @@ namespace SharpLSL
 
         /// <summary>
         /// Pushes a chunk of multiplexed samples into the outlet. Handles type
-        /// checking & conversion.
+        /// checking and conversion.
         /// </summary>
         /// <param name="chunk">
         /// A buffer of channel values holding the data for zero or more successive
@@ -2813,7 +2813,7 @@ namespace SharpLSL
 
         /// <summary>
         /// Pushes a chunk of multiplexed samples into the outlet. Handles type
-        /// checking & conversion.
+        /// checking and conversion.
         /// </summary>
         /// <param name="chunk">
         /// A buffer of channel values holding the data for zero or more successive
@@ -2849,7 +2849,7 @@ namespace SharpLSL
 
         /// <summary>
         /// Pushes a chunk of multiplexed samples into the outlet. Handles type
-        /// checking & conversion.
+        /// checking and conversion.
         /// </summary>
         /// <param name="chunk">
         /// A buffer of channel values holding the data for zero or more successive
@@ -2885,7 +2885,7 @@ namespace SharpLSL
 
         /// <summary>
         /// Pushes a chunk of multiplexed samples into the outlet. Handles type
-        /// checking & conversion.
+        /// checking and conversion.
         /// </summary>
         /// <param name="chunk">
         /// A buffer of channel values holding the data for zero or more successive

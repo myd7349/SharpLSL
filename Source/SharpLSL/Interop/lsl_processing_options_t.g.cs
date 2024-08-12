@@ -8,6 +8,8 @@
 // </auto-generated>
 //------------------------------------------------------------------------------
 
+#pragma warning disable CS1591
+
 namespace SharpLSL.Interop
 {
     public enum lsl_processing_options_t

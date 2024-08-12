@@ -8,6 +8,8 @@
 // </auto-generated>
 //------------------------------------------------------------------------------
 
+#pragma warning disable CS1591
+
 namespace SharpLSL.Interop
 {
     public enum lsl_channel_format_t

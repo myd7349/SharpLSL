@@ -8,6 +8,7 @@
     <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
     <PackageId>SharpLSL</PackageId>
     <Description>SharpLSL is a cross-platform C# binding of Lab Streaming Layer.</Description>
+    <GenerateDocumentationFile>true</GenerateDocumentationFile>
     <PackageLicenseExpression>MIT</PackageLicenseExpression>
     <IncludeSymbols>true</IncludeSymbols>
     <SymbolPackageFormat>snupkg</SymbolPackageFormat>

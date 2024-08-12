@@ -9,6 +9,9 @@ using static SharpLSL.Interop.LSL;
 
 namespace SharpLSL
 {
+    /// <summary>
+    /// Provides static methods and constants for interacting with the LSL library.
+    /// </summary>
     public static class LSL
     {
         /// <summary>
@@ -149,7 +152,7 @@ namespace SharpLSL
         /// <param name="waitTime">
         /// The waiting time for the operation, in seconds, to search for streams.
         /// The recommended wait time is 1 second (or 2 for a busy and large recording
-        /// operation). If this is too short (<0.5s) only a subset (or none) of the
+        /// operation). If this is too short (&lt;0.5s) only a subset (or none) of the
         /// outlets that are present on the network may be returned.
         /// </param>
         /// <returns>
@@ -273,7 +276,7 @@ namespace SharpLSL
         /// Advanced query that allows to impose more conditions on the retrieved
         /// streams; the given string is an
         /// [XPath 1.0 predicate](http://en.wikipedia.org/w/index.php?title=XPath_1.0)
-        /// for the `<info>` node (omitting the surrounding []'s).
+        /// for the `&lt;info&gt;` node (omitting the surrounding []'s).
         /// </para>
         /// </remarks>
         // TODO: Exception minCount maxCount 

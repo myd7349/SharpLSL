@@ -29,7 +29,7 @@ namespace SharpLSL
         /// </summary>
         /// <remarks>
         /// This format is used for representing numerical data with high precision
-        /// for universal numeric data as long as permitted by network & disk budget.
+        /// for universal numeric data as long as permitted by network and disk budget.
         /// The largest representable integer is 53-bit.
         /// </remarks>
         Double = lsl_channel_format_t.cft_double64,

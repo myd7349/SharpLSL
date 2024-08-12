@@ -372,7 +372,7 @@ namespace SharpLSL
 
         /// <summary>
         /// Pulls a sample from the inlet and read it into an array of values. Handles
-        /// type checking & conversion if necessary.
+        /// type checking and conversion if necessary.
         /// </summary>
         /// <param name="sample">
         /// The buffer to hold the resulting values.
@@ -419,7 +419,7 @@ namespace SharpLSL
 
         /// <summary>
         /// Pulls a sample from the inlet and read it into an array of values. Handles
-        /// type checking & conversion if necessary.
+        /// type checking and conversion if necessary.
         /// </summary>
         /// <param name="sample">
         /// The buffer to hold the resulting values.
@@ -466,7 +466,7 @@ namespace SharpLSL
 
         /// <summary>
         /// Pulls a sample from the inlet and read it into an array of values. Handles
-        /// type checking & conversion if necessary.
+        /// type checking and conversion if necessary.
         /// </summary>
         /// <param name="sample">
         /// The buffer to hold the resulting values.
@@ -513,7 +513,7 @@ namespace SharpLSL
 
         /// <summary>
         /// Pulls a sample from the inlet and read it into an array of values. Handles
-        /// type checking & conversion if necessary.
+        /// type checking and conversion if necessary.
         /// </summary>
         /// <param name="sample">
         /// The buffer to hold the resulting values.
@@ -560,7 +560,7 @@ namespace SharpLSL
 
         /// <summary>
         /// Pulls a sample from the inlet and read it into an array of values. Handles
-        /// type checking & conversion if necessary.
+        /// type checking and conversion if necessary.
         /// </summary>
         /// <param name="sample">
         /// The buffer to hold the resulting values.
@@ -607,7 +607,7 @@ namespace SharpLSL
 
         /// <summary>
         /// Pulls a sample from the inlet and read it into an array of values. Handles
-        /// type checking & conversion if necessary.
+        /// type checking and conversion if necessary.
         /// </summary>
         /// <param name="sample">
         /// The buffer to hold the resulting values.
@@ -654,7 +654,7 @@ namespace SharpLSL
 
         /// <summary>
         /// Pulls a sample from the inlet and read it into an array of values. Handles
-        /// type checking & conversion if necessary.
+        /// type checking and conversion if necessary.
         /// </summary>
         /// <param name="sample">
         /// The buffer to hold the resulting values.
@@ -715,7 +715,7 @@ namespace SharpLSL
 
         /// <summary>
         /// Pulls a sample from the inlet and read it into an array of values. Handles
-        /// type checking & conversion if necessary.
+        /// type checking and conversion if necessary.
         /// </summary>
         /// <param name="sample">
         /// The buffer to hold the resulting values.
@@ -862,7 +862,7 @@ namespace SharpLSL
 
         /// <summary>
         /// Pulls a chunk of samples from the inlet and read it into a buffer. Handles
-        /// type checking & conversion if necessary.
+        /// type checking and conversion if necessary.
         /// </summary>
         /// <param name="chunk">
         /// The buffer where the returned data chunk shall be stored.
@@ -910,7 +910,7 @@ namespace SharpLSL
 
         /// <summary>
         /// Pulls a chunk of samples from the inlet and read it into a buffer. Handles
-        /// type checking & conversion if necessary.
+        /// type checking and conversion if necessary.
         /// </summary>
         /// <param name="chunk">
         /// The buffer where the returned data chunk shall be stored.
@@ -958,7 +958,7 @@ namespace SharpLSL
 
         /// <summary>
         /// Pulls a chunk of samples from the inlet and read it into a buffer. Handles
-        /// type checking & conversion if necessary.
+        /// type checking and conversion if necessary.
         /// </summary>
         /// <param name="chunk">
         /// The buffer where the returned data chunk shall be stored.
@@ -1006,7 +1006,7 @@ namespace SharpLSL
 
         /// <summary>
         /// Pulls a chunk of samples from the inlet and read it into a buffer. Handles
-        /// type checking & conversion if necessary.
+        /// type checking and conversion if necessary.
         /// </summary>
         /// <param name="chunk">
         /// The buffer where the returned data chunk shall be stored.
@@ -1054,7 +1054,7 @@ namespace SharpLSL
 
         /// <summary>
         /// Pulls a chunk of samples from the inlet and read it into a buffer. Handles
-        /// type checking & conversion if necessary.
+        /// type checking and conversion if necessary.
         /// </summary>
         /// <param name="chunk">
         /// The buffer where the returned data chunk shall be stored.
@@ -1102,7 +1102,7 @@ namespace SharpLSL
 
         /// <summary>
         /// Pulls a chunk of samples from the inlet and read it into a buffer. Handles
-        /// type checking & conversion if necessary.
+        /// type checking and conversion if necessary.
         /// </summary>
         /// <param name="chunk">
         /// The buffer where the returned data chunk shall be stored.
@@ -1150,7 +1150,7 @@ namespace SharpLSL
 
         /// <summary>
         /// Pulls a chunk of samples from the inlet and read it into a buffer. Handles
-        /// type checking & conversion if necessary.
+        /// type checking and conversion if necessary.
         /// </summary>
         /// <param name="chunk">
         /// The buffer where the returned data chunk shall be stored.
@@ -1213,7 +1213,7 @@ namespace SharpLSL
 
         /// <summary>
         /// Pulls a chunk of data from the inlet and read it into an array of binary
-        /// strings, which may contain 0's. Handles type checking & conversion if
+        /// strings, which may contain 0's. Handles type checking and conversion if
         /// necessary.
         /// </summary>
         /// <param name="chunk">
@@ -1309,7 +1309,7 @@ namespace SharpLSL
 
         /// <summary>
         /// Pulls a chunk of samples from the inlet and read it into a buffer. Handles
-        /// type checking & conversion if necessary.
+        /// type checking and conversion if necessary.
         /// </summary>
         /// <param name="chunk">
         /// The buffer where the returned data chunk shall be stored.
@@ -1357,7 +1357,7 @@ namespace SharpLSL
 
         /// <summary>
         /// Pulls a chunk of samples from the inlet and read it into a buffer. Handles
-        /// type checking & conversion if necessary.
+        /// type checking and conversion if necessary.
         /// </summary>
         /// <param name="chunk">
         /// The buffer where the returned data chunk shall be stored.
@@ -1405,7 +1405,7 @@ namespace SharpLSL
 
         /// <summary>
         /// Pulls a chunk of samples from the inlet and read it into a buffer. Handles
-        /// type checking & conversion if necessary.
+        /// type checking and conversion if necessary.
         /// </summary>
         /// <param name="chunk">
         /// The buffer where the returned data chunk shall be stored.
@@ -1453,7 +1453,7 @@ namespace SharpLSL
 
         /// <summary>
         /// Pulls a chunk of samples from the inlet and read it into a buffer. Handles
-        /// type checking & conversion if necessary.
+        /// type checking and conversion if necessary.
         /// </summary>
         /// <param name="chunk">
         /// The buffer where the returned data chunk shall be stored.
@@ -1501,7 +1501,7 @@ namespace SharpLSL
 
         /// <summary>
         /// Pulls a chunk of samples from the inlet and read it into a buffer. Handles
-        /// type checking & conversion if necessary.
+        /// type checking and conversion if necessary.
         /// </summary>
         /// <param name="chunk">
         /// The buffer where the returned data chunk shall be stored.
@@ -1549,7 +1549,7 @@ namespace SharpLSL
 
         /// <summary>
         /// Pulls a chunk of samples from the inlet and read it into a buffer. Handles
-        /// type checking & conversion if necessary.
+        /// type checking and conversion if necessary.
         /// </summary>
         /// <param name="chunk">
         /// The buffer where the returned data chunk shall be stored.
@@ -1597,7 +1597,7 @@ namespace SharpLSL
 
         /// <summary>
         /// Pulls a chunk of samples from the inlet and read it into a buffer. Handles
-        /// type checking & conversion if necessary.
+        /// type checking and conversion if necessary.
         /// </summary>
         /// <param name="chunk">
         /// The buffer where the returned data chunk shall be stored.

@@ -7,3 +7,5 @@
 //     the code is regenerated.
 // </auto-generated>
 //------------------------------------------------------------------------------
+
+#pragma warning disable CS1591

@@ -1,3 +1,4 @@
+#pragma warning disable CS1591
 using System.Runtime.InteropServices;
 
 using lsl_xml_ptr = System.IntPtr;

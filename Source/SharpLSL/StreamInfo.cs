@@ -462,15 +462,15 @@ namespace SharpLSL
         /// Thrown when retrieving the entire <see cref="StreamInfo"/> in XML format fails.
         /// </exception>
         /// <remarks>
-        /// This yields an XML document (in string form) whose top-level element is
-        /// `<info>`. element contains one element for each field of the streaminfo
-        /// class, including:
-        /// - the core elements `<name>`, `<type>`, `<channel_count>`, `<nominal_srate>`,
-        ///   `<channel_format>`, `<source_id>`
-        /// - the misc elements `<version>`, `<created_at>`, `<uid>`, `<session_id>`,
-        ///   `<v4address>`, `<v4data_port>`, `<v4service_port>`, `<v6address>`,
-        ///   `<v6data_port>`, `<v6service_port>`
-        /// - the extended description element `<desc>` with user-defined sub-elements.
+        /// This yields an XML document (as a string) with the top-level element
+        /// `&lt;info&gt;`. The `&lt;info&gt;` element contains one element for each field
+        /// of the stream info class, including:
+        /// - the core elements `&lt;name&gt;`, `&lt;type&gt;`, `&lt;channel_count&gt;`, `&lt;nominal_srate&gt;`,
+        ///   `&lt;channel_format&gt;`, `&lt;source_id&gt;`
+        /// - the misc elements `&lt;version&gt;`, `&lt;created_at&gt;`, `&lt;uid&gt;`, `&lt;session_id&gt;`,
+        ///   `&lt;v4address&gt;`, `&lt;v4data_port&gt;`, `&lt;v4service_port&gt;`, `&lt;v6address&gt;`,
+        ///   `&lt;v6data_port&gt;`, `&lt;v6service_port&gt;`
+        /// - the extended description element `&lt;desc&gt;` with user-defined sub-elements.
         /// </remarks>
         /// <seealso cref="FromXML(string)"/>
         /// <seealso cref="Description"/>
