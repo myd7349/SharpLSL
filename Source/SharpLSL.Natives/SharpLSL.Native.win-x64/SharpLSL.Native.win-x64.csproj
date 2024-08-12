@@ -23,13 +23,15 @@
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
   </ItemGroup>
-  
-  <Target Name="DownloadNativeAssets" BeforeTargets="Build">
+
+  <Target Name="DownloadNativeAssets" BeforeTargets="UnzipNativeAssets">
     <DownloadFile SourceUrl="$(LSLAssetUrl)"
                   DestinationFolder="$(ProjectDir)$(BaseIntermediateOutputPath)"
                   DestinationFileName="$(LSLAssetArchive)"
                   Condition="!Exists('$(ProjectDir)$(BaseIntermediateOutputPath)$(LSLAssetArchive)')" />
+  </Target>
 
+  <Target Name="UnzipNativeAssets" BeforeTargets="Build">
     <Unzip SourceFiles="$(ProjectDir)$(BaseIntermediateOutputPath)$(LSLAssetArchive)"
            DestinationFolder="$(ProjectDir)$(BaseIntermediateOutputPath)"
            OverwriteReadOnlyFiles="true"
