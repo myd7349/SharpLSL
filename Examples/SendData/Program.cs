@@ -117,9 +117,10 @@ namespace SharpLSL.Examples
 
                 var rng = new Random();
 
-                for (uint t = 0; ; ++t)
+                uint t = 0;
+                while (true)
                 {
-                    for (int s = 0; s < samples; ++s)
+                    for (int s = 0; s < samples; ++s, ++t)
                     {
                         // Create random data for the first 8 channels.
                         for (int c = 0; c < Math.Min(channels, 8); ++c)
