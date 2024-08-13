@@ -1,9 +1,7 @@
 ﻿// Port of https://github.com/sccn/liblsl/blob/master/testing/lslver.c
-using SharpLSL;
-
-namespace LSLVer
+namespace SharpLSL.Examples
 {
-    internal class Program
+    internal class LSLVer
     {
         static void Main(string[] args)
         {
