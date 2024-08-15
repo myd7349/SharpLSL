@@ -51,6 +51,8 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "SendData", "Examples\SendDa
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "GetFullInfo", "Examples\GetFullInfo\GetFullInfo.csproj", "{6049BD6F-6711-437D-A836-6B47C5C3A90D}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "GetTimeCorrection", "Examples\GetTimeCorrection\GetTimeCorrection.csproj", "{7568AFA6-392B-4AF0-84A2-6387D6E65867}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -137,6 +139,10 @@ Global
 		{6049BD6F-6711-437D-A836-6B47C5C3A90D}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{6049BD6F-6711-437D-A836-6B47C5C3A90D}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{6049BD6F-6711-437D-A836-6B47C5C3A90D}.Release|Any CPU.Build.0 = Release|Any CPU
+		{7568AFA6-392B-4AF0-84A2-6387D6E65867}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{7568AFA6-392B-4AF0-84A2-6387D6E65867}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{7568AFA6-392B-4AF0-84A2-6387D6E65867}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{7568AFA6-392B-4AF0-84A2-6387D6E65867}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -163,6 +169,7 @@ Global
 		{9DAA5EC9-2A6A-41AA-A186-DFE7DFD3CE64} = {6D86CC19-E8B3-4C47-89CE-452D1BC2F3BB}
 		{0979581E-8E0D-4EE9-B9C1-A677A84E55A7} = {6D86CC19-E8B3-4C47-89CE-452D1BC2F3BB}
 		{6049BD6F-6711-437D-A836-6B47C5C3A90D} = {6D86CC19-E8B3-4C47-89CE-452D1BC2F3BB}
+		{7568AFA6-392B-4AF0-84A2-6387D6E65867} = {6D86CC19-E8B3-4C47-89CE-452D1BC2F3BB}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {DC951642-0519-4898-B040-D6869C5CF3B2}

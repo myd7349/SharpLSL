@@ -1,19 +1,22 @@
-﻿// Port of: https://github.com/sccn/liblsl/blob/master/examples/GetFullinfo.cpp
-// This example demonstrates how the full version of the stream info (i.e. including the
-// potentially large .desc field) can be obtained from an inlet. Note that the output of
-// the resolve functions only includes the core information otherwise.
+﻿// Port of: https://github.com/sccn/liblsl/blob/master/examples/GetTimeCorrection.cpp
+// This example demonstrates how a time correction value can be obtained on demand for a particular
+// stream on the net. This time correction value, when added to the timestamp of an obtained
+// sample, remaps the sample's timestamp into the local clock domain (so it is in the same domain
+// as what LSL.GetLocalClock() would return). For streams coming from the same computer, this value
+// should be approx. 0 (up to some tolerance).
 namespace SharpLSL.Examples
 {
-    internal class GetFullInfo
+    internal class GetTimeCorrection
     {
         static void Main(string[] args)
         {
             string field;
             string value;
-            
-            if (args.Length != 2)
+
+            if (args.Length < 2)
             {
-                Console.WriteLine("This connects to a stream which has a particular value for a given field and displays its full stream_info contents.");
+                Console.WriteLine("This connects to a stream which has a particular value for a given field and gets the time synchronization information for it.");
+
                 Console.WriteLine("Please enter a field name and the desired value (e.g. \"type EEG\" (without the quotes)):");
 
                 var input = Console.ReadLine();
@@ -48,12 +51,13 @@ namespace SharpLSL.Examples
 
                 using (var streamInlet = new StreamInlet(streamInfos[0]))
                 {
-                    // Get & display the info.
-                    Console.WriteLine("The information about this stream is displayed in the following:");
+                    // Start receiving & displaying the data.
+                    Console.WriteLine("Press [Enter] to query a new time correction value (clocks may drift)...");
 
-                    using (var streamInfo = streamInlet.GetStreamInfo())
+                    while (true)
                     {
-                        Console.WriteLine(streamInfo.ToXML());
+                        Console.WriteLine(streamInlet.TimeCorrection());
+                        Console.ReadKey();
                     }
                 }
             }
