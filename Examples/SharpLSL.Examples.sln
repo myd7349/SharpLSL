@@ -27,9 +27,11 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "SendData", "SendData\SendDa
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ReceiveDataSample", "ReceiveDataSample\ReceiveDataSample.csproj", "{46584BDA-91FA-421F-8652-F746428D438D}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SendStringMarkers", "SendStringMarkers\SendStringMarkers.csproj", "{08775229-50BD-4677-B801-62EDF3D0DA36}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "SendStringMarkers", "SendStringMarkers\SendStringMarkers.csproj", "{08775229-50BD-4677-B801-62EDF3D0DA36}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ReceiveStringMarkers", "ReceiveStringMarkers\ReceiveStringMarkers.csproj", "{E5C7EAAC-A9CD-492D-926A-C23319660906}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ReceiveStringMarkers", "ReceiveStringMarkers\ReceiveStringMarkers.csproj", "{E5C7EAAC-A9CD-492D-926A-C23319660906}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "TestSyncWithoutData", "TestSyncWithoutData\TestSyncWithoutData.csproj", "{FC156A16-E917-4F22-8280-0301C7A36B8C}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -85,6 +87,10 @@ Global
 		{E5C7EAAC-A9CD-492D-926A-C23319660906}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{E5C7EAAC-A9CD-492D-926A-C23319660906}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{E5C7EAAC-A9CD-492D-926A-C23319660906}.Release|Any CPU.Build.0 = Release|Any CPU
+		{FC156A16-E917-4F22-8280-0301C7A36B8C}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{FC156A16-E917-4F22-8280-0301C7A36B8C}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{FC156A16-E917-4F22-8280-0301C7A36B8C}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{FC156A16-E917-4F22-8280-0301C7A36B8C}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -102,6 +108,7 @@ Global
 		{46584BDA-91FA-421F-8652-F746428D438D} = {DA2DA41D-5029-4753-997B-12347F14B2CD}
 		{08775229-50BD-4677-B801-62EDF3D0DA36} = {DA2DA41D-5029-4753-997B-12347F14B2CD}
 		{E5C7EAAC-A9CD-492D-926A-C23319660906} = {DA2DA41D-5029-4753-997B-12347F14B2CD}
+		{FC156A16-E917-4F22-8280-0301C7A36B8C} = {DA2DA41D-5029-4753-997B-12347F14B2CD}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {1CF8E3E7-3F27-4F88-A157-9609A64159FC}
