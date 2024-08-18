@@ -33,9 +33,13 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ReceiveStringMarkers", "Rec
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "TestSyncWithoutData", "TestSyncWithoutData\TestSyncWithoutData.csproj", "{FC156A16-E917-4F22-8280-0301C7A36B8C}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SendDataMinimal", "SendDataMinimal\SendDataMinimal.csproj", "{2A24912A-9C36-4503-827E-F862A27C6ECE}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "SendDataMinimal", "SendDataMinimal\SendDataMinimal.csproj", "{2A24912A-9C36-4503-827E-F862A27C6ECE}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SendDataSimple", "SendDataSimple\SendDataSimple.csproj", "{9482E1FA-8F22-4A51-AAD0-AC02FB4D4F73}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "SendDataSimple", "SendDataSimple\SendDataSimple.csproj", "{9482E1FA-8F22-4A51-AAD0-AC02FB4D4F73}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SendMultipleStreams", "SendMultipleStreams\SendMultipleStreams.csproj", "{7D2EE9E2-14FB-4980-B0DE-B556BC46A7B7}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SendDataInChunks", "SendDataInChunks\SendDataInChunks.csproj", "{F22B8278-7EDB-476B-967E-10B86BA39DFA}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -103,6 +107,14 @@ Global
 		{9482E1FA-8F22-4A51-AAD0-AC02FB4D4F73}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{9482E1FA-8F22-4A51-AAD0-AC02FB4D4F73}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{9482E1FA-8F22-4A51-AAD0-AC02FB4D4F73}.Release|Any CPU.Build.0 = Release|Any CPU
+		{7D2EE9E2-14FB-4980-B0DE-B556BC46A7B7}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{7D2EE9E2-14FB-4980-B0DE-B556BC46A7B7}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{7D2EE9E2-14FB-4980-B0DE-B556BC46A7B7}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{7D2EE9E2-14FB-4980-B0DE-B556BC46A7B7}.Release|Any CPU.Build.0 = Release|Any CPU
+		{F22B8278-7EDB-476B-967E-10B86BA39DFA}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{F22B8278-7EDB-476B-967E-10B86BA39DFA}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{F22B8278-7EDB-476B-967E-10B86BA39DFA}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{F22B8278-7EDB-476B-967E-10B86BA39DFA}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -123,6 +135,8 @@ Global
 		{FC156A16-E917-4F22-8280-0301C7A36B8C} = {DA2DA41D-5029-4753-997B-12347F14B2CD}
 		{2A24912A-9C36-4503-827E-F862A27C6ECE} = {DA2DA41D-5029-4753-997B-12347F14B2CD}
 		{9482E1FA-8F22-4A51-AAD0-AC02FB4D4F73} = {DA2DA41D-5029-4753-997B-12347F14B2CD}
+		{7D2EE9E2-14FB-4980-B0DE-B556BC46A7B7} = {DA2DA41D-5029-4753-997B-12347F14B2CD}
+		{F22B8278-7EDB-476B-967E-10B86BA39DFA} = {DA2DA41D-5029-4753-997B-12347F14B2CD}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {1CF8E3E7-3F27-4F88-A157-9609A64159FC}
