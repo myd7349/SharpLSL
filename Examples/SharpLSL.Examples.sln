@@ -25,6 +25,8 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ReceiveDataInChunks", "Rece
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "SendData", "SendData\SendData.csproj", "{C9FE85C8-3A39-44AA-B2F4-8DC4899187FB}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ReceiveDataSample", "ReceiveDataSample\ReceiveDataSample.csproj", "{46584BDA-91FA-421F-8652-F746428D438D}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -67,6 +69,10 @@ Global
 		{C9FE85C8-3A39-44AA-B2F4-8DC4899187FB}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{C9FE85C8-3A39-44AA-B2F4-8DC4899187FB}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{C9FE85C8-3A39-44AA-B2F4-8DC4899187FB}.Release|Any CPU.Build.0 = Release|Any CPU
+		{46584BDA-91FA-421F-8652-F746428D438D}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{46584BDA-91FA-421F-8652-F746428D438D}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{46584BDA-91FA-421F-8652-F746428D438D}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{46584BDA-91FA-421F-8652-F746428D438D}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -81,6 +87,7 @@ Global
 		{DB729D3A-564F-42D2-8334-61959A22030F} = {DA2DA41D-5029-4753-997B-12347F14B2CD}
 		{9FD836E4-2FA7-4222-9FB2-D7F66EAB5E57} = {DA2DA41D-5029-4753-997B-12347F14B2CD}
 		{C9FE85C8-3A39-44AA-B2F4-8DC4899187FB} = {DA2DA41D-5029-4753-997B-12347F14B2CD}
+		{46584BDA-91FA-421F-8652-F746428D438D} = {DA2DA41D-5029-4753-997B-12347F14B2CD}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {1CF8E3E7-3F27-4F88-A157-9609A64159FC}

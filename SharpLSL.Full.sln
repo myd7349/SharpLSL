@@ -57,7 +57,9 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "HandleMetaData", "Examples\
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ReceiveData", "Examples\ReceiveData\ReceiveData.csproj", "{2A5048C9-0AF6-4DAC-A864-F32B54B175AC}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ReceiveDataInChunks", "Examples\ReceiveDataInChunks\ReceiveDataInChunks.csproj", "{18F01F25-FC14-4C32-8AFF-3A79FA8FFCBB}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ReceiveDataInChunks", "Examples\ReceiveDataInChunks\ReceiveDataInChunks.csproj", "{18F01F25-FC14-4C32-8AFF-3A79FA8FFCBB}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ReceiveDataSample", "Examples\ReceiveDataSample\ReceiveDataSample.csproj", "{B07F04B5-735A-4B48-9A8D-AC6D65514294}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -161,6 +163,10 @@ Global
 		{18F01F25-FC14-4C32-8AFF-3A79FA8FFCBB}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{18F01F25-FC14-4C32-8AFF-3A79FA8FFCBB}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{18F01F25-FC14-4C32-8AFF-3A79FA8FFCBB}.Release|Any CPU.Build.0 = Release|Any CPU
+		{B07F04B5-735A-4B48-9A8D-AC6D65514294}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{B07F04B5-735A-4B48-9A8D-AC6D65514294}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{B07F04B5-735A-4B48-9A8D-AC6D65514294}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{B07F04B5-735A-4B48-9A8D-AC6D65514294}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -191,6 +197,7 @@ Global
 		{230C199D-7BD0-4DE1-9AAB-FE29C19C4386} = {6D86CC19-E8B3-4C47-89CE-452D1BC2F3BB}
 		{2A5048C9-0AF6-4DAC-A864-F32B54B175AC} = {6D86CC19-E8B3-4C47-89CE-452D1BC2F3BB}
 		{18F01F25-FC14-4C32-8AFF-3A79FA8FFCBB} = {6D86CC19-E8B3-4C47-89CE-452D1BC2F3BB}
+		{B07F04B5-735A-4B48-9A8D-AC6D65514294} = {6D86CC19-E8B3-4C47-89CE-452D1BC2F3BB}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {DC951642-0519-4898-B040-D6869C5CF3B2}
