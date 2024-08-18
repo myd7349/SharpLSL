@@ -54,19 +54,19 @@ namespace SharpLSL.Examples
                     ulong numSamples = 0;
 
                     var chunk = new List<short[]>();
-                    
+
                     var fetchIntervalInMilliseconds = 20;
                     long expectedElapsedMilliseconds = fetchIntervalInMilliseconds;
 
                     var stopwatch = Stopwatch.StartNew();
-                    
+
                     while (true)
                     {
                         var sleepIntervalInMilliseconds =
                             expectedElapsedMilliseconds - stopwatch.ElapsedMilliseconds;
                         if (sleepIntervalInMilliseconds > 0)
                             Thread.Sleep((int)sleepIntervalInMilliseconds);
-                        
+
                         if (flush)
                         {
                             // You almost certainly don't want to use flush.

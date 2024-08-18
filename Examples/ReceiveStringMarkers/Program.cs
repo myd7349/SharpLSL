@@ -22,7 +22,7 @@ namespace SharpLSL.Examples
                     Console.WriteLine($"Listening to {streamInfo.Name}...");
                 }
             }
-            
+
             if (streamInlets.Count == 0)
             {
                 Console.WriteLine("No marker stream found.");

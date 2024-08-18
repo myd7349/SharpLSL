@@ -35,12 +35,12 @@ namespace SharpLSL.Examples
             else
                 return minimumTimeSlice;
         }
-        
+
         static void Main(string[] args)
         {
             string name;
             string type;
-            
+
             if (args.Length < 2)
             {
                 Console.WriteLine("This opens a stream under some user-defined name and with a user-defined content type.");
@@ -50,7 +50,7 @@ namespace SharpLSL.Examples
                 var input = Console.ReadLine();
                 if (input == null)
                     return;
-                
+
                 var inputParts = input.Split();
                 if (inputParts.Length != 2)
                     return;

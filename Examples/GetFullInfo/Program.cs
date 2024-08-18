@@ -10,7 +10,7 @@ namespace SharpLSL.Examples
         {
             string field;
             string value;
-            
+
             if (args.Length != 2)
             {
                 Console.WriteLine("This connects to a stream which has a particular value for a given field and displays its full stream_info contents.");

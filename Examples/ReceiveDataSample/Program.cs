@@ -12,7 +12,7 @@ namespace SharpLSL.Examples
             var name = args.Length >= 1 ? args[0] : "SimpleStream";
 
             var streamInfos = LSL.Resolve("name", name);
-         
+
             // Resolve the stream of interest & make an inlet to get data from the first result.
             using (var streamInlet = new StreamInlet(streamInfos[0]))
             {

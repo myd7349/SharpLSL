@@ -58,7 +58,7 @@ namespace SharpLSL.Examples
 
                 var sample = new float[streamInlet.ChannelCount];
                 var chunk = new List<float[]>();
-                
+
                 for (int i = 0; i < maxSamples; ++i)
                 {
                     // Pull a single sample.
@@ -87,7 +87,7 @@ namespace SharpLSL.Examples
             var sample = new float[channelCount];
 
             chunk.Clear();
-            
+
             while ((thisTimestamp = streamInlet.PullSample(sample)) != 0.0)
             {
                 chunk.Add(sample);

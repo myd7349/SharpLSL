@@ -20,7 +20,7 @@ namespace SharpLSL.Examples
 
                     var firstStreamInfo = foundStreamInfos[0];
                     Console.WriteLine($"Found {firstStreamInfo.Name}@{firstStreamInfo.HostName}.");
-                    
+
                     using (var streamInlet = new StreamInlet(firstStreamInfo))
                     {
                         var pushThread = new Thread(() => PushThread(streamOutlet));

@@ -51,7 +51,7 @@ namespace SharpLSL.Examples
                             // TODO: inf.desc().child("cap").child_value("size")
                             Console.WriteLine("\nThe cap circumference is: {0}",
                                 streamInletInfo.Description.FindChild("cap").GetChildValue("size"));
-                            
+
                             Console.WriteLine("\nThe channel labels are as follows:\n");
 
                             var channel = streamInletInfo
