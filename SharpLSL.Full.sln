@@ -61,6 +61,10 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ReceiveDataInChunks", "Exam
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ReceiveDataSample", "Examples\ReceiveDataSample\ReceiveDataSample.csproj", "{B07F04B5-735A-4B48-9A8D-AC6D65514294}"
 EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ReceiveStringMarkers", "Examples\ReceiveStringMarkers\ReceiveStringMarkers.csproj", "{799F1518-266C-4D49-A17D-D2B3649036E1}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "SendStringMarkers", "Examples\SendStringMarkers\SendStringMarkers.csproj", "{450AD4CE-DB2E-4B39-9DFA-517C2ED84644}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -167,6 +171,14 @@ Global
 		{B07F04B5-735A-4B48-9A8D-AC6D65514294}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{B07F04B5-735A-4B48-9A8D-AC6D65514294}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{B07F04B5-735A-4B48-9A8D-AC6D65514294}.Release|Any CPU.Build.0 = Release|Any CPU
+		{799F1518-266C-4D49-A17D-D2B3649036E1}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{799F1518-266C-4D49-A17D-D2B3649036E1}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{799F1518-266C-4D49-A17D-D2B3649036E1}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{799F1518-266C-4D49-A17D-D2B3649036E1}.Release|Any CPU.Build.0 = Release|Any CPU
+		{450AD4CE-DB2E-4B39-9DFA-517C2ED84644}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{450AD4CE-DB2E-4B39-9DFA-517C2ED84644}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{450AD4CE-DB2E-4B39-9DFA-517C2ED84644}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{450AD4CE-DB2E-4B39-9DFA-517C2ED84644}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -198,6 +210,8 @@ Global
 		{2A5048C9-0AF6-4DAC-A864-F32B54B175AC} = {6D86CC19-E8B3-4C47-89CE-452D1BC2F3BB}
 		{18F01F25-FC14-4C32-8AFF-3A79FA8FFCBB} = {6D86CC19-E8B3-4C47-89CE-452D1BC2F3BB}
 		{B07F04B5-735A-4B48-9A8D-AC6D65514294} = {6D86CC19-E8B3-4C47-89CE-452D1BC2F3BB}
+		{799F1518-266C-4D49-A17D-D2B3649036E1} = {6D86CC19-E8B3-4C47-89CE-452D1BC2F3BB}
+		{450AD4CE-DB2E-4B39-9DFA-517C2ED84644} = {6D86CC19-E8B3-4C47-89CE-452D1BC2F3BB}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {DC951642-0519-4898-B040-D6869C5CF3B2}
