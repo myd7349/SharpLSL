@@ -38,6 +38,8 @@ jobs:
         run: dotnet --list-sdks
       - name: Build SharpLSL
         run: dotnet build ./SharpLSL.Full.sln -c Release
+      - name: Run example
+        run: dotnet run ./Examples/GetLocalClock/GetLocalClock.csproj -c Release
       - name: Run unit tests
         run: dotnet test -c Release
       - name: Pack SharpLSL

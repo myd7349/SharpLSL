@@ -75,6 +75,8 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "SendDataInChunks", "Example
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "SendMultipleStreams", "Examples\SendMultipleStreams\SendMultipleStreams.csproj", "{19AA1751-FDCC-43EF-B171-86D250F23F41}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "GetLocalClock", "Examples\GetLocalClock\GetLocalClock.csproj", "{92048813-11B8-4342-8E7F-751C0502EA74}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -209,6 +211,10 @@ Global
 		{19AA1751-FDCC-43EF-B171-86D250F23F41}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{19AA1751-FDCC-43EF-B171-86D250F23F41}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{19AA1751-FDCC-43EF-B171-86D250F23F41}.Release|Any CPU.Build.0 = Release|Any CPU
+		{92048813-11B8-4342-8E7F-751C0502EA74}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{92048813-11B8-4342-8E7F-751C0502EA74}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{92048813-11B8-4342-8E7F-751C0502EA74}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{92048813-11B8-4342-8E7F-751C0502EA74}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -247,6 +253,7 @@ Global
 		{71291281-F00B-45C1-990F-6B4E911681C0} = {6D86CC19-E8B3-4C47-89CE-452D1BC2F3BB}
 		{6D5E9FA6-2961-458F-ACAB-167D9C21F0CB} = {6D86CC19-E8B3-4C47-89CE-452D1BC2F3BB}
 		{19AA1751-FDCC-43EF-B171-86D250F23F41} = {6D86CC19-E8B3-4C47-89CE-452D1BC2F3BB}
+		{92048813-11B8-4342-8E7F-751C0502EA74} = {6D86CC19-E8B3-4C47-89CE-452D1BC2F3BB}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {DC951642-0519-4898-B040-D6869C5CF3B2}
