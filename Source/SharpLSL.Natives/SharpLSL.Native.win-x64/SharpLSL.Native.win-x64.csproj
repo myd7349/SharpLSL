@@ -34,6 +34,7 @@
   <Target Name="UnzipNativeAssets" BeforeTargets="Build">
     <Unzip SourceFiles="$(ProjectDir)$(BaseIntermediateOutputPath)$(LSLAssetArchive)"
            DestinationFolder="$(ProjectDir)$(BaseIntermediateOutputPath)"
+           ContinueOnError="true"
            OverwriteReadOnlyFiles="true"
            Condition="!Exists('$(ProjectDir)$(BaseIntermediateOutputPath)bin/$(LSLAssetFile)')" />
   </Target>
