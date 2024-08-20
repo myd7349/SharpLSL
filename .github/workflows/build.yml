@@ -39,7 +39,7 @@ jobs:
       - name: Build SharpLSL
         run: dotnet build ./SharpLSL.Full.sln -c Release
       - name: Run example
-        run: dotnet run ./Examples/GetLocalClock/GetLocalClock.csproj -c Release
+        run: dotnet run --project ./Examples/GetLocalClock/GetLocalClock.csproj -c Release
       - name: Run unit tests
         run: dotnet test -c Release
       - name: Pack SharpLSL
