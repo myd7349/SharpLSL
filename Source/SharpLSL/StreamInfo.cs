@@ -6,8 +6,8 @@ using static SharpLSL.LSL;
 namespace SharpLSL
 {
     /// <summary>
-    /// Represents a `lsl_streaminfo` object which keeps a stream's meta data and
-    /// connection settings.
+    /// Represents a stream info object which keeps a stream's metadata and connection
+    /// settings.
     /// </summary>
     /// <remarks>
     /// Whenever a program wants to provide a new stream on the lab network it will

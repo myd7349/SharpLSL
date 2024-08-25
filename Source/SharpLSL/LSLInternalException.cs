@@ -3,7 +3,7 @@
 namespace SharpLSL
 {
     /// <summary>
-    /// Represents an internal error within the LSL (Lab Streaming Layer) framework.
+    /// Represents an internal error within the LSL (Lab Streaming Layer) library.
     /// </summary>
     /// <remarks>
     /// This exception is used to indicate errors that occur within the internal of LSL.
@@ -23,9 +23,7 @@ namespace SharpLSL
         /// Initializes a new instance of the <see cref="LSLInternalException"/> class with
         /// a specified error message.
         /// </summary>
-        /// <param name="message">
-        /// The error message that describes the reason for the exception.
-        /// </param>
+        /// <param name="message">The message that describes the error.</param>
         public LSLInternalException(string message)
             : base(message)
         {
@@ -35,9 +33,7 @@ namespace SharpLSL
         /// Initializes a new instance of the <see cref="LSLInternalException"/> class with
         /// a specified error message and a reference to the inner exception.
         /// </summary>
-        /// <param name="message">
-        /// The error message that describes the reason for the exception.
-        /// </param>
+        /// <param name="message">The message that describes the error.</param>
         /// <param name="innerException">
         /// The exception that is the cause of the current exception, or a null
         /// reference if no inner exception is specified.

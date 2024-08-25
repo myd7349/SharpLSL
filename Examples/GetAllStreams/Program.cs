@@ -11,7 +11,7 @@ namespace SharpLSL.Examples
                 Console.WriteLine("Here is a one-shot resolve of all current streams:");
 
                 // Discover all streams on the network
-                var streamInfos = LSL.ResolveAll();
+                var streamInfos = LSL.Resolve();
 
                 var foundStreams = new Dictionary<string, StreamInfo>();
                 foreach (var streamInfo in streamInfos)
@@ -28,7 +28,7 @@ namespace SharpLSL.Examples
                 {
                     while (true)
                     {
-                        var resolvedStreams = continuousResolver.Resolve();
+                        var resolvedStreams = continuousResolver.Results();
                         foreach (var streamInfo in resolvedStreams)
                         {
                             var streamUid = streamInfo.Uid;

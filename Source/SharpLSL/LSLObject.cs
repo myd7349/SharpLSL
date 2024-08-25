@@ -4,13 +4,13 @@ using System.Runtime.InteropServices;
 namespace SharpLSL
 {
     /// <summary>
-    /// Represents a base class for LSL (Lab Streaming Layer) objects, which wraps
-    /// a native handle to manage the underlying native resources.
+    /// Represents a base class for LSL (Lab Streaming Layer) objects, providing a
+    /// safe wrapper for native handles to manage underlying native resources.
     /// </summary>
     /// <remarks>
     /// This abstract class extends <see cref="SafeHandle"/> to provide a safe and
     /// managed way to interact with LSL objects. It ensures that the native resources
-    /// associated with the LSL objects are properly released when no longer needed. 
+    /// associated with the LSL objects are properly released when no longer needed.
     /// Derived classes should implement specific functionality for different types
     /// of LSL objects, such as inlets or outlets.
     /// </remarks>
@@ -36,10 +36,11 @@ namespace SharpLSL
         /// Specifies the handle to be wrapped.
         /// </param>
         /// <param name="ownsHandle">
-        /// Speciies whether the wrapped handle should be released during the finalization phase.
+        /// Speciies whether the wrapped handle should be released during the finalization
+        /// phase.
         /// </param>
         /// <exception cref="LSLException">
-        /// Thrown if the handle to be wrapped is invalid.
+        /// Thrown if the provided handle is invalid (IntPtr.Zero).
         /// </exception>
         protected LSLObject(IntPtr handle, bool ownsHandle = true)
             : base(IntPtr.Zero, ownsHandle)
@@ -51,14 +52,15 @@ namespace SharpLSL
         }
 
         /// <summary>
-        /// Gets a value indicating whether the handle value is invalid.
+        /// Gets a value indicating whether the handle is invalid (IntPtr.Zero).
         /// </summary>
         public override bool IsInvalid => handle == IntPtr.Zero;
 
         /// <summary>
-        /// Frees the wrapped LSL native handle by calling <see cref="DestroyLSLObject"/>.
+        /// Releases the wrapped LSL native handle by calling <see cref="DestroyLSLObject"/>.
         /// </summary>
         /// <returns>A value indicates if the handle is released successfully.</returns>
+        /// <seealso cref="DestroyLSLObject"/>
         protected override bool ReleaseHandle()
         {
             DestroyLSLObject();
@@ -84,7 +86,7 @@ namespace SharpLSL
         protected void ThrowIfInvalid()
         {
             if (IsInvalid)
-                throw new InvalidOperationException("The handle is invalid.");
+                throw new InvalidOperationException("The native LSL handle is invalid.");
         }
     }
 }

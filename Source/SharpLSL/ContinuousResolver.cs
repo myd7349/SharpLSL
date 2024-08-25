@@ -28,6 +28,7 @@ namespace SharpLSL
         /// <exception cref="LSLException">
         /// Thrown when creating a new instance of <see cref="ContinuousResolver"/> fails.
         /// </exception>
+        /// <seealso cref="LSL.Resolve(int, double)"/>
         public ContinuousResolver(double forgetAfter = 5.0)
             : base(lsl_create_continuous_resolver(forgetAfter))
         {
@@ -42,7 +43,7 @@ namespace SharpLSL
         /// "type", "source_id", or "desc/manufacturer").
         /// </param>
         /// <param name="value">
-        /// The string value that the property should have (e.g., "EEG" as the type
+        /// The string value that the property should have (e.g., "EEG" as the "type"
         /// property).
         /// </param>
         /// <param name="forgetAfter">
@@ -50,9 +51,8 @@ namespace SharpLSL
         /// network (e.g., due to shutdown) will not be reported by the resolver. The
         /// recommended default value is 5.0 seconds.
         /// </param>
-        /// <exception cref="LSLException">
-        /// Thrown when creating a new instance of <see cref="ContinuousResolver"/> fails.
-        /// </exception>
+        /// <inheritdoc cref="ContinuousResolver(double)"/>
+        /// <seealso cref="Resolve(string, string, int, int, double)"/>
         public ContinuousResolver(string property, string value, double forgetAfter = 5.0)
             : base(lsl_create_continuous_resolver_byprop(property, value, forgetAfter))
         {
@@ -71,6 +71,8 @@ namespace SharpLSL
         /// network (e.g., due to shutdown) will not be reported by the resolver. The
         /// recommended default value is 5.0 seconds.
         /// </param>
+        /// <inheritdoc cref="ContinuousResolver(double)"/>
+        /// <seealso cref="Resolve(string, int, int, double)"/>
         public ContinuousResolver(string predicate, double forgetAfter = 5.0)
             : base(lsl_create_continuous_resolver_bypred(predicate, forgetAfter))
         {
@@ -84,7 +86,8 @@ namespace SharpLSL
         /// Specifies the handle to be wrapped.
         /// </param>
         /// <param name="ownsHandle">
-        /// Speciies whether the wrapped handle should be released during the finalization phase.
+        /// Speciies whether the wrapped handle should be released during the finalization
+        /// phase.
         /// </param>
         /// <exception cref="LSLException">
         /// Thrown if the handle is invalid.
@@ -115,9 +118,21 @@ namespace SharpLSL
         /// <see cref="StreamInlet.GetStreamInfo(double)"/> on the inlet after you
         /// have created one.
         /// </remarks>
-        public StreamInfo[] Resolve(int maxCount = 1024)
+        /// <exception cref="InvalidOperationException">
+        /// Thrown if this continuous resolver object is invalid.
+        /// </exception>
+        /// <exception cref="ArgumentException">
+        /// Thrown when <paramref name="maxCount"/> is less than or equal to 0.
+        /// </exception>
+        /// <exception cref="LSLInternalException">
+        /// Thrown when an internal LSL error occurs.
+        /// </exception>
+        public StreamInfo[] Results(int maxCount = 1024)
         {
             ThrowIfInvalid();
+
+            if (maxCount <= 0)
+                throw new ArgumentException(nameof(maxCount));
 
             var streamInfoPointers = new IntPtr[maxCount];
 
@@ -132,7 +147,7 @@ namespace SharpLSL
         }
 
         /// <summary>
-        /// Destroys the continuous resolver and associated underlying native resource.
+        /// Destroys the native continuous resolver handle and associated resource.
         /// </summary>
         protected override void DestroyLSLObject()
         {

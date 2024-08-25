@@ -24,31 +24,39 @@ namespace SharpLSL
         /// Constant to indicate that a sample has the next successive timestamp.
         /// </summary>
         /// <remarks>
-        /// This is an optional optimization to transmit less data per sample.
-        /// The timestamp is then deduced from the preceding one according to the stream's
-        /// sampling rate. If the sampling rate is irregular, the time stamp will be assumed
-        /// to be the same as the previous sample's timestamp.
+        /// This constant serves as an optional optimization to transmit less data
+        /// per sample. When used, the timestamp is automatically calculated based
+        /// on the following rules:
+        /// <list type="bullet">
+        ///     <item>For streams with a regular sampling rate: The timestamp is deduced from 
+        ///     the preceding sample's timestamp according to the stream's sampling rate.</item>
+        ///     <item>For streams with an irregular sampling rate: The timestamp is assumed to be 
+        ///     the same as the previous sample's timestamp.</item>
+        /// </list>
         /// </remarks>
         public const double DeducedTimestamp = LSL_DEDUCED_TIMESTAMP;
 
         /// <summary>
-        /// Constant to indicate a very large time value, approximately equivalent to 1 year.
+        /// Represents an extremely long duration, approximately equivalent to 1 year.
+        /// </summary>
+        /// <remarks>
         /// This constant can be used for specifying timeouts where you want to effectively
         /// indicate an indefinite or very long duration.
-        /// </summary>
+        /// </remarks>
         public const double Forever = LSL_FOREVER;
 
         /// <summary>
-        /// Constant to indicate that there is no preference about how a data stream shall be
-        /// chunked for transmission.
+        /// Constant to indicate that there is no preference about how a data stream
+        /// shall be chunked for transmission.
         /// </summary>
         /// <remarks>
-        /// This constant can be used for the chunking parameters in the inlet or the outlet.
+        /// This constant can be used for the chunking parameters in the inlet or the
+        /// outlet.
         /// </remarks>
         public const int NoPreference = LSL_NO_PREFERENCE;
 
         /// <summary>
-        /// Constant to indicate the LSL version the binary was compiled against.
+        /// Constant to indicate the LSL version against which this library was compiled.
         /// </summary>
         /// <remarks>
         /// This constant is used either to check if the same version is used:
@@ -58,7 +66,7 @@ namespace SharpLSL
         ///     // Do stuff...
         /// }
         /// </code>
-        /// or to require a certain set of features::
+        /// or to require a certain set of features:
         /// <code>
         /// if (LSL.CompileHeaderVersion > 113)
         /// {
@@ -70,65 +78,97 @@ namespace SharpLSL
         public const int CompileHeaderVersion = LIBLSL_COMPILE_HEADER_VERSION;
 
         /// <summary>
-        /// Gets the last error message from the LSL (Lab Streaming Layer) library.
+        /// Retrieves the explanation for the most recent error in the LSL library.
         /// </summary>
         /// <returns>
-        /// A string containing the most recent error message from the LSL library.
+        /// A string containing the explanation for the most recent error.
         /// </returns>
         public static string GetLastError() => PtrToString(lsl_last_error());
 
         /// <summary>
-        /// Gets the LSL protocol version encoded as a single integer.
+        /// Retrieves the LSL protocol version encoded as a single integer.
         /// </summary>
-        /// <returns>The LSL protocol version encoded as a single integer.</returns>
+        /// <returns>The LSL protocol version as a integer.</returns>
         /// <remarks>
-        /// The protocol version is encoded as a single integer, where:
+        /// The protocol version is encoded as follows:
         /// <list type="bullet">
-        ///     <item>The major version can be obtained by dividing the protocol version by 100 (i.e., <c>LSL.GetProtocolVersion() / 100</c>).</item>
-        ///     <item>The minor version can be obtained by taking the remainder of the protocol version divided by 100 (i.e., <c>LSL.GetProtocolVersion() % 100</c>).</item>
+        ///     <item>Major version = <c>GetProtocolVersion() / 100</c></item>
+        ///     <item>Minor version = <c>GetProtocolVersion() % 100</c></item>
         /// </list>
-        /// Clients with different minor versions are considered protocol-compatible,
-        /// while clients with different major versions are not compatible and will
-        /// refuse to work together.
+        /// 
+        /// Version compatibility:
+        /// <list type="bullet">
+        ///     <item>Clients with different minor versions are considered protocol-compatible.</item>
+        ///     <item>Clients with different major versions are not compatible and will refuse to work together.</item>
+        /// </list>
+        /// 
+        /// Example:
+        /// <code>
+        /// var version = LSL.GetProtocolVersion();
+        /// var majorVersion = version / 100;
+        /// var minorVersion = version % 100;
+        /// Console.WriteLine($"LSL Protocol Version: {majorVersion}.{minorVersion}");
+        /// </code>
         /// </remarks>
         /// <seealso cref="CompileHeaderVersion"/>
         /// <seealso cref="StreamInfo.Version"/>
         public static int GetProtocolVersion() => lsl_protocol_version();
 
         /// <summary>
-        /// Gets the underlying liblsl version number encoded as a single integer. 
+        /// Retrieves the version of the underlying liblsl library encoded as a
+        /// single integer.
         /// </summary>
-        /// <returns>The liblsl version number encoded as a single integer. </returns>
+        /// <returns>The liblsl library version as an integer. </returns>
         /// <remarks>
-        /// The liblsl version number is encoded as a single integer, where:
+        /// The library version is encoded as follows:
         /// <list type="bullet">
-        ///     <item>The major version can be obtained by dividing the version by 100 (i.e., <c>LSL.GetLibraryVersion() / 100</c>).</item>
-        ///     <item>The minor version can be obtained by taking the remainder of the version divided by 100 (i.e., <c>LSL.GetLibraryVersion() % 100</c>).</item>
+        ///     <item>Major version = <c>GetLibraryVersion() / 100</c></item>
+        ///     <item>Minor version = <c>GetLibraryVersion() % 100</c></item>
         /// </list>
+        /// 
+        /// Example:
+        /// <code>
+        /// var version = LSL.GetLibraryVersion();
+        /// var majorVersion = version / 100;
+        /// var minorVersion = version % 100;
+        /// Console.WriteLine($"liblsl Version: {majorVersion}.{minorVersion}");
+        /// </code>
         /// </remarks>
         public static int GetLibraryVersion() => lsl_library_version();
 
         /// <summary>
-        /// Gets a string containing library information.
+        /// Retrieves a string containing detailed information about the liblsl library.
         /// </summary>
-        /// <returns>The string containing library information.</returns>
+        /// <returns>A string containing library information.</returns>
         /// <remarks>
-        /// The format of the string shouldn't be used for anything important except
-        /// giving a debugging person a good idea which exact library version is used.
+        /// This method provides detailed information about the liblsl library, which
+        /// can be useful for debugging purposes.
         /// </remarks>
         public static string GetLibraryInfo() => PtrToString(lsl_library_info());
 
         /// <summary>
-        /// Gets the current local system timestamp in seconds with high resolution.
+        /// Retrieves the current local system timestamp in seconds with high precision.
         /// </summary>
         /// <returns>The current local system timestamp in seconds.</returns>
         /// <remarks>
-        /// This function returns a local system timestamp in seconds which has a
-        /// high resolution better than a milliseconds. The returned timestamp can
-        /// be used to assign timestamps to samples as they are being acquired.
-        /// If the "age" of a sample is known at a particular time (e.g., from USB
-        /// transmission delays), it can be used as an offset to <seealso cref="GetLocalClock"/>
-        /// to obtain a better estimate of when a sample was actually captured.
+        /// This function provides a high-precision local system timestamp with
+        /// resolution better than a millisecond. It can be used for various timing
+        /// purposes, particularly:
+        /// 
+        /// <list type="bullet">
+        ///     <item>Assigning timestamps to samples as they are acquired.</item>
+        ///     <item>Calculating precise time differences or durations.</item>
+        ///     <item>Synchronizing data streams or events in multi-modal applications.</item>
+        /// </list>
+        /// 
+        /// For improved accuracy when dealing with known sample delays:
+        /// <code>
+        /// double sampleAge = knownDelayInSeconds;
+        /// double adjustedTimestamp = LSL.GetLocalClock() - sampleAge;
+        /// </code>
+        /// 
+        /// This adjustment can compensate for known delays (e.g., USB transmission delays)
+        /// to more accurately reflect when a sample was captured.
         /// </remarks>
         /// <seealso cref="StreamOutlet.PushSample(short[], double)"/>
         /// <seealso cref="StreamOutlet.PushSample(int[], double)"/>
@@ -172,10 +212,34 @@ namespace SharpLSL
         /// This is the default mechanism used by the browsing programs and the
         /// recording program.
         /// </para>
+        /// <para>
+        /// The stream infos returned by the resolver are only short versions that do
+        /// not include the <see cref="StreamInfo.Description"/> field (which can be
+        /// arbitrarily big). To obtain the full stream information you need to call
+        /// <see cref="StreamInlet.GetStreamInfo(double)"/> on the inlet after you
+        /// have created one.
+        /// </para>
         /// </remarks>
-        // TODO: Exception
-        public static StreamInfo[] ResolveAll(int maxCount = 1024, double waitTime = 1.0)
+        /// <exception cref="ArgumentException">
+        /// Thrown when <paramref name="maxCount"/> is less than or equal to 0.
+        /// </exception>
+        /// <exception cref="LSLInternalException">
+        /// Thrown when an internal LSL error occurs.
+        /// </exception>
+        /// <exception cref="LSLException">
+        /// Thrown when an unknown LSL error occurs.
+        /// </exception>
+        /// <seealso cref="Resolve(string, string, int, int, double)"/>
+        /// <seealso cref="Resolve(string, int, int, double)"/>
+        /// <seealso cref="ContinuousResolver(double)"/>
+        public static StreamInfo[] Resolve(int maxCount = 1024, double waitTime = 1.0)
         {
+            if (maxCount <= 0)
+                throw new ArgumentException(nameof(maxCount));
+
+            if (waitTime < 0)
+                throw new ArgumentException(nameof(waitTime));
+
             var streamInfoPointers = new IntPtr[maxCount];
 
             var result = lsl_resolve_all(streamInfoPointers, (uint)streamInfoPointers.Length, waitTime);
@@ -196,7 +260,7 @@ namespace SharpLSL
         /// "type", "source_id", or "desc/manufacturer").
         /// </param>
         /// <param name="value">
-        /// The string value that the property should have (e.g., "EEG" as the type
+        /// The string value that the property should have (e.g., "EEG" as the "type"
         /// property).
         /// </param>
         /// <param name="minCount">
@@ -227,9 +291,37 @@ namespace SharpLSL
         /// have created one.
         /// </para>
         /// </remarks>
-        // TODO: Exception, Check minCount, maxCount
+        /// <exception cref="ArgumentNullException">
+        /// Thrown when <paramref name="value"/> is null.
+        /// </exception>
+        /// <exception cref="ArgumentException">
+        /// Thrown when <paramref name="property"/> is null or an empty string,
+        /// or when <paramref name="minCount"/> is less than or equal to 0,
+        /// or when <paramref name="maxCount"/> is less than <paramref name="minCount"/>.
+        /// </exception>
+        /// <exception cref="LSLInternalException">
+        /// Thrown when an internal LSL error occurs.
+        /// </exception>
+        /// <exception cref="LSLException">
+        /// Thrown when an unknown LSL error occurs.
+        /// </exception>
+        /// <seealso cref="Resolve(int, double)"/>
+        /// <seealso cref="Resolve(string, int, int, double)"/>
+        /// <seealso cref="ContinuousResolver(string, string, double)"/>
         public static StreamInfo[] Resolve(string property, string value, int minCount = 1, int maxCount = 1024, double timeout = Forever)
         {
+            if (string.IsNullOrEmpty(property))
+                throw new ArgumentException(nameof(property));
+
+            if (value == null)
+                throw new ArgumentNullException(nameof(value));
+
+            if (minCount <= 0)
+                throw new ArgumentException(nameof(minCount));
+
+            if (maxCount < minCount)
+                throw new ArgumentException(nameof(maxCount));
+
             var streamInfoPointers = new IntPtr[maxCount];
 
             var result = lsl_resolve_byprop(streamInfoPointers, (uint)streamInfoPointers.Length, property, value, minCount, timeout);
@@ -275,13 +367,35 @@ namespace SharpLSL
         /// <para>
         /// Advanced query that allows to impose more conditions on the retrieved
         /// streams; the given string is an
-        /// [XPath 1.0 predicate](http://en.wikipedia.org/w/index.php?title=XPath_1.0)
+        /// <see href="http://en.wikipedia.org/w/index.php?title=XPath_1.0"/>
         /// for the `&lt;info&gt;` node (omitting the surrounding []'s).
         /// </para>
         /// </remarks>
-        // TODO: Exception minCount maxCount 
+        /// <exception cref="ArgumentException">
+        /// Thrown when <paramref name="predicate"/> is null or an empty string,
+        /// or when <paramref name="minCount"/> is less than or equal to 0,
+        /// or when <paramref name="maxCount"/> is less than <paramref name="minCount"/>.
+        /// </exception>
+        /// <exception cref="LSLInternalException">
+        /// Thrown when an internal LSL error occurs.
+        /// </exception>
+        /// <exception cref="LSLException">
+        /// Thrown when an unknown LSL error occurs.
+        /// </exception>
+        /// <seealso cref="Resolve(int, double)"/>
+        /// <seealso cref="Resolve(string, string, int, int, double)"/>
+        /// <seealso cref="ContinuousResolver(string, double)"/>
         public static StreamInfo[] Resolve(string predicate, int minCount = 1, int maxCount = 1024, double timeout = Forever)
         {
+            if (string.IsNullOrEmpty(predicate))
+                throw new ArgumentException(nameof(predicate));
+
+            if (minCount <= 0)
+                throw new ArgumentException(nameof(minCount));
+
+            if (maxCount < minCount)
+                throw new ArgumentException(nameof(maxCount));
+
             var streamInfoPointers = new IntPtr[maxCount];
 
             var result = lsl_resolve_bypred(streamInfoPointers, (uint)streamInfoPointers.Length, predicate, minCount, timeout);
@@ -300,6 +414,9 @@ namespace SharpLSL
 #endif
         internal static string PtrToString(IntPtr ptr)
         {
+            if (ptr == IntPtr.Zero)
+                return null;
+
             return Marshal.PtrToStringAnsi(ptr);
         }
 
@@ -309,6 +426,9 @@ namespace SharpLSL
 #endif
         internal static string PtrToXmlString(IntPtr ptr)
         {
+            if (ptr == IntPtr.Zero)
+                return null;
+
             return Marshal.PtrToStringAnsi(ptr);
         }
 
@@ -360,6 +480,17 @@ namespace SharpLSL
 #if !NET35
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
 #endif
+        internal static void CheckLengthBuffer<T>(T[] lengths, int channelCount)
+        {
+            if (lengths == null)
+                throw new ArgumentNullException(nameof(lengths));
+
+            CheckChannelCount(channelCount, lengths.Length);
+        }
+
+#if !NET35
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+#endif
         internal static int CheckChunkBuffer<T>(T[] chunk, int channelCount)
         {
             if (chunk == null)
@@ -383,7 +514,7 @@ namespace SharpLSL
                 throw new ArgumentException(nameof(chunk));
 
             if (chunk.GetLength(1) != channelCount)
-                throw new ArgumentException($"Chunk's second dimension size ({chunk.GetLength(1)}) does not match the expected channel count ({channelCount}).");
+                throw new ArgumentException($"The number of columns in chunk ({chunk.GetLength(1)}) does not match the expected channel count ({channelCount}).");
         }
 
 #if !NET35

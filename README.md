@@ -38,12 +38,13 @@ If your application is cross-platform, you can opt for the `SharpLSL.Native.all`
 
 - [BlueMuse](https://github.com/kowalej/BlueMuse)
 - [labstreaminglayer](https://github.com/sccn/labstreaminglayer)
+- [LibLSL](https://github.com/Diademics-Pty-Ltd/LibLSL)
 - [liblsl](https://github.com/sccn/liblsl)
 - [liblsl-Csharp](https://github.com/labstreaminglayer/liblsl-Csharp)
 - [lsl](https://github.com/emotional-cities/lsl)
 - [LSL4Unity](https://github.com/labstreaminglayer/LSL4Unity)
-- [LibLSL](https://github.com/Diademics-Pty-Ltd/LibLSL)
 - [lsl_archived](https://github.com/sccn/lsl_archived)
+- [lsl_in_unity](https://github.com/mvidaldp/lsl_in_unity)
 
 # License
 

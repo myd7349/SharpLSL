@@ -5,18 +5,18 @@ using SharpLSL.Interop;
 namespace SharpLSL
 {
     /// <summary>
-    /// Post-processing options for stream inlets.
+    /// Specifies post-processing options for stream inlets.
     /// </summary>
     /// <seealso cref="StreamInlet.SetPostProcessingOptions(PostProcessingOptions)"/>
     [Flags]
     public enum PostProcessingOptions
     {
         /// <summary>
-        /// No automatic post-processing is applied.
+        /// Specifies that no automatic post-processing is applied.
         /// </summary>
         /// <remarks>
         /// This option returns the ground-truth timestamps as they are, allowing
-        /// for manual post-processing. It is the default behavior of the inlet.
+        /// for manual post-processing. This is the default behavior of the inlet.
         /// </remarks>
         None = lsl_processing_options_t.proc_none,
 
@@ -24,9 +24,10 @@ namespace SharpLSL
         /// Performs clock synchronization automatically.
         /// </summary>
         /// <remarks>
-        /// This option indicates a time correction to the timestamps will be performed
-        /// automatically. It is equivalent to manually adding the <seealso cref="StreamInlet.SetSmoothingHalfTime(float)"/>
-        /// value to the received timestamps.
+        /// This option indicates a time correction to the timestamps will be
+        /// performed automatically. It is equivalent to manually adding the
+        /// <see cref="StreamInlet.TimeCorrection(double)"/> value to the received
+        /// timestamps.
         /// </remarks>
         /// <seealso cref="StreamInlet.TimeCorrection(double)"/>
         /// <seealso cref="StreamInlet.TimeCorrection(ref double, ref double, double)"/>
@@ -36,8 +37,8 @@ namespace SharpLSL
         /// Removes jitter from timestamps.
         /// </summary>
         /// <remarks>
-        /// This will apply a smoothing algorithm to the received timestamps; the
-        /// smoothing needs to see a minimum number of samples (30-120 seconds
+        /// This will apply a smoothing algorithm to the received timestamps.
+        /// The smoothing needs to see a minimum number of samples (30-120 seconds
         /// worst-case) until the remaining jitter is consistently below 1ms.
         /// </remarks>
         Dejitter = lsl_processing_options_t.proc_dejitter,

@@ -1,5 +1,3 @@
-using System;
-
 using SharpLSL.Interop;
 
 namespace SharpLSL
@@ -7,25 +5,40 @@ namespace SharpLSL
     /// <summary>
     /// Specifies the transport options for stream inlets and outlets.
     /// </summary>
-    [Flags]
+    /// <seealso cref="StreamInlet(StreamInfo, int, int, bool, TransportOptions)"/>
+    /// <seealso cref="StreamOutlet(StreamInfo, int, int, TransportOptions)"/>
     public enum TransportOptions
     {
-        // TODO: argument name & see also
         /// <summary>
-        /// Default behavior: `max_buffered` / `max_buflen` is interpreted as time in seconds, and asynchronous transfer is used.
+        /// Default behavior: buffer size is interpreted as time in seconds, and
+        /// asynchronous transfer is used.
         /// </summary>
+        /// <remarks>
+        /// When using this option, the <c>maxBufferLength</c>/<c>maxBuffered</c>
+        /// parameter in inlet/outlet creation methods represents the maximum buffer
+        /// duration in seconds.
+        /// </remarks>
         Default = lsl_transport_options_t.transp_default,
 
-        // TODO: argument name & see also
         /// <summary>
-        /// Specifies the supplied `max_buf` value is in samples.
+        /// Specifies that the buffer size is measured in samples rather than time.
         /// </summary>
+        /// <remarks>
+        /// When using this option, the <c>maxBufferLength</c>/<c>maxBuffered</c>
+        /// parameter in inlet/outlet creation methods represents the maximum number
+        /// of samples to buffer.
+        /// This option is mutually exclusive with BufferSizeThousandths.
+        /// TODO:
+        /// </remarks>
         BufferSizeInSamples = lsl_transport_options_t.transp_bufsize_samples,
 
-        // TODO: argument name & see also
         /// <summary>
-        /// Specifies the supplied `max_buf` value should be scaled by 0.001.
+        /// Specifies that the supplied buffer size should be scaled by 0.001.
         /// </summary>
+        /// <remarks>
+        /// This option is mutually exclusive with BufferSizeInSamples.
+        /// TODO:
+        /// </remarks>
         BufferSizeThousandths = lsl_transport_options_t.transp_bufsize_thousandths,
     }
 }

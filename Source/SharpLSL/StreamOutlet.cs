@@ -1,5 +1,4 @@
 ﻿using System;
-using System.Runtime.CompilerServices;
 
 using SharpLSL.Interop;
 
@@ -9,14 +8,27 @@ using static SharpLSL.LSL;
 namespace SharpLSL
 {
     /// <summary>
-    /// Represents a stream outlet object for pushing streaming data (and meta-data)
-    /// to the lab network.
+    /// Represents a stream outlet for pushing time series data to the lab network.
     /// </summary>
+    /// <remarks>
+    /// <para>
+    /// StreamOutlet allows to push data streams to all connected inlets. The data is
+    /// pushed sample-by-sample or chunk-by-chunk, and can consist of single or
+    /// multichannel data , regular or irregular sampling rate, with uniform value
+    /// types (integers, floats, doubles, strings). Streams can also have arbitrary
+    /// XML meta-data (akin to a file header).
+    /// </para>
+    /// <para>
+    /// By creating an outlet the stream is made visible to a collection of computers
+    /// (defined by the network settings/layout) where one can subscribe to it by find
+    /// it via a resolver and connecting a <see cref="StreamInlet"/> to it.
+    /// </para>
+    /// </remarks>
     public class StreamOutlet : LSLObject
     {
         /// <summary>
-        /// Constructs a new stream outlet for pushing streaming data (and meta-data).
-        /// This makes the stream discoverable.
+        /// Constructs a new stream outlet for pushing time series data (and the
+        /// metadata). This makes the stream discoverable.
         /// </summary>
         /// <param name="streamInfo">
         /// The stream information to use for creating this stream outlet. Stays
@@ -34,10 +46,11 @@ namespace SharpLSL
         /// is a nominal sampling rate, otherwise x100 in samples). A good default
         /// is 360, which corresponds to 6 minutes of data. Note that, for high
         /// bandwidth data you will almost certainly want to use a lower value here
-        /// to avoid  running out of RAM.
+        /// to avoid running out of RAM.
         /// </param>
         /// <param name="transportOptions">
-        /// Specifies the transport options.
+        /// Specifies additional options for data transport. Default is <see cref="TransportOptions.Default"/>.
+        /// TODO:
         /// </param>
         /// <exception cref="LSLException">
         /// Thrown when creating a new instance of <see cref="StreamOutlet"/> fails.
@@ -56,7 +69,8 @@ namespace SharpLSL
         /// Specifies the handle to be wrapped.
         /// </param>
         /// <param name="ownsHandle">
-        /// Speciies whether the wrapped handle should be released during the finalization phase.
+        /// Speciies whether the wrapped handle should be released during the finalization
+        /// phase.
         /// </param>
         /// <exception cref="LSLException">
         /// Thrown if the handle is invalid.
@@ -64,11 +78,16 @@ namespace SharpLSL
         public StreamOutlet(IntPtr handle, bool ownsHandle = true)
             : base(handle, ownsHandle)
         {
+            using (var streamInfo = GetStreamInfo())
+            {
+                ChannelCount = streamInfo.ChannelCount;
+            }
         }
 
         /// <summary>
         /// Gets number of channels of the stream.
         /// </summary>
+        /// <seealso cref="StreamInfo.ChannelCount"/>
         public int ChannelCount { get; }
 
         /// <summary>
@@ -80,7 +99,7 @@ namespace SharpLSL
         /// network information fields assigned).
         /// </returns>
         /// <exception cref="InvalidOperationException">
-        /// Thrown if this object is invalid.
+        /// Thrown if this stream outlet object is invalid.
         /// </exception>
         /// <exception cref="LSLException">
         /// Thrown if getting the stream information fails.
@@ -103,14 +122,14 @@ namespace SharpLSL
         /// The sample data to push.
         /// </param>
         /// <exception cref="InvalidOperationException">
-        /// Thrown if this object is invalid.
+        /// Thrown if this stream outlet object is invalid.
         /// </exception>
         /// <exception cref="ArgumentNullException">
         /// Thrown if the provided buffer <paramref name="sample"/> is null.
         /// </exception>
         /// <exception cref="ArgumentException">
         /// Thrown if size of the provided buffer <paramref name="sample"/> does not
-        /// the channel count (<see cref="ChannelCount"/>) of the stream outlet.
+        /// match the channel count (<see cref="ChannelCount"/>) of the stream outlet.
         /// </exception>
         public void PushSample(sbyte[] sample)
         {
@@ -120,22 +139,7 @@ namespace SharpLSL
             CheckError(lsl_push_sample_c(handle, sample));
         }
 
-        /// <summary>
-        /// Pushes a sample into the outlet. Handles type checking and conversion.
-        /// </summary>
-        /// <param name="sample">
-        /// The sample data to push.
-        /// </param>
-        /// <exception cref="InvalidOperationException">
-        /// Thrown if this object is invalid.
-        /// </exception>
-        /// <exception cref="ArgumentNullException">
-        /// Thrown if the provided buffer <paramref name="sample"/> is null.
-        /// </exception>
-        /// <exception cref="ArgumentException">
-        /// Thrown if size of the provided buffer <paramref name="sample"/> does not
-        /// the channel count (<see cref="ChannelCount"/>) of the stream outlet.
-        /// </exception>
+        /// <inheritdoc cref="PushSample(sbyte[])"/>
         public void PushSample(short[] sample)
         {
             ThrowIfInvalid();
@@ -144,22 +148,7 @@ namespace SharpLSL
             CheckError(lsl_push_sample_s(handle, sample));
         }
 
-        /// <summary>
-        /// Pushes a sample into the outlet. Handles type checking and conversion.
-        /// </summary>
-        /// <param name="sample">
-        /// The sample data to push.
-        /// </param>
-        /// <exception cref="InvalidOperationException">
-        /// Thrown if this object is invalid.
-        /// </exception>
-        /// <exception cref="ArgumentNullException">
-        /// Thrown if the provided buffer <paramref name="sample"/> is null.
-        /// </exception>
-        /// <exception cref="ArgumentException">
-        /// Thrown if size of the provided buffer <paramref name="sample"/> does not
-        /// the channel count (<see cref="ChannelCount"/>) of the stream outlet.
-        /// </exception>
+        /// <inheritdoc cref="PushSample(sbyte[])"/>
         public void PushSample(int[] sample)
         {
             ThrowIfInvalid();
@@ -168,22 +157,7 @@ namespace SharpLSL
             CheckError(lsl_push_sample_i(handle, sample));
         }
 
-        /// <summary>
-        /// Pushes a sample into the outlet. Handles type checking and conversion.
-        /// </summary>
-        /// <param name="sample">
-        /// The sample data to push.
-        /// </param>
-        /// <exception cref="InvalidOperationException">
-        /// Thrown if this object is invalid.
-        /// </exception>
-        /// <exception cref="ArgumentNullException">
-        /// Thrown if the provided buffer <paramref name="sample"/> is null.
-        /// </exception>
-        /// <exception cref="ArgumentException">
-        /// Thrown if size of the provided buffer <paramref name="sample"/> does not
-        /// the channel count (<see cref="ChannelCount"/>) of the stream outlet.
-        /// </exception>
+        /// <inheritdoc cref="PushSample(sbyte[])"/>
         public void PushSample(long[] sample)
         {
             ThrowIfInvalid();
@@ -192,22 +166,7 @@ namespace SharpLSL
             CheckError(lsl_push_sample_l(handle, sample));
         }
 
-        /// <summary>
-        /// Pushes a sample into the outlet. Handles type checking and conversion.
-        /// </summary>
-        /// <param name="sample">
-        /// The sample data to push.
-        /// </param>
-        /// <exception cref="InvalidOperationException">
-        /// Thrown if this object is invalid.
-        /// </exception>
-        /// <exception cref="ArgumentNullException">
-        /// Thrown if the provided buffer <paramref name="sample"/> is null.
-        /// </exception>
-        /// <exception cref="ArgumentException">
-        /// Thrown if size of the provided buffer <paramref name="sample"/> does not
-        /// the channel count (<see cref="ChannelCount"/>) of the stream outlet.
-        /// </exception>
+        /// <inheritdoc cref="PushSample(sbyte[])"/>
         public void PushSample(float[] sample)
         {
             ThrowIfInvalid();
@@ -216,22 +175,7 @@ namespace SharpLSL
             CheckError(lsl_push_sample_f(handle, sample));
         }
 
-        /// <summary>
-        /// Pushes a sample into the outlet. Handles type checking and conversion.
-        /// </summary>
-        /// <param name="sample">
-        /// The sample data to push.
-        /// </param>
-        /// <exception cref="InvalidOperationException">
-        /// Thrown if this object is invalid.
-        /// </exception>
-        /// <exception cref="ArgumentNullException">
-        /// Thrown if the provided buffer <paramref name="sample"/> is null.
-        /// </exception>
-        /// <exception cref="ArgumentException">
-        /// Thrown if size of the provided buffer <paramref name="sample"/> does not
-        /// the channel count (<see cref="ChannelCount"/>) of the stream outlet.
-        /// </exception>
+        /// <inheritdoc cref="PushSample(sbyte[])"/>
         public void PushSample(double[] sample)
         {
             ThrowIfInvalid();
@@ -240,22 +184,7 @@ namespace SharpLSL
             CheckError(lsl_push_sample_d(handle, sample));
         }
 
-        /// <summary>
-        /// Pushes a sample into the outlet. Handles type checking and conversion.
-        /// </summary>
-        /// <param name="sample">
-        /// The sample data to push.
-        /// </param>
-        /// <exception cref="InvalidOperationException">
-        /// Thrown if this object is invalid.
-        /// </exception>
-        /// <exception cref="ArgumentNullException">
-        /// Thrown if the provided buffer <paramref name="sample"/> is null.
-        /// </exception>
-        /// <exception cref="ArgumentException">
-        /// Thrown if size of the provided buffer <paramref name="sample"/> does not
-        /// the channel count (<see cref="ChannelCount"/>) of the stream outlet.
-        /// </exception>
+        /// <inheritdoc cref="PushSample(sbyte[])"/>
         public void PushSample(string[] sample)
         {
             ThrowIfInvalid();
@@ -264,17 +193,11 @@ namespace SharpLSL
             CheckError(lsl_push_sample_str(handle, sample)); // TODO: Test
         }
 
-        // TODO: lsl_push_sample_v
-
         /// <summary>
-        /// Pushes a sample into the outlet. Handles type checking and conversion.
+        /// Pushes a pointer to some values as a sample into the outlet.
         /// </summary>
         /// <param name="sample">
         /// The sample data to push.
-        /// </param>
-        /// <param name="timestamp">
-        /// The capture time of the sample, in agreement with
-        /// <see cref="GetLocalClock"/>; if omitted, the current time is used.
         /// </param>
         /// <exception cref="InvalidOperationException">
         /// Thrown if this object is invalid.
@@ -282,10 +205,127 @@ namespace SharpLSL
         /// <exception cref="ArgumentNullException">
         /// Thrown if the provided buffer <paramref name="sample"/> is null.
         /// </exception>
-        /// <exception cref="ArgumentException">
-        /// Thrown if size of the provided buffer <paramref name="sample"/> does not
-        /// the channel count (<see cref="ChannelCount"/>) of the stream outlet.
+        public unsafe void PushSample(IntPtr sample)
+        {
+            ThrowIfInvalid();
+
+            if (sample == IntPtr.Zero)
+                throw new ArgumentNullException(nameof(sample));
+
+            CheckError(lsl_push_sample_v(handle, sample.ToPointer()));
+        }
+
+        /// <summary>
+        /// Pushes a sample consisting of variable-length byte arrays into the outlet.
+        /// </summary>
+        /// <param name="sample">
+        /// An array of byte arrays, where each inner array represents data for one
+        /// channel. The length of this array must match the channel count of the
+        /// stream outlet.
+        /// </param>
+        /// <param name="lengths">
+        /// Optional. An array specifying the number of bytes to push for each channel.
+        /// If null, the full length of each byte array in <paramref name="sample"/>
+        /// is used.
+        /// </param>
+        /// <exception cref="ArgumentNullException">
+        /// Thrown if <paramref name="sample"/> is null, or if any of the inner byte
+        /// arrays in <paramref name="sample"/> is null.
         /// </exception>
+        /// <exception cref="ArgumentException">
+        /// Thrown if the length of <paramref name="sample"/> does not match the
+        /// channel count of the stream outlet, if any of the inner byte arrays
+        /// in <paramref name="sample"/> is empty, if <paramref name="lengths"/>
+        /// is provided but its length does not match the channel count, or if any
+        /// value in <paramref name="lengths"/> is less than or equal to 0 or greater
+        /// than the length of the corresponding byte array in <paramref name="sample"/>.
+        /// </exception>
+        /// <inheritdoc cref="PushSample(sbyte[])"/>
+        public unsafe void PushSample(byte[][] sample, int[] lengths = null)
+        {
+            ThrowIfInvalid();
+            CheckSampleBuffer(sample, ChannelCount);
+
+            if (lengths != null)
+                CheckLengthBuffer(lengths, ChannelCount);
+
+            var ulengths = stackalloc uint[ChannelCount];
+            for (int i = 0; i < ChannelCount; ++i)
+            {
+                if (sample[i] == null)
+                    throw new ArgumentNullException(nameof(sample));
+
+                if (sample[i].Length == 0)
+                    throw new ArgumentException(nameof(sample));
+
+                if (lengths == null)
+                {
+                    ulengths[i] = (uint)sample[i].Length;
+                }
+                else
+                {
+                    if (lengths[i] <= 0 || lengths[i] > sample[i].Length)
+                        throw new ArgumentException(nameof(lengths));
+
+                    ulengths[i] = (uint)lengths[i];
+                }
+            }
+
+            CheckError(lsl_push_sample_buf(handle, sample, ulengths));
+        }
+
+        /// <summary>
+        /// Pushes a sample consisting of memory buffers into the outlet.
+        /// </summary>
+        /// <param name="sample">
+        /// An array of IntPtr, where each IntPtr points to a memory buffer containing
+        /// data for one channel. The length of this array must match the channel
+        /// count of the stream outlet.
+        /// </param>
+        /// <param name="lengths">
+        /// An array specifying the number of elements to push for each channel. The
+        /// length of this array must match the channel count of the stream outlet.
+        /// </param>
+        /// <exception cref="ArgumentNullException">
+        /// Thrown if <paramref name="sample"/> or <paramref name="lengths"/> is
+        /// null, or if any element in <paramref name="sample"/> is IntPtr.Zero.
+        /// </exception>
+        /// <exception cref="ArgumentException">
+        /// Thrown if the length of <paramref name="sample"/> or <paramref name="lengths"/> 
+        /// does not match the channel count (<see cref="ChannelCount"/>) of the
+        /// stream outlet, or if any element in <paramref name="lengths"/> is less
+        /// than or equal to 0.
+        /// </exception>
+        /// <inheritdoc cref="PushSample(sbyte[])"/>
+        public unsafe void PushSample(IntPtr[] sample, int[] lengths)
+        {
+            ThrowIfInvalid();
+            CheckSampleBuffer(sample, ChannelCount);
+            CheckLengthBuffer(lengths, ChannelCount);
+
+            var ulengths = stackalloc uint[ChannelCount];
+            for (int i = 0; i < ChannelCount; ++i)
+            {
+                if (sample[i] == IntPtr.Zero)
+                    throw new ArgumentNullException(nameof(sample));
+
+                if (lengths[i] <= 0)
+                    throw new ArgumentException(nameof(lengths));
+
+                ulengths[i] = (uint)lengths[i];
+            }
+
+            CheckError(lsl_push_sample_buf(handle, sample, ulengths));
+        }
+
+        /// <param name="sample">
+        /// The sample data to push.
+        /// </param>
+        /// <param name="timestamp">
+        /// The capture time of the sample, in agreement with <see cref="GetLocalClock"/>.
+        /// If the timestamp is 0.0, the current time is used.
+        /// </param>
+        /// <inheritdoc cref="PushSample(sbyte[])"/>
         public void PushSample(sbyte[] sample, double timestamp)
         {
             ThrowIfInvalid();
@@ -294,26 +334,7 @@ namespace SharpLSL
             CheckError(lsl_push_sample_ct(handle, sample, timestamp));
         }
 
-        /// <summary>
-        /// Pushes a sample into the outlet. Handles type checking and conversion.
-        /// </summary>
-        /// <param name="sample">
-        /// The sample data to push.
-        /// </param>
-        /// <param name="timestamp">
-        /// The capture time of the sample, in agreement with
-        /// <see cref="GetLocalClock"/>; if omitted, the current time is used.
-        /// </param>
-        /// <exception cref="InvalidOperationException">
-        /// Thrown if this object is invalid.
-        /// </exception>
-        /// <exception cref="ArgumentNullException">
-        /// Thrown if the provided buffer <paramref name="sample"/> is null.
-        /// </exception>
-        /// <exception cref="ArgumentException">
-        /// Thrown if size of the provided buffer <paramref name="sample"/> does not
-        /// the channel count (<see cref="ChannelCount"/>) of the stream outlet.
-        /// </exception>
+        /// <inheritdoc cref="PushSample(sbyte[], double)"/>
         public void PushSample(short[] sample, double timestamp)
         {
             ThrowIfInvalid();
@@ -322,26 +343,7 @@ namespace SharpLSL
             CheckError(lsl_push_sample_st(handle, sample, timestamp));
         }
 
-        /// <summary>
-        /// Pushes a sample into the outlet. Handles type checking and conversion.
-        /// </summary>
-        /// <param name="sample">
-        /// The sample data to push.
-        /// </param>
-        /// <param name="timestamp">
-        /// The capture time of the sample, in agreement with
-        /// <see cref="GetLocalClock"/>; if omitted, the current time is used.
-        /// </param>
-        /// <exception cref="InvalidOperationException">
-        /// Thrown if this object is invalid.
-        /// </exception>
-        /// <exception cref="ArgumentNullException">
-        /// Thrown if the provided buffer <paramref name="sample"/> is null.
-        /// </exception>
-        /// <exception cref="ArgumentException">
-        /// Thrown if size of the provided buffer <paramref name="sample"/> does not
-        /// the channel count (<see cref="ChannelCount"/>) of the stream outlet.
-        /// </exception>
+        /// <inheritdoc cref="PushSample(sbyte[], double)"/>
         public void PushSample(int[] sample, double timestamp)
         {
             ThrowIfInvalid();
@@ -350,26 +352,7 @@ namespace SharpLSL
             CheckError(lsl_push_sample_it(handle, sample, timestamp));
         }
 
-        /// <summary>
-        /// Pushes a sample into the outlet. Handles type checking and conversion.
-        /// </summary>
-        /// <param name="sample">
-        /// The sample data to push.
-        /// </param>
-        /// <param name="timestamp">
-        /// The capture time of the sample, in agreement with
-        /// <see cref="GetLocalClock"/>; if omitted, the current time is used.
-        /// </param>
-        /// <exception cref="InvalidOperationException">
-        /// Thrown if this object is invalid.
-        /// </exception>
-        /// <exception cref="ArgumentNullException">
-        /// Thrown if the provided buffer <paramref name="sample"/> is null.
-        /// </exception>
-        /// <exception cref="ArgumentException">
-        /// Thrown if size of the provided buffer <paramref name="sample"/> does not
-        /// the channel count (<see cref="ChannelCount"/>) of the stream outlet.
-        /// </exception>
+        /// <inheritdoc cref="PushSample(sbyte[], double)"/>
         public void PushSample(long[] sample, double timestamp)
         {
             ThrowIfInvalid();
@@ -378,26 +361,7 @@ namespace SharpLSL
             CheckError(lsl_push_sample_lt(handle, sample, timestamp));
         }
 
-        /// <summary>
-        /// Pushes a sample into the outlet. Handles type checking and conversion.
-        /// </summary>
-        /// <param name="sample">
-        /// The sample data to push.
-        /// </param>
-        /// <param name="timestamp">
-        /// The capture time of the sample, in agreement with
-        /// <see cref="GetLocalClock"/>; if omitted, the current time is used.
-        /// </param>
-        /// <exception cref="InvalidOperationException">
-        /// Thrown if this object is invalid.
-        /// </exception>
-        /// <exception cref="ArgumentNullException">
-        /// Thrown if the provided buffer <paramref name="sample"/> is null.
-        /// </exception>
-        /// <exception cref="ArgumentException">
-        /// Thrown if size of the provided buffer <paramref name="sample"/> does not
-        /// the channel count (<see cref="ChannelCount"/>) of the stream outlet.
-        /// </exception>
+        /// <inheritdoc cref="PushSample(sbyte[], double)"/>
         public void PushSample(float[] sample, double timestamp)
         {
             ThrowIfInvalid();
@@ -406,26 +370,7 @@ namespace SharpLSL
             CheckError(lsl_push_sample_ft(handle, sample, timestamp));
         }
 
-        /// <summary>
-        /// Pushes a sample into the outlet. Handles type checking and conversion.
-        /// </summary>
-        /// <param name="sample">
-        /// The sample data to push.
-        /// </param>
-        /// <param name="timestamp">
-        /// The capture time of the sample, in agreement with
-        /// <see cref="GetLocalClock"/>; if omitted, the current time is used.
-        /// </param>
-        /// <exception cref="InvalidOperationException">
-        /// Thrown if this object is invalid.
-        /// </exception>
-        /// <exception cref="ArgumentNullException">
-        /// Thrown if the provided buffer <paramref name="sample"/> is null.
-        /// </exception>
-        /// <exception cref="ArgumentException">
-        /// Thrown if size of the provided buffer <paramref name="sample"/> does not
-        /// the channel count (<see cref="ChannelCount"/>) of the stream outlet.
-        /// </exception>
+        /// <inheritdoc cref="PushSample(sbyte[], double)"/>
         public void PushSample(double[] sample, double timestamp)
         {
             ThrowIfInvalid();
@@ -434,26 +379,7 @@ namespace SharpLSL
             CheckError(lsl_push_sample_dt(handle, sample, timestamp));
         }
 
-        /// <summary>
-        /// Pushes a sample into the outlet. Handles type checking and conversion.
-        /// </summary>
-        /// <param name="sample">
-        /// The sample data to push.
-        /// </param>
-        /// <param name="timestamp">
-        /// The capture time of the sample, in agreement with
-        /// <see cref="GetLocalClock"/>; if omitted, the current time is used.
-        /// </param>
-        /// <exception cref="InvalidOperationException">
-        /// Thrown if this object is invalid.
-        /// </exception>
-        /// <exception cref="ArgumentNullException">
-        /// Thrown if the provided buffer <paramref name="sample"/> is null.
-        /// </exception>
-        /// <exception cref="ArgumentException">
-        /// Thrown if size of the provided buffer <paramref name="sample"/> does not
-        /// the channel count (<see cref="ChannelCount"/>) of the stream outlet.
-        /// </exception>
+        /// <inheritdoc cref="PushSample(sbyte[], double)"/>
         public void PushSample(string[] sample, double timestamp)
         {
             ThrowIfInvalid();
@@ -463,30 +389,33 @@ namespace SharpLSL
         }
 
         /// <summary>
-        /// Pushes a sample into the outlet. Handles type checking and conversion.
+        /// Pushes a pointer to some values as a sample into the outlet.
         /// </summary>
+        /// <inheritdoc cref="PushSample(sbyte[], double)"/>
+        public unsafe void PushSample(IntPtr sample, double timestamp)
+        {
+            ThrowIfInvalid();
+
+            if (sample == IntPtr.Zero)
+                throw new ArgumentNullException(nameof(sample));
+
+            CheckError(lsl_push_sample_vt(handle, sample.ToPointer(), timestamp));
+        }
+
         /// <param name="sample">
         /// The sample data to push.
         /// </param>
         /// <param name="timestamp">
-        /// The capture time of the sample, in agreement with
-        /// <see cref="GetLocalClock"/>; if omitted, the current time is used.
+        /// The capture time of the sample, in agreement with <see cref="GetLocalClock"/>.
+        /// If the timestamp is 0.0, the current time is used.
         /// </param>
         /// <param name="pushThrough">
         /// Whether to push the sample through to the receivers instead of buffering
         /// it with subsequent samples. Note that the chunk size, if specified at
-        /// outlet construction, takes precedence over the push through flag.
+        /// outlet construction, takes precedence over the <paramref name="pushThrough"/>
+        /// flag.
         /// </param>
-        /// <exception cref="InvalidOperationException">
-        /// Thrown if this object is invalid.
-        /// </exception>
-        /// <exception cref="ArgumentNullException">
-        /// Thrown if the provided buffer <paramref name="sample"/> is null.
-        /// </exception>
-        /// <exception cref="ArgumentException">
-        /// Thrown if size of the provided buffer <paramref name="sample"/> does not
-        /// the channel count (<see cref="ChannelCount"/>) of the stream outlet.
-        /// </exception>
+        /// <inheritdoc cref="PushSample(sbyte[], double)"/>
         public void PushSample(sbyte[] sample, double timestamp, bool pushThrough)
         {
             ThrowIfInvalid();
@@ -495,31 +424,7 @@ namespace SharpLSL
             CheckError(lsl_push_sample_ctp(handle, sample, timestamp, pushThrough ? 1 : 0));
         }
 
-        /// <summary>
-        /// Pushes a sample into the outlet. Handles type checking and conversion.
-        /// </summary>
-        /// <param name="sample">
-        /// The sample data to push.
-        /// </param>
-        /// <param name="timestamp">
-        /// The capture time of the sample, in agreement with
-        /// <see cref="GetLocalClock"/>; if omitted, the current time is used.
-        /// </param>
-        /// <param name="pushThrough">
-        /// Whether to push the sample through to the receivers instead of buffering
-        /// it with subsequent samples. Note that the chunk size, if specified at
-        /// outlet construction, takes precedence over the push through flag.
-        /// </param>
-        /// <exception cref="InvalidOperationException">
-        /// Thrown if this object is invalid.
-        /// </exception>
-        /// <exception cref="ArgumentNullException">
-        /// Thrown if the provided buffer <paramref name="sample"/> is null.
-        /// </exception>
-        /// <exception cref="ArgumentException">
-        /// Thrown if size of the provided buffer <paramref name="sample"/> does not
-        /// the channel count (<see cref="ChannelCount"/>) of the stream outlet.
-        /// </exception>
+        /// <inheritdoc cref="PushSample(sbyte[], double, bool)"/>
         public void PushSample(short[] sample, double timestamp, bool pushThrough)
         {
             ThrowIfInvalid();
@@ -528,31 +433,7 @@ namespace SharpLSL
             CheckError(lsl_push_sample_stp(handle, sample, timestamp, pushThrough ? 1 : 0));
         }
 
-        /// <summary>
-        /// Pushes a sample into the outlet. Handles type checking and conversion.
-        /// </summary>
-        /// <param name="sample">
-        /// The sample data to push.
-        /// </param>
-        /// <param name="timestamp">
-        /// The capture time of the sample, in agreement with
-        /// <see cref="GetLocalClock"/>; if omitted, the current time is used.
-        /// </param>
-        /// <param name="pushThrough">
-        /// Whether to push the sample through to the receivers instead of buffering
-        /// it with subsequent samples. Note that the chunk size, if specified at
-        /// outlet construction, takes precedence over the push through flag.
-        /// </param>
-        /// <exception cref="InvalidOperationException">
-        /// Thrown if this object is invalid.
-        /// </exception>
-        /// <exception cref="ArgumentNullException">
-        /// Thrown if the provided buffer <paramref name="sample"/> is null.
-        /// </exception>
-        /// <exception cref="ArgumentException">
-        /// Thrown if size of the provided buffer <paramref name="sample"/> does not
-        /// the channel count (<see cref="ChannelCount"/>) of the stream outlet.
-        /// </exception>
+        /// <inheritdoc cref="PushSample(sbyte[], double, bool)"/>
         public void PushSample(int[] sample, double timestamp, bool pushThrough)
         {
             ThrowIfInvalid();
@@ -561,31 +442,7 @@ namespace SharpLSL
             CheckError(lsl_push_sample_itp(handle, sample, timestamp, pushThrough ? 1 : 0));
         }
 
-        /// <summary>
-        /// Pushes a sample into the outlet. Handles type checking and conversion.
-        /// </summary>
-        /// <param name="sample">
-        /// The sample data to push.
-        /// </param>
-        /// <param name="timestamp">
-        /// The capture time of the sample, in agreement with
-        /// <see cref="GetLocalClock"/>; if omitted, the current time is used.
-        /// </param>
-        /// <param name="pushThrough">
-        /// Whether to push the sample through to the receivers instead of buffering
-        /// it with subsequent samples. Note that the chunk size, if specified at
-        /// outlet construction, takes precedence over the push through flag.
-        /// </param>
-        /// <exception cref="InvalidOperationException">
-        /// Thrown if this object is invalid.
-        /// </exception>
-        /// <exception cref="ArgumentNullException">
-        /// Thrown if the provided buffer <paramref name="sample"/> is null.
-        /// </exception>
-        /// <exception cref="ArgumentException">
-        /// Thrown if size of the provided buffer <paramref name="sample"/> does not
-        /// the channel count (<see cref="ChannelCount"/>) of the stream outlet.
-        /// </exception>
+        /// <inheritdoc cref="PushSample(sbyte[], double, bool)"/>
         public void PushSample(long[] sample, double timestamp, bool pushThrough)
         {
             ThrowIfInvalid();
@@ -594,31 +451,7 @@ namespace SharpLSL
             CheckError(lsl_push_sample_ltp(handle, sample, timestamp, pushThrough ? 1 : 0));
         }
 
-        /// <summary>
-        /// Pushes a sample into the outlet. Handles type checking and conversion.
-        /// </summary>
-        /// <param name="sample">
-        /// The sample data to push.
-        /// </param>
-        /// <param name="timestamp">
-        /// The capture time of the sample, in agreement with
-        /// <see cref="GetLocalClock"/>; if omitted, the current time is used.
-        /// </param>
-        /// <param name="pushThrough">
-        /// Whether to push the sample through to the receivers instead of buffering
-        /// it with subsequent samples. Note that the chunk size, if specified at
-        /// outlet construction, takes precedence over the push through flag.
-        /// </param>
-        /// <exception cref="InvalidOperationException">
-        /// Thrown if this object is invalid.
-        /// </exception>
-        /// <exception cref="ArgumentNullException">
-        /// Thrown if the provided buffer <paramref name="sample"/> is null.
-        /// </exception>
-        /// <exception cref="ArgumentException">
-        /// Thrown if size of the provided buffer <paramref name="sample"/> does not
-        /// the channel count (<see cref="ChannelCount"/>) of the stream outlet.
-        /// </exception>
+        /// <inheritdoc cref="PushSample(sbyte[], double, bool)"/>
         public void PushSample(float[] sample, double timestamp, bool pushThrough)
         {
             ThrowIfInvalid();
@@ -627,31 +460,7 @@ namespace SharpLSL
             CheckError(lsl_push_sample_ftp(handle, sample, timestamp, pushThrough ? 1 : 0));
         }
 
-        /// <summary>
-        /// Pushes a sample into the outlet. Handles type checking and conversion.
-        /// </summary>
-        /// <param name="sample">
-        /// The sample data to push.
-        /// </param>
-        /// <param name="timestamp">
-        /// The capture time of the sample, in agreement with
-        /// <see cref="GetLocalClock"/>; if omitted, the current time is used.
-        /// </param>
-        /// <param name="pushThrough">
-        /// Whether to push the sample through to the receivers instead of buffering
-        /// it with subsequent samples. Note that the chunk size, if specified at
-        /// outlet construction, takes precedence over the push through flag.
-        /// </param>
-        /// <exception cref="InvalidOperationException">
-        /// Thrown if this object is invalid.
-        /// </exception>
-        /// <exception cref="ArgumentNullException">
-        /// Thrown if the provided buffer <paramref name="sample"/> is null.
-        /// </exception>
-        /// <exception cref="ArgumentException">
-        /// Thrown if size of the provided buffer <paramref name="sample"/> does not
-        /// the channel count (<see cref="ChannelCount"/>) of the stream outlet.
-        /// </exception>
+        /// <inheritdoc cref="PushSample(sbyte[], double, bool)"/>
         public void PushSample(double[] sample, double timestamp, bool pushThrough)
         {
             ThrowIfInvalid();
@@ -660,37 +469,37 @@ namespace SharpLSL
             CheckError(lsl_push_sample_dtp(handle, sample, timestamp, pushThrough ? 1 : 0));
         }
 
-        /// <summary>
-        /// Pushes a sample into the outlet. Handles type checking and conversion.
-        /// </summary>
-        /// <param name="sample">
-        /// The sample data to push.
-        /// </param>
-        /// <param name="timestamp">
-        /// The capture time of the sample, in agreement with
-        /// <see cref="GetLocalClock"/>; if omitted, the current time is used.
-        /// </param>
-        /// <param name="pushThrough">
-        /// Whether to push the sample through to the receivers instead of buffering
-        /// it with subsequent samples. Note that the chunk size, if specified at
-        /// outlet construction, takes precedence over the push through flag.
-        /// </param>
-        /// <exception cref="InvalidOperationException">
-        /// Thrown if this object is invalid.
-        /// </exception>
-        /// <exception cref="ArgumentNullException">
-        /// Thrown if the provided buffer <paramref name="sample"/> is null.
-        /// </exception>
-        /// <exception cref="ArgumentException">
-        /// Thrown if size of the provided buffer <paramref name="sample"/> does not
-        /// the channel count (<see cref="ChannelCount"/>) of the stream outlet.
-        /// </exception>
+        /// <inheritdoc cref="PushSample(sbyte[], double, bool)"/>
         public void PushSample(string[] sample, double timestamp, bool pushThrough)
         {
             ThrowIfInvalid();
             CheckSampleBuffer(sample, ChannelCount);
 
             CheckError(lsl_push_sample_strtp(handle, sample, timestamp, pushThrough ? 1 : 0));
+        }
+
+        /// <param name="sample">
+        /// The sample data to push.
+        /// </param>
+        /// <param name="timestamp">
+        /// The capture time of the sample, in agreement with <see cref="GetLocalClock"/>.
+        /// If the timestamp is 0.0, the current time is used.
+        /// </param>
+        /// <param name="pushThrough">
+        /// Whether to push the sample through to the receivers instead of buffering
+        /// it with subsequent samples. Note that the chunk size, if specified at
+        /// outlet construction, takes precedence over the <paramref name="pushThrough"/>
+        /// flag.
+        /// </param>
+        /// <inheritdoc cref="PushSample(IntPtr, double)"/>
+        public unsafe void PushSample(IntPtr sample, double timestamp, bool pushThrough)
+        {
+            ThrowIfInvalid();
+
+            if (sample == IntPtr.Zero)
+                throw new ArgumentNullException(nameof(sample));
+
+            CheckError(lsl_push_sample_vtp(handle, sample.ToPointer(), timestamp, pushThrough ? 1 : 0));
         }
 
         /// <summary>
@@ -702,7 +511,7 @@ namespace SharpLSL
         /// samples to send.
         /// </param>
         /// <exception cref="InvalidOperationException">
-        /// Thrown if this object is invalid.
+        /// Thrown if this stream outlet object is invalid.
         /// </exception>
         /// <exception cref="ArgumentNullException">
         /// Thrown if the provided buffer <paramref name="chunk"/> is null.
@@ -718,23 +527,7 @@ namespace SharpLSL
             CheckError(lsl_push_chunk_c(handle, chunk, (uint)chunk.Length));
         }
 
-        /// <summary>
-        /// Pushes a chunk of multiplexed samples into the outlet. Handles type
-        /// checking and conversion.
-        /// </summary>
-        /// <param name="chunk">
-        /// A buffer of channel values holding the data for zero or more successive
-        /// samples to send.
-        /// </param>
-        /// <exception cref="InvalidOperationException">
-        /// Thrown if this object is invalid.
-        /// </exception>
-        /// <exception cref="ArgumentNullException">
-        /// Thrown if the provided buffer <paramref name="chunk"/> is null.
-        /// </exception>
-        /// <exception cref="ArgumentException">
-        /// Thrown if size of the provided buffer is too small.
-        /// </exception>
+        /// <inheritdoc cref="PushChunk(sbyte[])"/>
         public void PushChunk(short[] chunk)
         {
             ThrowIfInvalid();
@@ -743,23 +536,7 @@ namespace SharpLSL
             CheckError(lsl_push_chunk_s(handle, chunk, (uint)chunk.Length));
         }
 
-        /// <summary>
-        /// Pushes a chunk of multiplexed samples into the outlet. Handles type
-        /// checking and conversion.
-        /// </summary>
-        /// <param name="chunk">
-        /// A buffer of channel values holding the data for zero or more successive
-        /// samples to send.
-        /// </param>
-        /// <exception cref="InvalidOperationException">
-        /// Thrown if this object is invalid.
-        /// </exception>
-        /// <exception cref="ArgumentNullException">
-        /// Thrown if the provided buffer <paramref name="chunk"/> is null.
-        /// </exception>
-        /// <exception cref="ArgumentException">
-        /// Thrown if size of the provided buffer is too small.
-        /// </exception>
+        /// <inheritdoc cref="PushChunk(sbyte[])"/>
         public void PushChunk(int[] chunk)
         {
             ThrowIfInvalid();
@@ -768,23 +545,7 @@ namespace SharpLSL
             CheckError(lsl_push_chunk_i(handle, chunk, (uint)chunk.Length));
         }
 
-        /// <summary>
-        /// Pushes a chunk of multiplexed samples into the outlet. Handles type
-        /// checking and conversion.
-        /// </summary>
-        /// <param name="chunk">
-        /// A buffer of channel values holding the data for zero or more successive
-        /// samples to send.
-        /// </param>
-        /// <exception cref="InvalidOperationException">
-        /// Thrown if this object is invalid.
-        /// </exception>
-        /// <exception cref="ArgumentNullException">
-        /// Thrown if the provided buffer <paramref name="chunk"/> is null.
-        /// </exception>
-        /// <exception cref="ArgumentException">
-        /// Thrown if size of the provided buffer is too small.
-        /// </exception>
+        /// <inheritdoc cref="PushChunk(sbyte[])"/>
         public void PushChunk(long[] chunk)
         {
             ThrowIfInvalid();
@@ -793,23 +554,7 @@ namespace SharpLSL
             CheckError(lsl_push_chunk_l(handle, chunk, (uint)chunk.Length));
         }
 
-        /// <summary>
-        /// Pushes a chunk of multiplexed samples into the outlet. Handles type
-        /// checking and conversion.
-        /// </summary>
-        /// <param name="chunk">
-        /// A buffer of channel values holding the data for zero or more successive
-        /// samples to send.
-        /// </param>
-        /// <exception cref="InvalidOperationException">
-        /// Thrown if this object is invalid.
-        /// </exception>
-        /// <exception cref="ArgumentNullException">
-        /// Thrown if the provided buffer <paramref name="chunk"/> is null.
-        /// </exception>
-        /// <exception cref="ArgumentException">
-        /// Thrown if size of the provided buffer is too small.
-        /// </exception>
+        /// <inheritdoc cref="PushChunk(sbyte[])"/>
         public void PushChunk(float[] chunk)
         {
             ThrowIfInvalid();
@@ -818,23 +563,7 @@ namespace SharpLSL
             CheckError(lsl_push_chunk_f(handle, chunk, (uint)chunk.Length));
         }
 
-        /// <summary>
-        /// Pushes a chunk of multiplexed samples into the outlet. Handles type
-        /// checking and conversion.
-        /// </summary>
-        /// <param name="chunk">
-        /// A buffer of channel values holding the data for zero or more successive
-        /// samples to send.
-        /// </param>
-        /// <exception cref="InvalidOperationException">
-        /// Thrown if this object is invalid.
-        /// </exception>
-        /// <exception cref="ArgumentNullException">
-        /// Thrown if the provided buffer <paramref name="chunk"/> is null.
-        /// </exception>
-        /// <exception cref="ArgumentException">
-        /// Thrown if size of the provided buffer is too small.
-        /// </exception>
+        /// <inheritdoc cref="PushChunk(sbyte[])"/>
         public void PushChunk(double[] chunk)
         {
             ThrowIfInvalid();
@@ -843,23 +572,7 @@ namespace SharpLSL
             CheckError(lsl_push_chunk_d(handle, chunk, (uint)chunk.Length));
         }
 
-        /// <summary>
-        /// Pushes a chunk of multiplexed samples into the outlet. Handles type
-        /// checking and conversion.
-        /// </summary>
-        /// <param name="chunk">
-        /// A buffer of channel values holding the data for zero or more successive
-        /// samples to send.
-        /// </param>
-        /// <exception cref="InvalidOperationException">
-        /// Thrown if this object is invalid.
-        /// </exception>
-        /// <exception cref="ArgumentNullException">
-        /// Thrown if the provided buffer <paramref name="chunk"/> is null.
-        /// </exception>
-        /// <exception cref="ArgumentException">
-        /// Thrown if size of the provided buffer is too small.
-        /// </exception>
+        /// <inheritdoc cref="PushChunk(sbyte[])"/>
         public void PushChunk(string[] chunk)
         {
             ThrowIfInvalid();
@@ -868,23 +581,7 @@ namespace SharpLSL
             CheckError(lsl_push_chunk_str(handle, chunk, (uint)chunk.Length));
         }
 
-        /// <summary>
-        /// Pushes a chunk of multiplexed samples into the outlet. Handles type
-        /// checking and conversion.
-        /// </summary>
-        /// <param name="chunk">
-        /// A buffer of channel values holding the data for zero or more successive
-        /// samples to send.
-        /// </param>
-        /// <exception cref="InvalidOperationException">
-        /// Thrown if this object is invalid.
-        /// </exception>
-        /// <exception cref="ArgumentNullException">
-        /// Thrown if the provided buffer <paramref name="chunk"/> is null.
-        /// </exception>
-        /// <exception cref="ArgumentException">
-        /// Thrown if size of the provided buffer is too small.
-        /// </exception>
+        /// <inheritdoc cref="PushChunk(sbyte[])"/>
         public void PushChunk(sbyte[,] chunk)
         {
             ThrowIfInvalid();
@@ -893,23 +590,7 @@ namespace SharpLSL
             CheckError(lsl_push_chunk_c(handle, chunk, (uint)chunk.Length));
         }
 
-        /// <summary>
-        /// Pushes a chunk of multiplexed samples into the outlet. Handles type
-        /// checking and conversion.
-        /// </summary>
-        /// <param name="chunk">
-        /// A buffer of channel values holding the data for zero or more successive
-        /// samples to send.
-        /// </param>
-        /// <exception cref="InvalidOperationException">
-        /// Thrown if this object is invalid.
-        /// </exception>
-        /// <exception cref="ArgumentNullException">
-        /// Thrown if the provided buffer <paramref name="chunk"/> is null.
-        /// </exception>
-        /// <exception cref="ArgumentException">
-        /// Thrown if size of the provided buffer is too small.
-        /// </exception>
+        /// <inheritdoc cref="PushChunk(sbyte[])"/>
         public void PushChunk(short[,] chunk)
         {
             ThrowIfInvalid();
@@ -918,23 +599,7 @@ namespace SharpLSL
             CheckError(lsl_push_chunk_s(handle, chunk, (uint)chunk.Length));
         }
 
-        /// <summary>
-        /// Pushes a chunk of multiplexed samples into the outlet. Handles type
-        /// checking and conversion.
-        /// </summary>
-        /// <param name="chunk">
-        /// A buffer of channel values holding the data for zero or more successive
-        /// samples to send.
-        /// </param>
-        /// <exception cref="InvalidOperationException">
-        /// Thrown if this object is invalid.
-        /// </exception>
-        /// <exception cref="ArgumentNullException">
-        /// Thrown if the provided buffer <paramref name="chunk"/> is null.
-        /// </exception>
-        /// <exception cref="ArgumentException">
-        /// Thrown if size of the provided buffer is too small.
-        /// </exception>
+        /// <inheritdoc cref="PushChunk(sbyte[])"/>
         public void PushChunk(int[,] chunk)
         {
             ThrowIfInvalid();
@@ -943,23 +608,7 @@ namespace SharpLSL
             CheckError(lsl_push_chunk_i(handle, chunk, (uint)chunk.Length));
         }
 
-        /// <summary>
-        /// Pushes a chunk of multiplexed samples into the outlet. Handles type
-        /// checking and conversion.
-        /// </summary>
-        /// <param name="chunk">
-        /// A buffer of channel values holding the data for zero or more successive
-        /// samples to send.
-        /// </param>
-        /// <exception cref="InvalidOperationException">
-        /// Thrown if this object is invalid.
-        /// </exception>
-        /// <exception cref="ArgumentNullException">
-        /// Thrown if the provided buffer <paramref name="chunk"/> is null.
-        /// </exception>
-        /// <exception cref="ArgumentException">
-        /// Thrown if size of the provided buffer is too small.
-        /// </exception>
+        /// <inheritdoc cref="PushChunk(sbyte[])"/>
         public void PushChunk(long[,] chunk)
         {
             ThrowIfInvalid();
@@ -968,23 +617,7 @@ namespace SharpLSL
             CheckError(lsl_push_chunk_l(handle, chunk, (uint)chunk.Length));
         }
 
-        /// <summary>
-        /// Pushes a chunk of multiplexed samples into the outlet. Handles type
-        /// checking and conversion.
-        /// </summary>
-        /// <param name="chunk">
-        /// A buffer of channel values holding the data for zero or more successive
-        /// samples to send.
-        /// </param>
-        /// <exception cref="InvalidOperationException">
-        /// Thrown if this object is invalid.
-        /// </exception>
-        /// <exception cref="ArgumentNullException">
-        /// Thrown if the provided buffer <paramref name="chunk"/> is null.
-        /// </exception>
-        /// <exception cref="ArgumentException">
-        /// Thrown if size of the provided buffer is too small.
-        /// </exception>
+        /// <inheritdoc cref="PushChunk(sbyte[])"/>
         public void PushChunk(float[,] chunk)
         {
             ThrowIfInvalid();
@@ -993,23 +626,7 @@ namespace SharpLSL
             CheckError(lsl_push_chunk_f(handle, chunk, (uint)chunk.Length));
         }
 
-        /// <summary>
-        /// Pushes a chunk of multiplexed samples into the outlet. Handles type
-        /// checking and conversion.
-        /// </summary>
-        /// <param name="chunk">
-        /// A buffer of channel values holding the data for zero or more successive
-        /// samples to send.
-        /// </param>
-        /// <exception cref="InvalidOperationException">
-        /// Thrown if this object is invalid.
-        /// </exception>
-        /// <exception cref="ArgumentNullException">
-        /// Thrown if the provided buffer <paramref name="chunk"/> is null.
-        /// </exception>
-        /// <exception cref="ArgumentException">
-        /// Thrown if size of the provided buffer is too small.
-        /// </exception>
+        /// <inheritdoc cref="PushChunk(sbyte[])"/>
         public void PushChunk(double[,] chunk)
         {
             ThrowIfInvalid();
@@ -1018,23 +635,7 @@ namespace SharpLSL
             CheckError(lsl_push_chunk_d(handle, chunk, (uint)chunk.Length));
         }
 
-        /// <summary>
-        /// Pushes a chunk of multiplexed samples into the outlet. Handles type
-        /// checking and conversion.
-        /// </summary>
-        /// <param name="chunk">
-        /// A buffer of channel values holding the data for zero or more successive
-        /// samples to send.
-        /// </param>
-        /// <exception cref="InvalidOperationException">
-        /// Thrown if this object is invalid.
-        /// </exception>
-        /// <exception cref="ArgumentNullException">
-        /// Thrown if the provided buffer <paramref name="chunk"/> is null.
-        /// </exception>
-        /// <exception cref="ArgumentException">
-        /// Thrown if size of the provided buffer is too small.
-        /// </exception>
+        /// <inheritdoc cref="PushChunk(sbyte[])"/>
         public void PushChunk(string[,] chunk)
         {
             ThrowIfInvalid();
@@ -1043,10 +644,6 @@ namespace SharpLSL
             CheckError(lsl_push_chunk_str(handle, chunk, (uint)chunk.Length));
         }
 
-        /// <summary>
-        /// Pushes a chunk of multiplexed samples into the outlet. Handles type
-        /// checking and conversion.
-        /// </summary>
         /// <param name="chunk">
         /// A buffer of channel values holding the data for zero or more successive
         /// samples to send.
@@ -1057,15 +654,7 @@ namespace SharpLSL
         /// The timestamps of other samples are automatically derived based on the
         /// sampling rate of the stream.
         /// </param>
-        /// <exception cref="InvalidOperationException">
-        /// Thrown if this object is invalid.
-        /// </exception>
-        /// <exception cref="ArgumentNullException">
-        /// Thrown if the provided buffer <paramref name="chunk"/> is null.
-        /// </exception>
-        /// <exception cref="ArgumentException">
-        /// Thrown if size of the provided buffer is too small.
-        /// </exception>
+        /// <inheritdoc cref="PushChunk(sbyte[])"/>
         public void PushChunk(sbyte[] chunk, double timestamp)
         {
             ThrowIfInvalid();
@@ -1074,29 +663,7 @@ namespace SharpLSL
             CheckError(lsl_push_chunk_ct(handle, chunk, (uint)chunk.Length, timestamp));
         }
 
-        /// <summary>
-        /// Pushes a chunk of multiplexed samples into the outlet. Handles type
-        /// checking and conversion.
-        /// </summary>
-        /// <param name="chunk">
-        /// A buffer of channel values holding the data for zero or more successive
-        /// samples to send.
-        /// </param>
-        /// <param name="timestamp">
-        /// The capture time of the most recent sample, in agreement with
-        /// <see cref="GetLocalClock"/>; if omitted, the current time is used.
-        /// The timestamps of other samples are automatically derived based on the
-        /// sampling rate of the stream.
-        /// </param>
-        /// <exception cref="InvalidOperationException">
-        /// Thrown if this object is invalid.
-        /// </exception>
-        /// <exception cref="ArgumentNullException">
-        /// Thrown if the provided buffer <paramref name="chunk"/> is null.
-        /// </exception>
-        /// <exception cref="ArgumentException">
-        /// Thrown if size of the provided buffer is too small.
-        /// </exception>
+        /// <inheritdoc cref="PushChunk(sbyte[], double)"/>
         public void PushChunk(short[] chunk, double timestamp)
         {
             ThrowIfInvalid();
@@ -1105,29 +672,7 @@ namespace SharpLSL
             CheckError(lsl_push_chunk_st(handle, chunk, (uint)chunk.Length, timestamp));
         }
 
-        /// <summary>
-        /// Pushes a chunk of multiplexed samples into the outlet. Handles type
-        /// checking and conversion.
-        /// </summary>
-        /// <param name="chunk">
-        /// A buffer of channel values holding the data for zero or more successive
-        /// samples to send.
-        /// </param>
-        /// <param name="timestamp">
-        /// The capture time of the most recent sample, in agreement with
-        /// <see cref="GetLocalClock"/>; if omitted, the current time is used.
-        /// The timestamps of other samples are automatically derived based on the
-        /// sampling rate of the stream.
-        /// </param>
-        /// <exception cref="InvalidOperationException">
-        /// Thrown if this object is invalid.
-        /// </exception>
-        /// <exception cref="ArgumentNullException">
-        /// Thrown if the provided buffer <paramref name="chunk"/> is null.
-        /// </exception>
-        /// <exception cref="ArgumentException">
-        /// Thrown if size of the provided buffer is too small.
-        /// </exception>
+        /// <inheritdoc cref="PushChunk(sbyte[], double)"/>
         public void PushChunk(int[] chunk, double timestamp)
         {
             ThrowIfInvalid();
@@ -1136,29 +681,7 @@ namespace SharpLSL
             CheckError(lsl_push_chunk_it(handle, chunk, (uint)chunk.Length, timestamp));
         }
 
-        /// <summary>
-        /// Pushes a chunk of multiplexed samples into the outlet. Handles type
-        /// checking and conversion.
-        /// </summary>
-        /// <param name="chunk">
-        /// A buffer of channel values holding the data for zero or more successive
-        /// samples to send.
-        /// </param>
-        /// <param name="timestamp">
-        /// The capture time of the most recent sample, in agreement with
-        /// <see cref="GetLocalClock"/>; if omitted, the current time is used.
-        /// The timestamps of other samples are automatically derived based on the
-        /// sampling rate of the stream.
-        /// </param>
-        /// <exception cref="InvalidOperationException">
-        /// Thrown if this object is invalid.
-        /// </exception>
-        /// <exception cref="ArgumentNullException">
-        /// Thrown if the provided buffer <paramref name="chunk"/> is null.
-        /// </exception>
-        /// <exception cref="ArgumentException">
-        /// Thrown if size of the provided buffer is too small.
-        /// </exception>
+        /// <inheritdoc cref="PushChunk(sbyte[], double)"/>
         public void PushChunk(long[] chunk, double timestamp)
         {
             ThrowIfInvalid();
@@ -1167,29 +690,7 @@ namespace SharpLSL
             CheckError(lsl_push_chunk_lt(handle, chunk, (uint)chunk.Length, timestamp));
         }
 
-        /// <summary>
-        /// Pushes a chunk of multiplexed samples into the outlet. Handles type
-        /// checking and conversion.
-        /// </summary>
-        /// <param name="chunk">
-        /// A buffer of channel values holding the data for zero or more successive
-        /// samples to send.
-        /// </param>
-        /// <param name="timestamp">
-        /// The capture time of the most recent sample, in agreement with
-        /// <see cref="GetLocalClock"/>; if omitted, the current time is used.
-        /// The timestamps of other samples are automatically derived based on the
-        /// sampling rate of the stream.
-        /// </param>
-        /// <exception cref="InvalidOperationException">
-        /// Thrown if this object is invalid.
-        /// </exception>
-        /// <exception cref="ArgumentNullException">
-        /// Thrown if the provided buffer <paramref name="chunk"/> is null.
-        /// </exception>
-        /// <exception cref="ArgumentException">
-        /// Thrown if size of the provided buffer is too small.
-        /// </exception>
+        /// <inheritdoc cref="PushChunk(sbyte[], double)"/>
         public void PushChunk(float[] chunk, double timestamp)
         {
             ThrowIfInvalid();
@@ -1198,29 +699,7 @@ namespace SharpLSL
             CheckError(lsl_push_chunk_ft(handle, chunk, (uint)chunk.Length, timestamp));
         }
 
-        /// <summary>
-        /// Pushes a chunk of multiplexed samples into the outlet. Handles type
-        /// checking and conversion.
-        /// </summary>
-        /// <param name="chunk">
-        /// A buffer of channel values holding the data for zero or more successive
-        /// samples to send.
-        /// </param>
-        /// <param name="timestamp">
-        /// The capture time of the most recent sample, in agreement with
-        /// <see cref="GetLocalClock"/>; if omitted, the current time is used.
-        /// The timestamps of other samples are automatically derived based on the
-        /// sampling rate of the stream.
-        /// </param>
-        /// <exception cref="InvalidOperationException">
-        /// Thrown if this object is invalid.
-        /// </exception>
-        /// <exception cref="ArgumentNullException">
-        /// Thrown if the provided buffer <paramref name="chunk"/> is null.
-        /// </exception>
-        /// <exception cref="ArgumentException">
-        /// Thrown if size of the provided buffer is too small.
-        /// </exception>
+        /// <inheritdoc cref="PushChunk(sbyte[], double)"/>
         public void PushChunk(double[] chunk, double timestamp)
         {
             ThrowIfInvalid();
@@ -1229,29 +708,7 @@ namespace SharpLSL
             CheckError(lsl_push_chunk_dt(handle, chunk, (uint)chunk.Length, timestamp));
         }
 
-        /// <summary>
-        /// Pushes a chunk of multiplexed samples into the outlet. Handles type
-        /// checking and conversion.
-        /// </summary>
-        /// <param name="chunk">
-        /// A buffer of channel values holding the data for zero or more successive
-        /// samples to send.
-        /// </param>
-        /// <param name="timestamp">
-        /// The capture time of the most recent sample, in agreement with
-        /// <see cref="GetLocalClock"/>; if omitted, the current time is used.
-        /// The timestamps of other samples are automatically derived based on the
-        /// sampling rate of the stream.
-        /// </param>
-        /// <exception cref="InvalidOperationException">
-        /// Thrown if this object is invalid.
-        /// </exception>
-        /// <exception cref="ArgumentNullException">
-        /// Thrown if the provided buffer <paramref name="chunk"/> is null.
-        /// </exception>
-        /// <exception cref="ArgumentException">
-        /// Thrown if size of the provided buffer is too small.
-        /// </exception>
+        /// <inheritdoc cref="PushChunk(sbyte[], double)"/>
         public void PushChunk(string[] chunk, double timestamp)
         {
             ThrowIfInvalid();
@@ -1260,29 +717,7 @@ namespace SharpLSL
             CheckError(lsl_push_chunk_strt(handle, chunk, (uint)chunk.Length, timestamp));
         }
 
-        /// <summary>
-        /// Pushes a chunk of multiplexed samples into the outlet. Handles type
-        /// checking and conversion.
-        /// </summary>
-        /// <param name="chunk">
-        /// A buffer of channel values holding the data for zero or more successive
-        /// samples to send.
-        /// </param>
-        /// <param name="timestamp">
-        /// The capture time of the most recent sample, in agreement with
-        /// <see cref="GetLocalClock"/>; if omitted, the current time is used.
-        /// The timestamps of other samples are automatically derived based on the
-        /// sampling rate of the stream.
-        /// </param>
-        /// <exception cref="InvalidOperationException">
-        /// Thrown if this object is invalid.
-        /// </exception>
-        /// <exception cref="ArgumentNullException">
-        /// Thrown if the provided buffer <paramref name="chunk"/> is null.
-        /// </exception>
-        /// <exception cref="ArgumentException">
-        /// Thrown if size of the provided buffer is too small.
-        /// </exception>
+        /// <inheritdoc cref="PushChunk(sbyte[], double)"/>
         public void PushChunk(sbyte[,] chunk, double timestamp)
         {
             ThrowIfInvalid();
@@ -1291,29 +726,7 @@ namespace SharpLSL
             CheckError(lsl_push_chunk_ct(handle, chunk, (uint)chunk.Length, timestamp));
         }
 
-        /// <summary>
-        /// Pushes a chunk of multiplexed samples into the outlet. Handles type
-        /// checking and conversion.
-        /// </summary>
-        /// <param name="chunk">
-        /// A buffer of channel values holding the data for zero or more successive
-        /// samples to send.
-        /// </param>
-        /// <param name="timestamp">
-        /// The capture time of the most recent sample, in agreement with
-        /// <see cref="GetLocalClock"/>; if omitted, the current time is used.
-        /// The timestamps of other samples are automatically derived based on the
-        /// sampling rate of the stream.
-        /// </param>
-        /// <exception cref="InvalidOperationException">
-        /// Thrown if this object is invalid.
-        /// </exception>
-        /// <exception cref="ArgumentNullException">
-        /// Thrown if the provided buffer <paramref name="chunk"/> is null.
-        /// </exception>
-        /// <exception cref="ArgumentException">
-        /// Thrown if size of the provided buffer is too small.
-        /// </exception>
+        /// <inheritdoc cref="PushChunk(sbyte[], double)"/>
         public void PushChunk(short[,] chunk, double timestamp)
         {
             ThrowIfInvalid();
@@ -1322,29 +735,7 @@ namespace SharpLSL
             CheckError(lsl_push_chunk_st(handle, chunk, (uint)chunk.Length, timestamp));
         }
 
-        /// <summary>
-        /// Pushes a chunk of multiplexed samples into the outlet. Handles type
-        /// checking and conversion.
-        /// </summary>
-        /// <param name="chunk">
-        /// A buffer of channel values holding the data for zero or more successive
-        /// samples to send.
-        /// </param>
-        /// <param name="timestamp">
-        /// The capture time of the most recent sample, in agreement with
-        /// <see cref="GetLocalClock"/>; if omitted, the current time is used.
-        /// The timestamps of other samples are automatically derived based on the
-        /// sampling rate of the stream.
-        /// </param>
-        /// <exception cref="InvalidOperationException">
-        /// Thrown if this object is invalid.
-        /// </exception>
-        /// <exception cref="ArgumentNullException">
-        /// Thrown if the provided buffer <paramref name="chunk"/> is null.
-        /// </exception>
-        /// <exception cref="ArgumentException">
-        /// Thrown if size of the provided buffer is too small.
-        /// </exception>
+        /// <inheritdoc cref="PushChunk(sbyte[], double)"/>
         public void PushChunk(int[,] chunk, double timestamp)
         {
             ThrowIfInvalid();
@@ -1353,29 +744,7 @@ namespace SharpLSL
             CheckError(lsl_push_chunk_it(handle, chunk, (uint)chunk.Length, timestamp));
         }
 
-        /// <summary>
-        /// Pushes a chunk of multiplexed samples into the outlet. Handles type
-        /// checking and conversion.
-        /// </summary>
-        /// <param name="chunk">
-        /// A buffer of channel values holding the data for zero or more successive
-        /// samples to send.
-        /// </param>
-        /// <param name="timestamp">
-        /// The capture time of the most recent sample, in agreement with
-        /// <see cref="GetLocalClock"/>; if omitted, the current time is used.
-        /// The timestamps of other samples are automatically derived based on the
-        /// sampling rate of the stream.
-        /// </param>
-        /// <exception cref="InvalidOperationException">
-        /// Thrown if this object is invalid.
-        /// </exception>
-        /// <exception cref="ArgumentNullException">
-        /// Thrown if the provided buffer <paramref name="chunk"/> is null.
-        /// </exception>
-        /// <exception cref="ArgumentException">
-        /// Thrown if size of the provided buffer is too small.
-        /// </exception>
+        /// <inheritdoc cref="PushChunk(sbyte[], double)"/>
         public void PushChunk(long[,] chunk, double timestamp)
         {
             ThrowIfInvalid();
@@ -1384,29 +753,7 @@ namespace SharpLSL
             CheckError(lsl_push_chunk_lt(handle, chunk, (uint)chunk.Length, timestamp));
         }
 
-        /// <summary>
-        /// Pushes a chunk of multiplexed samples into the outlet. Handles type
-        /// checking and conversion.
-        /// </summary>
-        /// <param name="chunk">
-        /// A buffer of channel values holding the data for zero or more successive
-        /// samples to send.
-        /// </param>
-        /// <param name="timestamp">
-        /// The capture time of the most recent sample, in agreement with
-        /// <see cref="GetLocalClock"/>; if omitted, the current time is used.
-        /// The timestamps of other samples are automatically derived based on the
-        /// sampling rate of the stream.
-        /// </param>
-        /// <exception cref="InvalidOperationException">
-        /// Thrown if this object is invalid.
-        /// </exception>
-        /// <exception cref="ArgumentNullException">
-        /// Thrown if the provided buffer <paramref name="chunk"/> is null.
-        /// </exception>
-        /// <exception cref="ArgumentException">
-        /// Thrown if size of the provided buffer is too small.
-        /// </exception>
+        /// <inheritdoc cref="PushChunk(sbyte[], double)"/>
         public void PushChunk(float[,] chunk, double timestamp)
         {
             ThrowIfInvalid();
@@ -1415,29 +762,7 @@ namespace SharpLSL
             CheckError(lsl_push_chunk_ft(handle, chunk, (uint)chunk.Length, timestamp));
         }
 
-        /// <summary>
-        /// Pushes a chunk of multiplexed samples into the outlet. Handles type
-        /// checking and conversion.
-        /// </summary>
-        /// <param name="chunk">
-        /// A buffer of channel values holding the data for zero or more successive
-        /// samples to send.
-        /// </param>
-        /// <param name="timestamp">
-        /// The capture time of the most recent sample, in agreement with
-        /// <see cref="GetLocalClock"/>; if omitted, the current time is used.
-        /// The timestamps of other samples are automatically derived based on the
-        /// sampling rate of the stream.
-        /// </param>
-        /// <exception cref="InvalidOperationException">
-        /// Thrown if this object is invalid.
-        /// </exception>
-        /// <exception cref="ArgumentNullException">
-        /// Thrown if the provided buffer <paramref name="chunk"/> is null.
-        /// </exception>
-        /// <exception cref="ArgumentException">
-        /// Thrown if size of the provided buffer is too small.
-        /// </exception>
+        /// <inheritdoc cref="PushChunk(sbyte[], double)"/>
         public void PushChunk(double[,] chunk, double timestamp)
         {
             ThrowIfInvalid();
@@ -1446,29 +771,7 @@ namespace SharpLSL
             CheckError(lsl_push_chunk_dt(handle, chunk, (uint)chunk.Length, timestamp));
         }
 
-        /// <summary>
-        /// Pushes a chunk of multiplexed samples into the outlet. Handles type
-        /// checking and conversion.
-        /// </summary>
-        /// <param name="chunk">
-        /// A buffer of channel values holding the data for zero or more successive
-        /// samples to send.
-        /// </param>
-        /// <param name="timestamp">
-        /// The capture time of the most recent sample, in agreement with
-        /// <see cref="GetLocalClock"/>; if omitted, the current time is used.
-        /// The timestamps of other samples are automatically derived based on the
-        /// sampling rate of the stream.
-        /// </param>
-        /// <exception cref="InvalidOperationException">
-        /// Thrown if this object is invalid.
-        /// </exception>
-        /// <exception cref="ArgumentNullException">
-        /// Thrown if the provided buffer <paramref name="chunk"/> is null.
-        /// </exception>
-        /// <exception cref="ArgumentException">
-        /// Thrown if size of the provided buffer is too small.
-        /// </exception>
+        /// <inheritdoc cref="PushChunk(sbyte[], double)"/>
         public void PushChunk(string[,] chunk, double timestamp)
         {
             ThrowIfInvalid();
@@ -1477,10 +780,6 @@ namespace SharpLSL
             CheckError(lsl_push_chunk_strt(handle, chunk, (uint)chunk.Length, timestamp));
         }
 
-        /// <summary>
-        /// Pushes a chunk of multiplexed samples into the outlet. Handles type
-        /// checking and conversion.
-        /// </summary>
         /// <param name="chunk">
         /// A buffer of channel values holding the data for zero or more successive
         /// samples to send.
@@ -1496,15 +795,7 @@ namespace SharpLSL
         /// it with subsequent samples. Note that the chunk size, if specified at
         /// outlet construction, takes precedence over the push through flag.
         /// </param>
-        /// <exception cref="InvalidOperationException">
-        /// Thrown if this object is invalid.
-        /// </exception>
-        /// <exception cref="ArgumentNullException">
-        /// Thrown if the provided buffer <paramref name="chunk"/> is null.
-        /// </exception>
-        /// <exception cref="ArgumentException">
-        /// Thrown if size of the provided buffer is too small.
-        /// </exception>
+        /// <inheritdoc cref="PushChunk(sbyte[], double)"/>
         public void PushChunk(sbyte[] chunk, double timestamp, bool pushThrough)
         {
             ThrowIfInvalid();
@@ -1513,34 +804,7 @@ namespace SharpLSL
             CheckError(lsl_push_chunk_ctp(handle, chunk, (uint)chunk.Length, timestamp, pushThrough ? 1 : 0));
         }
 
-        /// <summary>
-        /// Pushes a chunk of multiplexed samples into the outlet. Handles type
-        /// checking and conversion.
-        /// </summary>
-        /// <param name="chunk">
-        /// A buffer of channel values holding the data for zero or more successive
-        /// samples to send.
-        /// </param>
-        /// <param name="timestamp">
-        /// The capture time of the most recent sample, in agreement with
-        /// <see cref="GetLocalClock"/>; if omitted, the current time is used.
-        /// The timestamps of other samples are automatically derived based on the
-        /// sampling rate of the stream.
-        /// </param>
-        /// <param name="pushThrough">
-        /// Whether to push the sample through to the receivers instead of buffering
-        /// it with subsequent samples. Note that the chunk size, if specified at
-        /// outlet construction, takes precedence over the push through flag.
-        /// </param>
-        /// <exception cref="InvalidOperationException">
-        /// Thrown if this object is invalid.
-        /// </exception>
-        /// <exception cref="ArgumentNullException">
-        /// Thrown if the provided buffer <paramref name="chunk"/> is null.
-        /// </exception>
-        /// <exception cref="ArgumentException">
-        /// Thrown if size of the provided buffer is too small.
-        /// </exception>
+        /// <inheritdoc cref="PushChunk(sbyte[], double, bool)"/>
         public void PushChunk(short[] chunk, double timestamp, bool pushThrough)
         {
             ThrowIfInvalid();
@@ -1549,34 +813,7 @@ namespace SharpLSL
             CheckError(lsl_push_chunk_stp(handle, chunk, (uint)chunk.Length, timestamp, pushThrough ? 1 : 0));
         }
 
-        /// <summary>
-        /// Pushes a chunk of multiplexed samples into the outlet. Handles type
-        /// checking and conversion.
-        /// </summary>
-        /// <param name="chunk">
-        /// A buffer of channel values holding the data for zero or more successive
-        /// samples to send.
-        /// </param>
-        /// <param name="timestamp">
-        /// The capture time of the most recent sample, in agreement with
-        /// <see cref="GetLocalClock"/>; if omitted, the current time is used.
-        /// The timestamps of other samples are automatically derived based on the
-        /// sampling rate of the stream.
-        /// </param>
-        /// <param name="pushThrough">
-        /// Whether to push the sample through to the receivers instead of buffering
-        /// it with subsequent samples. Note that the chunk size, if specified at
-        /// outlet construction, takes precedence over the push through flag.
-        /// </param>
-        /// <exception cref="InvalidOperationException">
-        /// Thrown if this object is invalid.
-        /// </exception>
-        /// <exception cref="ArgumentNullException">
-        /// Thrown if the provided buffer <paramref name="chunk"/> is null.
-        /// </exception>
-        /// <exception cref="ArgumentException">
-        /// Thrown if size of the provided buffer is too small.
-        /// </exception>
+        /// <inheritdoc cref="PushChunk(sbyte[], double, bool)"/>
         public void PushChunk(int[] chunk, double timestamp, bool pushThrough)
         {
             ThrowIfInvalid();
@@ -1585,34 +822,7 @@ namespace SharpLSL
             CheckError(lsl_push_chunk_itp(handle, chunk, (uint)chunk.Length, timestamp, pushThrough ? 1 : 0));
         }
 
-        /// <summary>
-        /// Pushes a chunk of multiplexed samples into the outlet. Handles type
-        /// checking and conversion.
-        /// </summary>
-        /// <param name="chunk">
-        /// A buffer of channel values holding the data for zero or more successive
-        /// samples to send.
-        /// </param>
-        /// <param name="timestamp">
-        /// The capture time of the most recent sample, in agreement with
-        /// <see cref="GetLocalClock"/>; if omitted, the current time is used.
-        /// The timestamps of other samples are automatically derived based on the
-        /// sampling rate of the stream.
-        /// </param>
-        /// <param name="pushThrough">
-        /// Whether to push the sample through to the receivers instead of buffering
-        /// it with subsequent samples. Note that the chunk size, if specified at
-        /// outlet construction, takes precedence over the push through flag.
-        /// </param>
-        /// <exception cref="InvalidOperationException">
-        /// Thrown if this object is invalid.
-        /// </exception>
-        /// <exception cref="ArgumentNullException">
-        /// Thrown if the provided buffer <paramref name="chunk"/> is null.
-        /// </exception>
-        /// <exception cref="ArgumentException">
-        /// Thrown if size of the provided buffer is too small.
-        /// </exception>
+        /// <inheritdoc cref="PushChunk(sbyte[], double, bool)"/>
         public void PushChunk(long[] chunk, double timestamp, bool pushThrough)
         {
             ThrowIfInvalid();
@@ -1621,34 +831,7 @@ namespace SharpLSL
             CheckError(lsl_push_chunk_ltp(handle, chunk, (uint)chunk.Length, timestamp, pushThrough ? 1 : 0));
         }
 
-        /// <summary>
-        /// Pushes a chunk of multiplexed samples into the outlet. Handles type
-        /// checking and conversion.
-        /// </summary>
-        /// <param name="chunk">
-        /// A buffer of channel values holding the data for zero or more successive
-        /// samples to send.
-        /// </param>
-        /// <param name="timestamp">
-        /// The capture time of the most recent sample, in agreement with
-        /// <see cref="GetLocalClock"/>; if omitted, the current time is used.
-        /// The timestamps of other samples are automatically derived based on the
-        /// sampling rate of the stream.
-        /// </param>
-        /// <param name="pushThrough">
-        /// Whether to push the sample through to the receivers instead of buffering
-        /// it with subsequent samples. Note that the chunk size, if specified at
-        /// outlet construction, takes precedence over the push through flag.
-        /// </param>
-        /// <exception cref="InvalidOperationException">
-        /// Thrown if this object is invalid.
-        /// </exception>
-        /// <exception cref="ArgumentNullException">
-        /// Thrown if the provided buffer <paramref name="chunk"/> is null.
-        /// </exception>
-        /// <exception cref="ArgumentException">
-        /// Thrown if size of the provided buffer is too small.
-        /// </exception>
+        /// <inheritdoc cref="PushChunk(sbyte[], double, bool)"/>
         public void PushChunk(float[] chunk, double timestamp, bool pushThrough)
         {
             ThrowIfInvalid();
@@ -1657,34 +840,7 @@ namespace SharpLSL
             CheckError(lsl_push_chunk_ftp(handle, chunk, (uint)chunk.Length, timestamp, pushThrough ? 1 : 0));
         }
 
-        /// <summary>
-        /// Pushes a chunk of multiplexed samples into the outlet. Handles type
-        /// checking and conversion.
-        /// </summary>
-        /// <param name="chunk">
-        /// A buffer of channel values holding the data for zero or more successive
-        /// samples to send.
-        /// </param>
-        /// <param name="timestamp">
-        /// The capture time of the most recent sample, in agreement with
-        /// <see cref="GetLocalClock"/>; if omitted, the current time is used.
-        /// The timestamps of other samples are automatically derived based on the
-        /// sampling rate of the stream.
-        /// </param>
-        /// <param name="pushThrough">
-        /// Whether to push the sample through to the receivers instead of buffering
-        /// it with subsequent samples. Note that the chunk size, if specified at
-        /// outlet construction, takes precedence over the push through flag.
-        /// </param>
-        /// <exception cref="InvalidOperationException">
-        /// Thrown if this object is invalid.
-        /// </exception>
-        /// <exception cref="ArgumentNullException">
-        /// Thrown if the provided buffer <paramref name="chunk"/> is null.
-        /// </exception>
-        /// <exception cref="ArgumentException">
-        /// Thrown if size of the provided buffer is too small.
-        /// </exception>
+        /// <inheritdoc cref="PushChunk(sbyte[], double, bool)"/>
         public void PushChunk(double[] chunk, double timestamp, bool pushThrough)
         {
             ThrowIfInvalid();
@@ -1693,34 +849,7 @@ namespace SharpLSL
             CheckError(lsl_push_chunk_dtp(handle, chunk, (uint)chunk.Length, timestamp, pushThrough ? 1 : 0));
         }
 
-        /// <summary>
-        /// Pushes a chunk of multiplexed samples into the outlet. Handles type
-        /// checking and conversion.
-        /// </summary>
-        /// <param name="chunk">
-        /// A buffer of channel values holding the data for zero or more successive
-        /// samples to send.
-        /// </param>
-        /// <param name="timestamp">
-        /// The capture time of the most recent sample, in agreement with
-        /// <see cref="GetLocalClock"/>; if omitted, the current time is used.
-        /// The timestamps of other samples are automatically derived based on the
-        /// sampling rate of the stream.
-        /// </param>
-        /// <param name="pushThrough">
-        /// Whether to push the sample through to the receivers instead of buffering
-        /// it with subsequent samples. Note that the chunk size, if specified at
-        /// outlet construction, takes precedence over the push through flag.
-        /// </param>
-        /// <exception cref="InvalidOperationException">
-        /// Thrown if this object is invalid.
-        /// </exception>
-        /// <exception cref="ArgumentNullException">
-        /// Thrown if the provided buffer <paramref name="chunk"/> is null.
-        /// </exception>
-        /// <exception cref="ArgumentException">
-        /// Thrown if size of the provided buffer is too small.
-        /// </exception>
+        /// <inheritdoc cref="PushChunk(sbyte[], double, bool)"/>
         public void PushChunk(string[] chunk, double timestamp, bool pushThrough)
         {
             ThrowIfInvalid();
@@ -1729,34 +858,7 @@ namespace SharpLSL
             CheckError(lsl_push_chunk_strtp(handle, chunk, (uint)chunk.Length, timestamp, pushThrough ? 1 : 0));
         }
 
-        /// <summary>
-        /// Pushes a chunk of multiplexed samples into the outlet. Handles type
-        /// checking and conversion.
-        /// </summary>
-        /// <param name="chunk">
-        /// A buffer of channel values holding the data for zero or more successive
-        /// samples to send.
-        /// </param>
-        /// <param name="timestamp">
-        /// The capture time of the most recent sample, in agreement with
-        /// <see cref="GetLocalClock"/>; if omitted, the current time is used.
-        /// The timestamps of other samples are automatically derived based on the
-        /// sampling rate of the stream.
-        /// </param>
-        /// <param name="pushThrough">
-        /// Whether to push the sample through to the receivers instead of buffering
-        /// it with subsequent samples. Note that the chunk size, if specified at
-        /// outlet construction, takes precedence over the push through flag.
-        /// </param>
-        /// <exception cref="InvalidOperationException">
-        /// Thrown if this object is invalid.
-        /// </exception>
-        /// <exception cref="ArgumentNullException">
-        /// Thrown if the provided buffer <paramref name="chunk"/> is null.
-        /// </exception>
-        /// <exception cref="ArgumentException">
-        /// Thrown if size of the provided buffer is too small.
-        /// </exception>
+        /// <inheritdoc cref="PushChunk(sbyte[], double, bool)"/>
         public void PushChunk(sbyte[,] chunk, double timestamp, bool pushThrough)
         {
             ThrowIfInvalid();
@@ -1765,34 +867,7 @@ namespace SharpLSL
             CheckError(lsl_push_chunk_ctp(handle, chunk, (uint)chunk.Length, timestamp, pushThrough ? 1 : 0));
         }
 
-        /// <summary>
-        /// Pushes a chunk of multiplexed samples into the outlet. Handles type
-        /// checking and conversion.
-        /// </summary>
-        /// <param name="chunk">
-        /// A buffer of channel values holding the data for zero or more successive
-        /// samples to send.
-        /// </param>
-        /// <param name="timestamp">
-        /// The capture time of the most recent sample, in agreement with
-        /// <see cref="GetLocalClock"/>; if omitted, the current time is used.
-        /// The timestamps of other samples are automatically derived based on the
-        /// sampling rate of the stream.
-        /// </param>
-        /// <param name="pushThrough">
-        /// Whether to push the sample through to the receivers instead of buffering
-        /// it with subsequent samples. Note that the chunk size, if specified at
-        /// outlet construction, takes precedence over the push through flag.
-        /// </param>
-        /// <exception cref="InvalidOperationException">
-        /// Thrown if this object is invalid.
-        /// </exception>
-        /// <exception cref="ArgumentNullException">
-        /// Thrown if the provided buffer <paramref name="chunk"/> is null.
-        /// </exception>
-        /// <exception cref="ArgumentException">
-        /// Thrown if size of the provided buffer is too small.
-        /// </exception>
+        /// <inheritdoc cref="PushChunk(sbyte[], double, bool)"/>
         public void PushChunk(short[,] chunk, double timestamp, bool pushThrough)
         {
             ThrowIfInvalid();
@@ -1801,34 +876,7 @@ namespace SharpLSL
             CheckError(lsl_push_chunk_stp(handle, chunk, (uint)chunk.Length, timestamp, pushThrough ? 1 : 0));
         }
 
-        /// <summary>
-        /// Pushes a chunk of multiplexed samples into the outlet. Handles type
-        /// checking and conversion.
-        /// </summary>
-        /// <param name="chunk">
-        /// A buffer of channel values holding the data for zero or more successive
-        /// samples to send.
-        /// </param>
-        /// <param name="timestamp">
-        /// The capture time of the most recent sample, in agreement with
-        /// <see cref="GetLocalClock"/>; if omitted, the current time is used.
-        /// The timestamps of other samples are automatically derived based on the
-        /// sampling rate of the stream.
-        /// </param>
-        /// <param name="pushThrough">
-        /// Whether to push the sample through to the receivers instead of buffering
-        /// it with subsequent samples. Note that the chunk size, if specified at
-        /// outlet construction, takes precedence over the push through flag.
-        /// </param>
-        /// <exception cref="InvalidOperationException">
-        /// Thrown if this object is invalid.
-        /// </exception>
-        /// <exception cref="ArgumentNullException">
-        /// Thrown if the provided buffer <paramref name="chunk"/> is null.
-        /// </exception>
-        /// <exception cref="ArgumentException">
-        /// Thrown if size of the provided buffer is too small.
-        /// </exception>
+        /// <inheritdoc cref="PushChunk(sbyte[], double, bool)"/>
         public void PushChunk(int[,] chunk, double timestamp, bool pushThrough)
         {
             ThrowIfInvalid();
@@ -1837,34 +885,7 @@ namespace SharpLSL
             CheckError(lsl_push_chunk_itp(handle, chunk, (uint)chunk.Length, timestamp, pushThrough ? 1 : 0));
         }
 
-        /// <summary>
-        /// Pushes a chunk of multiplexed samples into the outlet. Handles type
-        /// checking and conversion.
-        /// </summary>
-        /// <param name="chunk">
-        /// A buffer of channel values holding the data for zero or more successive
-        /// samples to send.
-        /// </param>
-        /// <param name="timestamp">
-        /// The capture time of the most recent sample, in agreement with
-        /// <see cref="GetLocalClock"/>; if omitted, the current time is used.
-        /// The timestamps of other samples are automatically derived based on the
-        /// sampling rate of the stream.
-        /// </param>
-        /// <param name="pushThrough">
-        /// Whether to push the sample through to the receivers instead of buffering
-        /// it with subsequent samples. Note that the chunk size, if specified at
-        /// outlet construction, takes precedence over the push through flag.
-        /// </param>
-        /// <exception cref="InvalidOperationException">
-        /// Thrown if this object is invalid.
-        /// </exception>
-        /// <exception cref="ArgumentNullException">
-        /// Thrown if the provided buffer <paramref name="chunk"/> is null.
-        /// </exception>
-        /// <exception cref="ArgumentException">
-        /// Thrown if size of the provided buffer is too small.
-        /// </exception>
+        /// <inheritdoc cref="PushChunk(sbyte[], double, bool)"/>
         public void PushChunk(long[,] chunk, double timestamp, bool pushThrough)
         {
             ThrowIfInvalid();
@@ -1873,34 +894,7 @@ namespace SharpLSL
             CheckError(lsl_push_chunk_ltp(handle, chunk, (uint)chunk.Length, timestamp, pushThrough ? 1 : 0));
         }
 
-        /// <summary>
-        /// Pushes a chunk of multiplexed samples into the outlet. Handles type
-        /// checking and conversion.
-        /// </summary>
-        /// <param name="chunk">
-        /// A buffer of channel values holding the data for zero or more successive
-        /// samples to send.
-        /// </param>
-        /// <param name="timestamp">
-        /// The capture time of the most recent sample, in agreement with
-        /// <see cref="GetLocalClock"/>; if omitted, the current time is used.
-        /// The timestamps of other samples are automatically derived based on the
-        /// sampling rate of the stream.
-        /// </param>
-        /// <param name="pushThrough">
-        /// Whether to push the sample through to the receivers instead of buffering
-        /// it with subsequent samples. Note that the chunk size, if specified at
-        /// outlet construction, takes precedence over the push through flag.
-        /// </param>
-        /// <exception cref="InvalidOperationException">
-        /// Thrown if this object is invalid.
-        /// </exception>
-        /// <exception cref="ArgumentNullException">
-        /// Thrown if the provided buffer <paramref name="chunk"/> is null.
-        /// </exception>
-        /// <exception cref="ArgumentException">
-        /// Thrown if size of the provided buffer is too small.
-        /// </exception>
+        /// <inheritdoc cref="PushChunk(sbyte[], double, bool)"/>
         public void PushChunk(float[,] chunk, double timestamp, bool pushThrough)
         {
             ThrowIfInvalid();
@@ -1909,34 +903,7 @@ namespace SharpLSL
             CheckError(lsl_push_chunk_ftp(handle, chunk, (uint)chunk.Length, timestamp, pushThrough ? 1 : 0));
         }
 
-        /// <summary>
-        /// Pushes a chunk of multiplexed samples into the outlet. Handles type
-        /// checking and conversion.
-        /// </summary>
-        /// <param name="chunk">
-        /// A buffer of channel values holding the data for zero or more successive
-        /// samples to send.
-        /// </param>
-        /// <param name="timestamp">
-        /// The capture time of the most recent sample, in agreement with
-        /// <see cref="GetLocalClock"/>; if omitted, the current time is used.
-        /// The timestamps of other samples are automatically derived based on the
-        /// sampling rate of the stream.
-        /// </param>
-        /// <param name="pushThrough">
-        /// Whether to push the sample through to the receivers instead of buffering
-        /// it with subsequent samples. Note that the chunk size, if specified at
-        /// outlet construction, takes precedence over the push through flag.
-        /// </param>
-        /// <exception cref="InvalidOperationException">
-        /// Thrown if this object is invalid.
-        /// </exception>
-        /// <exception cref="ArgumentNullException">
-        /// Thrown if the provided buffer <paramref name="chunk"/> is null.
-        /// </exception>
-        /// <exception cref="ArgumentException">
-        /// Thrown if size of the provided buffer is too small.
-        /// </exception>
+        /// <inheritdoc cref="PushChunk(sbyte[], double, bool)"/>
         public void PushChunk(double[,] chunk, double timestamp, bool pushThrough)
         {
             ThrowIfInvalid();
@@ -1945,34 +912,7 @@ namespace SharpLSL
             CheckError(lsl_push_chunk_dtp(handle, chunk, (uint)chunk.Length, timestamp, pushThrough ? 1 : 0));
         }
 
-        /// <summary>
-        /// Pushes a chunk of multiplexed samples into the outlet. Handles type
-        /// checking and conversion.
-        /// </summary>
-        /// <param name="chunk">
-        /// A buffer of channel values holding the data for zero or more successive
-        /// samples to send.
-        /// </param>
-        /// <param name="timestamp">
-        /// The capture time of the most recent sample, in agreement with
-        /// <see cref="GetLocalClock"/>; if omitted, the current time is used.
-        /// The timestamps of other samples are automatically derived based on the
-        /// sampling rate of the stream.
-        /// </param>
-        /// <param name="pushThrough">
-        /// Whether to push the sample through to the receivers instead of buffering
-        /// it with subsequent samples. Note that the chunk size, if specified at
-        /// outlet construction, takes precedence over the push through flag.
-        /// </param>
-        /// <exception cref="InvalidOperationException">
-        /// Thrown if this object is invalid.
-        /// </exception>
-        /// <exception cref="ArgumentNullException">
-        /// Thrown if the provided buffer <paramref name="chunk"/> is null.
-        /// </exception>
-        /// <exception cref="ArgumentException">
-        /// Thrown if size of the provided buffer is too small.
-        /// </exception>
+        /// <inheritdoc cref="PushChunk(sbyte[], double, bool)"/>
         public void PushChunk(string[,] chunk, double timestamp, bool pushThrough)
         {
             ThrowIfInvalid();
@@ -1981,10 +921,6 @@ namespace SharpLSL
             CheckError(lsl_push_chunk_strtp(handle, chunk, (uint)chunk.Length, timestamp, pushThrough ? 1 : 0));
         }
 
-        /// <summary>
-        /// Pushes a chunk of multiplexed samples into the outlet. Handles type
-        /// checking and conversion.
-        /// </summary>
         /// <param name="chunk">
         /// A buffer of channel values holding the data for zero or more successive
         /// samples to send.
@@ -1992,16 +928,11 @@ namespace SharpLSL
         /// <param name="timestamps">
         /// The buffer holding one timestamp for each sample in the data buffer.
         /// </param>
-        /// <exception cref="InvalidOperationException">
-        /// Thrown if this object is invalid.
-        /// </exception>
         /// <exception cref="ArgumentNullException">
         /// Thrown if the provided data buffer <paramref name="chunk"/> or timestamp
         /// buffer <paramref name="timestamps"/> is null.
         /// </exception>
-        /// <exception cref="ArgumentException">
-        /// Thrown if size of the provided buffer is too small.
-        /// </exception>
+        /// <inheritdoc cref="PushChunk(sbyte[])"/>
         public void PushChunk(sbyte[] chunk, double[] timestamps)
         {
             ThrowIfInvalid();
@@ -2012,27 +943,7 @@ namespace SharpLSL
             CheckError(lsl_push_chunk_ctn(handle, chunk, (uint)chunk.Length, timestamps));
         }
 
-        /// <summary>
-        /// Pushes a chunk of multiplexed samples into the outlet. Handles type
-        /// checking and conversion.
-        /// </summary>
-        /// <param name="chunk">
-        /// A buffer of channel values holding the data for zero or more successive
-        /// samples to send.
-        /// </param>
-        /// <param name="timestamps">
-        /// The buffer holding one timestamp for each sample in the data buffer.
-        /// </param>
-        /// <exception cref="InvalidOperationException">
-        /// Thrown if this object is invalid.
-        /// </exception>
-        /// <exception cref="ArgumentNullException">
-        /// Thrown if the provided data buffer <paramref name="chunk"/> or timestamp
-        /// buffer <paramref name="timestamps"/> is null.
-        /// </exception>
-        /// <exception cref="ArgumentException">
-        /// Thrown if size of the provided buffer is too small.
-        /// </exception>
+        /// <inheritdoc cref="PushChunk(sbyte[], double[])"/>
         public void PushChunk(short[] chunk, double[] timestamps)
         {
             ThrowIfInvalid();
@@ -2043,27 +954,7 @@ namespace SharpLSL
             CheckError(lsl_push_chunk_stn(handle, chunk, (uint)chunk.Length, timestamps));
         }
 
-        /// <summary>
-        /// Pushes a chunk of multiplexed samples into the outlet. Handles type
-        /// checking and conversion.
-        /// </summary>
-        /// <param name="chunk">
-        /// A buffer of channel values holding the data for zero or more successive
-        /// samples to send.
-        /// </param>
-        /// <param name="timestamps">
-        /// The buffer holding one timestamp for each sample in the data buffer.
-        /// </param>
-        /// <exception cref="InvalidOperationException">
-        /// Thrown if this object is invalid.
-        /// </exception>
-        /// <exception cref="ArgumentNullException">
-        /// Thrown if the provided data buffer <paramref name="chunk"/> or timestamp
-        /// buffer <paramref name="timestamps"/> is null.
-        /// </exception>
-        /// <exception cref="ArgumentException">
-        /// Thrown if size of the provided buffer is too small.
-        /// </exception>
+        /// <inheritdoc cref="PushChunk(sbyte[], double[])"/>
         public void PushChunk(int[] chunk, double[] timestamps)
         {
             ThrowIfInvalid();
@@ -2074,27 +965,7 @@ namespace SharpLSL
             CheckError(lsl_push_chunk_itn(handle, chunk, (uint)chunk.Length, timestamps));
         }
 
-        /// <summary>
-        /// Pushes a chunk of multiplexed samples into the outlet. Handles type
-        /// checking and conversion.
-        /// </summary>
-        /// <param name="chunk">
-        /// A buffer of channel values holding the data for zero or more successive
-        /// samples to send.
-        /// </param>
-        /// <param name="timestamps">
-        /// The buffer holding one timestamp for each sample in the data buffer.
-        /// </param>
-        /// <exception cref="InvalidOperationException">
-        /// Thrown if this object is invalid.
-        /// </exception>
-        /// <exception cref="ArgumentNullException">
-        /// Thrown if the provided data buffer <paramref name="chunk"/> or timestamp
-        /// buffer <paramref name="timestamps"/> is null.
-        /// </exception>
-        /// <exception cref="ArgumentException">
-        /// Thrown if size of the provided buffer is too small.
-        /// </exception>
+        /// <inheritdoc cref="PushChunk(sbyte[], double[])"/>
         public void PushChunk(long[] chunk, double[] timestamps)
         {
             ThrowIfInvalid();
@@ -2105,27 +976,7 @@ namespace SharpLSL
             CheckError(lsl_push_chunk_ltn(handle, chunk, (uint)chunk.Length, timestamps));
         }
 
-        /// <summary>
-        /// Pushes a chunk of multiplexed samples into the outlet. Handles type
-        /// checking and conversion.
-        /// </summary>
-        /// <param name="chunk">
-        /// A buffer of channel values holding the data for zero or more successive
-        /// samples to send.
-        /// </param>
-        /// <param name="timestamps">
-        /// The buffer holding one timestamp for each sample in the data buffer.
-        /// </param>
-        /// <exception cref="InvalidOperationException">
-        /// Thrown if this object is invalid.
-        /// </exception>
-        /// <exception cref="ArgumentNullException">
-        /// Thrown if the provided data buffer <paramref name="chunk"/> or timestamp
-        /// buffer <paramref name="timestamps"/> is null.
-        /// </exception>
-        /// <exception cref="ArgumentException">
-        /// Thrown if size of the provided buffer is too small.
-        /// </exception>
+        /// <inheritdoc cref="PushChunk(sbyte[], double[])"/>
         public void PushChunk(float[] chunk, double[] timestamps)
         {
             ThrowIfInvalid();
@@ -2136,27 +987,7 @@ namespace SharpLSL
             CheckError(lsl_push_chunk_ftn(handle, chunk, (uint)chunk.Length, timestamps));
         }
 
-        /// <summary>
-        /// Pushes a chunk of multiplexed samples into the outlet. Handles type
-        /// checking and conversion.
-        /// </summary>
-        /// <param name="chunk">
-        /// A buffer of channel values holding the data for zero or more successive
-        /// samples to send.
-        /// </param>
-        /// <param name="timestamps">
-        /// The buffer holding one timestamp for each sample in the data buffer.
-        /// </param>
-        /// <exception cref="InvalidOperationException">
-        /// Thrown if this object is invalid.
-        /// </exception>
-        /// <exception cref="ArgumentNullException">
-        /// Thrown if the provided data buffer <paramref name="chunk"/> or timestamp
-        /// buffer <paramref name="timestamps"/> is null.
-        /// </exception>
-        /// <exception cref="ArgumentException">
-        /// Thrown if size of the provided buffer is too small.
-        /// </exception>
+        /// <inheritdoc cref="PushChunk(sbyte[], double[])"/>
         public void PushChunk(double[] chunk, double[] timestamps)
         {
             ThrowIfInvalid();
@@ -2167,27 +998,7 @@ namespace SharpLSL
             CheckError(lsl_push_chunk_dtn(handle, chunk, (uint)chunk.Length, timestamps));
         }
 
-        /// <summary>
-        /// Pushes a chunk of multiplexed samples into the outlet. Handles type
-        /// checking and conversion.
-        /// </summary>
-        /// <param name="chunk">
-        /// A buffer of channel values holding the data for zero or more successive
-        /// samples to send.
-        /// </param>
-        /// <param name="timestamps">
-        /// The buffer holding one timestamp for each sample in the data buffer.
-        /// </param>
-        /// <exception cref="InvalidOperationException">
-        /// Thrown if this object is invalid.
-        /// </exception>
-        /// <exception cref="ArgumentNullException">
-        /// Thrown if the provided data buffer <paramref name="chunk"/> or timestamp
-        /// buffer <paramref name="timestamps"/> is null.
-        /// </exception>
-        /// <exception cref="ArgumentException">
-        /// Thrown if size of the provided buffer is too small.
-        /// </exception>
+        /// <inheritdoc cref="PushChunk(sbyte[], double[])"/>
         public void PushChunk(string[] chunk, double[] timestamps)
         {
             ThrowIfInvalid();
@@ -2198,27 +1009,7 @@ namespace SharpLSL
             CheckError(lsl_push_chunk_strtn(handle, chunk, (uint)chunk.Length, timestamps));
         }
 
-        /// <summary>
-        /// Pushes a chunk of multiplexed samples into the outlet. Handles type
-        /// checking and conversion.
-        /// </summary>
-        /// <param name="chunk">
-        /// A buffer of channel values holding the data for zero or more successive
-        /// samples to send.
-        /// </param>
-        /// <param name="timestamps">
-        /// The buffer holding one timestamp for each sample in the data buffer.
-        /// </param>
-        /// <exception cref="InvalidOperationException">
-        /// Thrown if this object is invalid.
-        /// </exception>
-        /// <exception cref="ArgumentNullException">
-        /// Thrown if the provided data buffer <paramref name="chunk"/> or timestamp
-        /// buffer <paramref name="timestamps"/> is null.
-        /// </exception>
-        /// <exception cref="ArgumentException">
-        /// Thrown if size of the provided buffer is too small.
-        /// </exception>
+        /// <inheritdoc cref="PushChunk(sbyte[], double[])"/>
         public void PushChunk(sbyte[,] chunk, double[] timestamps)
         {
             ThrowIfInvalid();
@@ -2229,27 +1020,7 @@ namespace SharpLSL
             CheckError(lsl_push_chunk_ctn(handle, chunk, (uint)chunk.Length, timestamps));
         }
 
-        /// <summary>
-        /// Pushes a chunk of multiplexed samples into the outlet. Handles type
-        /// checking and conversion.
-        /// </summary>
-        /// <param name="chunk">
-        /// A buffer of channel values holding the data for zero or more successive
-        /// samples to send.
-        /// </param>
-        /// <param name="timestamps">
-        /// The buffer holding one timestamp for each sample in the data buffer.
-        /// </param>
-        /// <exception cref="InvalidOperationException">
-        /// Thrown if this object is invalid.
-        /// </exception>
-        /// <exception cref="ArgumentNullException">
-        /// Thrown if the provided data buffer <paramref name="chunk"/> or timestamp
-        /// buffer <paramref name="timestamps"/> is null.
-        /// </exception>
-        /// <exception cref="ArgumentException">
-        /// Thrown if size of the provided buffer is too small.
-        /// </exception>
+        /// <inheritdoc cref="PushChunk(sbyte[], double[])"/>
         public void PushChunk(short[,] chunk, double[] timestamps)
         {
             ThrowIfInvalid();
@@ -2260,27 +1031,7 @@ namespace SharpLSL
             CheckError(lsl_push_chunk_stn(handle, chunk, (uint)chunk.Length, timestamps));
         }
 
-        /// <summary>
-        /// Pushes a chunk of multiplexed samples into the outlet. Handles type
-        /// checking and conversion.
-        /// </summary>
-        /// <param name="chunk">
-        /// A buffer of channel values holding the data for zero or more successive
-        /// samples to send.
-        /// </param>
-        /// <param name="timestamps">
-        /// The buffer holding one timestamp for each sample in the data buffer.
-        /// </param>
-        /// <exception cref="InvalidOperationException">
-        /// Thrown if this object is invalid.
-        /// </exception>
-        /// <exception cref="ArgumentNullException">
-        /// Thrown if the provided data buffer <paramref name="chunk"/> or timestamp
-        /// buffer <paramref name="timestamps"/> is null.
-        /// </exception>
-        /// <exception cref="ArgumentException">
-        /// Thrown if size of the provided buffer is too small.
-        /// </exception>
+        /// <inheritdoc cref="PushChunk(sbyte[], double[])"/>
         public void PushChunk(int[,] chunk, double[] timestamps)
         {
             ThrowIfInvalid();
@@ -2291,27 +1042,7 @@ namespace SharpLSL
             CheckError(lsl_push_chunk_itn(handle, chunk, (uint)chunk.Length, timestamps));
         }
 
-        /// <summary>
-        /// Pushes a chunk of multiplexed samples into the outlet. Handles type
-        /// checking and conversion.
-        /// </summary>
-        /// <param name="chunk">
-        /// A buffer of channel values holding the data for zero or more successive
-        /// samples to send.
-        /// </param>
-        /// <param name="timestamps">
-        /// The buffer holding one timestamp for each sample in the data buffer.
-        /// </param>
-        /// <exception cref="InvalidOperationException">
-        /// Thrown if this object is invalid.
-        /// </exception>
-        /// <exception cref="ArgumentNullException">
-        /// Thrown if the provided data buffer <paramref name="chunk"/> or timestamp
-        /// buffer <paramref name="timestamps"/> is null.
-        /// </exception>
-        /// <exception cref="ArgumentException">
-        /// Thrown if size of the provided buffer is too small.
-        /// </exception>
+        /// <inheritdoc cref="PushChunk(sbyte[], double[])"/>
         public void PushChunk(long[,] chunk, double[] timestamps)
         {
             ThrowIfInvalid();
@@ -2322,27 +1053,7 @@ namespace SharpLSL
             CheckError(lsl_push_chunk_ltn(handle, chunk, (uint)chunk.Length, timestamps));
         }
 
-        /// <summary>
-        /// Pushes a chunk of multiplexed samples into the outlet. Handles type
-        /// checking and conversion.
-        /// </summary>
-        /// <param name="chunk">
-        /// A buffer of channel values holding the data for zero or more successive
-        /// samples to send.
-        /// </param>
-        /// <param name="timestamps">
-        /// The buffer holding one timestamp for each sample in the data buffer.
-        /// </param>
-        /// <exception cref="InvalidOperationException">
-        /// Thrown if this object is invalid.
-        /// </exception>
-        /// <exception cref="ArgumentNullException">
-        /// Thrown if the provided data buffer <paramref name="chunk"/> or timestamp
-        /// buffer <paramref name="timestamps"/> is null.
-        /// </exception>
-        /// <exception cref="ArgumentException">
-        /// Thrown if size of the provided buffer is too small.
-        /// </exception>
+        /// <inheritdoc cref="PushChunk(sbyte[], double[])"/>
         public void PushChunk(float[,] chunk, double[] timestamps)
         {
             ThrowIfInvalid();
@@ -2353,27 +1064,7 @@ namespace SharpLSL
             CheckError(lsl_push_chunk_ftn(handle, chunk, (uint)chunk.Length, timestamps));
         }
 
-        /// <summary>
-        /// Pushes a chunk of multiplexed samples into the outlet. Handles type
-        /// checking and conversion.
-        /// </summary>
-        /// <param name="chunk">
-        /// A buffer of channel values holding the data for zero or more successive
-        /// samples to send.
-        /// </param>
-        /// <param name="timestamps">
-        /// The buffer holding one timestamp for each sample in the data buffer.
-        /// </param>
-        /// <exception cref="InvalidOperationException">
-        /// Thrown if this object is invalid.
-        /// </exception>
-        /// <exception cref="ArgumentNullException">
-        /// Thrown if the provided data buffer <paramref name="chunk"/> or timestamp
-        /// buffer <paramref name="timestamps"/> is null.
-        /// </exception>
-        /// <exception cref="ArgumentException">
-        /// Thrown if size of the provided buffer is too small.
-        /// </exception>
+        /// <inheritdoc cref="PushChunk(sbyte[], double[])"/>
         public void PushChunk(double[,] chunk, double[] timestamps)
         {
             ThrowIfInvalid();
@@ -2384,27 +1075,7 @@ namespace SharpLSL
             CheckError(lsl_push_chunk_dtn(handle, chunk, (uint)chunk.Length, timestamps));
         }
 
-        /// <summary>
-        /// Pushes a chunk of multiplexed samples into the outlet. Handles type
-        /// checking and conversion.
-        /// </summary>
-        /// <param name="chunk">
-        /// A buffer of channel values holding the data for zero or more successive
-        /// samples to send.
-        /// </param>
-        /// <param name="timestamps">
-        /// The buffer holding one timestamp for each sample in the data buffer.
-        /// </param>
-        /// <exception cref="InvalidOperationException">
-        /// Thrown if this object is invalid.
-        /// </exception>
-        /// <exception cref="ArgumentNullException">
-        /// Thrown if the provided data buffer <paramref name="chunk"/> or timestamp
-        /// buffer <paramref name="timestamps"/> is null.
-        /// </exception>
-        /// <exception cref="ArgumentException">
-        /// Thrown if size of the provided buffer is too small.
-        /// </exception>
+        /// <inheritdoc cref="PushChunk(sbyte[], double[])"/>
         public void PushChunk(string[,] chunk, double[] timestamps)
         {
             ThrowIfInvalid();
@@ -2415,10 +1086,6 @@ namespace SharpLSL
             CheckError(lsl_push_chunk_strtn(handle, chunk, (uint)chunk.Length, timestamps));
         }
 
-        /// <summary>
-        /// Pushes a chunk of multiplexed samples into the outlet. Handles type
-        /// checking and conversion.
-        /// </summary>
         /// <param name="chunk">
         /// A buffer of channel values holding the data for zero or more successive
         /// samples to send.
@@ -2431,16 +1098,7 @@ namespace SharpLSL
         /// it with subsequent samples. Note that the chunk size, if specified at
         /// outlet construction, takes precedence over the push through flag.
         /// </param>
-        /// <exception cref="InvalidOperationException">
-        /// Thrown if this object is invalid.
-        /// </exception>
-        /// <exception cref="ArgumentNullException">
-        /// Thrown if the provided data buffer <paramref name="chunk"/> or timestamp
-        /// buffer <paramref name="timestamps"/> is null.
-        /// </exception>
-        /// <exception cref="ArgumentException">
-        /// Thrown if size of the provided buffer is too small.
-        /// </exception>
+        /// <inheritdoc cref="PushChunk(sbyte[], double[])"/>
         public void PushChunk(sbyte[] chunk, double[] timestamps, bool pushThrough)
         {
             ThrowIfInvalid();
@@ -2451,32 +1109,7 @@ namespace SharpLSL
             CheckError(lsl_push_chunk_ctnp(handle, chunk, (uint)chunk.Length, timestamps, pushThrough ? 1 : 0));
         }
 
-        /// <summary>
-        /// Pushes a chunk of multiplexed samples into the outlet. Handles type
-        /// checking and conversion.
-        /// </summary>
-        /// <param name="chunk">
-        /// A buffer of channel values holding the data for zero or more successive
-        /// samples to send.
-        /// </param>
-        /// <param name="timestamps">
-        /// The buffer holding one timestamp for each sample in the data buffer.
-        /// </param>
-        /// <param name="pushThrough">
-        /// Whether to push the sample through to the receivers instead of buffering
-        /// it with subsequent samples. Note that the chunk size, if specified at
-        /// outlet construction, takes precedence over the push through flag.
-        /// </param>
-        /// <exception cref="InvalidOperationException">
-        /// Thrown if this object is invalid.
-        /// </exception>
-        /// <exception cref="ArgumentNullException">
-        /// Thrown if the provided data buffer <paramref name="chunk"/> or timestamp
-        /// buffer <paramref name="timestamps"/> is null.
-        /// </exception>
-        /// <exception cref="ArgumentException">
-        /// Thrown if size of the provided buffer is too small.
-        /// </exception>
+        /// <inheritdoc cref="PushChunk(sbyte[], double[], bool)"/>
         public void PushChunk(short[] chunk, double[] timestamps, bool pushThrough)
         {
             ThrowIfInvalid();
@@ -2487,32 +1120,7 @@ namespace SharpLSL
             CheckError(lsl_push_chunk_stnp(handle, chunk, (uint)chunk.Length, timestamps, pushThrough ? 1 : 0));
         }
 
-        /// <summary>
-        /// Pushes a chunk of multiplexed samples into the outlet. Handles type
-        /// checking and conversion.
-        /// </summary>
-        /// <param name="chunk">
-        /// A buffer of channel values holding the data for zero or more successive
-        /// samples to send.
-        /// </param>
-        /// <param name="timestamps">
-        /// The buffer holding one timestamp for each sample in the data buffer.
-        /// </param>
-        /// <param name="pushThrough">
-        /// Whether to push the sample through to the receivers instead of buffering
-        /// it with subsequent samples. Note that the chunk size, if specified at
-        /// outlet construction, takes precedence over the push through flag.
-        /// </param>
-        /// <exception cref="InvalidOperationException">
-        /// Thrown if this object is invalid.
-        /// </exception>
-        /// <exception cref="ArgumentNullException">
-        /// Thrown if the provided data buffer <paramref name="chunk"/> or timestamp
-        /// buffer <paramref name="timestamps"/> is null.
-        /// </exception>
-        /// <exception cref="ArgumentException">
-        /// Thrown if size of the provided buffer is too small.
-        /// </exception>
+        /// <inheritdoc cref="PushChunk(sbyte[], double[], bool)"/>
         public void PushChunk(int[] chunk, double[] timestamps, bool pushThrough)
         {
             ThrowIfInvalid();
@@ -2523,32 +1131,7 @@ namespace SharpLSL
             CheckError(lsl_push_chunk_itnp(handle, chunk, (uint)chunk.Length, timestamps, pushThrough ? 1 : 0));
         }
 
-        /// <summary>
-        /// Pushes a chunk of multiplexed samples into the outlet. Handles type
-        /// checking and conversion.
-        /// </summary>
-        /// <param name="chunk">
-        /// A buffer of channel values holding the data for zero or more successive
-        /// samples to send.
-        /// </param>
-        /// <param name="timestamps">
-        /// The buffer holding one timestamp for each sample in the data buffer.
-        /// </param>
-        /// <param name="pushThrough">
-        /// Whether to push the sample through to the receivers instead of buffering
-        /// it with subsequent samples. Note that the chunk size, if specified at
-        /// outlet construction, takes precedence over the push through flag.
-        /// </param>
-        /// <exception cref="InvalidOperationException">
-        /// Thrown if this object is invalid.
-        /// </exception>
-        /// <exception cref="ArgumentNullException">
-        /// Thrown if the provided data buffer <paramref name="chunk"/> or timestamp
-        /// buffer <paramref name="timestamps"/> is null.
-        /// </exception>
-        /// <exception cref="ArgumentException">
-        /// Thrown if size of the provided buffer is too small.
-        /// </exception>
+        /// <inheritdoc cref="PushChunk(sbyte[], double[], bool)"/>
         public void PushChunk(long[] chunk, double[] timestamps, bool pushThrough)
         {
             ThrowIfInvalid();
@@ -2559,32 +1142,7 @@ namespace SharpLSL
             CheckError(lsl_push_chunk_ltnp(handle, chunk, (uint)chunk.Length, timestamps, pushThrough ? 1 : 0));
         }
 
-        /// <summary>
-        /// Pushes a chunk of multiplexed samples into the outlet. Handles type
-        /// checking and conversion.
-        /// </summary>
-        /// <param name="chunk">
-        /// A buffer of channel values holding the data for zero or more successive
-        /// samples to send.
-        /// </param>
-        /// <param name="timestamps">
-        /// The buffer holding one timestamp for each sample in the data buffer.
-        /// </param>
-        /// <param name="pushThrough">
-        /// Whether to push the sample through to the receivers instead of buffering
-        /// it with subsequent samples. Note that the chunk size, if specified at
-        /// outlet construction, takes precedence over the push through flag.
-        /// </param>
-        /// <exception cref="InvalidOperationException">
-        /// Thrown if this object is invalid.
-        /// </exception>
-        /// <exception cref="ArgumentNullException">
-        /// Thrown if the provided data buffer <paramref name="chunk"/> or timestamp
-        /// buffer <paramref name="timestamps"/> is null.
-        /// </exception>
-        /// <exception cref="ArgumentException">
-        /// Thrown if size of the provided buffer is too small.
-        /// </exception>
+        /// <inheritdoc cref="PushChunk(sbyte[], double[], bool)"/>
         public void PushChunk(float[] chunk, double[] timestamps, bool pushThrough)
         {
             ThrowIfInvalid();
@@ -2595,32 +1153,7 @@ namespace SharpLSL
             CheckError(lsl_push_chunk_ftnp(handle, chunk, (uint)chunk.Length, timestamps, pushThrough ? 1 : 0));
         }
 
-        /// <summary>
-        /// Pushes a chunk of multiplexed samples into the outlet. Handles type
-        /// checking and conversion.
-        /// </summary>
-        /// <param name="chunk">
-        /// A buffer of channel values holding the data for zero or more successive
-        /// samples to send.
-        /// </param>
-        /// <param name="timestamps">
-        /// The buffer holding one timestamp for each sample in the data buffer.
-        /// </param>
-        /// <param name="pushThrough">
-        /// Whether to push the sample through to the receivers instead of buffering
-        /// it with subsequent samples. Note that the chunk size, if specified at
-        /// outlet construction, takes precedence over the push through flag.
-        /// </param>
-        /// <exception cref="InvalidOperationException">
-        /// Thrown if this object is invalid.
-        /// </exception>
-        /// <exception cref="ArgumentNullException">
-        /// Thrown if the provided data buffer <paramref name="chunk"/> or timestamp
-        /// buffer <paramref name="timestamps"/> is null.
-        /// </exception>
-        /// <exception cref="ArgumentException">
-        /// Thrown if size of the provided buffer is too small.
-        /// </exception>
+        /// <inheritdoc cref="PushChunk(sbyte[], double[], bool)"/>
         public void PushChunk(double[] chunk, double[] timestamps, bool pushThrough)
         {
             ThrowIfInvalid();
@@ -2631,32 +1164,7 @@ namespace SharpLSL
             CheckError(lsl_push_chunk_dtnp(handle, chunk, (uint)chunk.Length, timestamps, pushThrough ? 1 : 0));
         }
 
-        /// <summary>
-        /// Pushes a chunk of multiplexed samples into the outlet. Handles type
-        /// checking and conversion.
-        /// </summary>
-        /// <param name="chunk">
-        /// A buffer of channel values holding the data for zero or more successive
-        /// samples to send.
-        /// </param>
-        /// <param name="timestamps">
-        /// The buffer holding one timestamp for each sample in the data buffer.
-        /// </param>
-        /// <param name="pushThrough">
-        /// Whether to push the sample through to the receivers instead of buffering
-        /// it with subsequent samples. Note that the chunk size, if specified at
-        /// outlet construction, takes precedence over the push through flag.
-        /// </param>
-        /// <exception cref="InvalidOperationException">
-        /// Thrown if this object is invalid.
-        /// </exception>
-        /// <exception cref="ArgumentNullException">
-        /// Thrown if the provided data buffer <paramref name="chunk"/> or timestamp
-        /// buffer <paramref name="timestamps"/> is null.
-        /// </exception>
-        /// <exception cref="ArgumentException">
-        /// Thrown if size of the provided buffer is too small.
-        /// </exception>
+        /// <inheritdoc cref="PushChunk(sbyte[], double[], bool)"/>
         public void PushChunk(string[] chunk, double[] timestamps, bool pushThrough)
         {
             ThrowIfInvalid();
@@ -2667,32 +1175,7 @@ namespace SharpLSL
             CheckError(lsl_push_chunk_strtnp(handle, chunk, (uint)chunk.Length, timestamps, pushThrough ? 1 : 0));
         }
 
-        /// <summary>
-        /// Pushes a chunk of multiplexed samples into the outlet. Handles type
-        /// checking and conversion.
-        /// </summary>
-        /// <param name="chunk">
-        /// A buffer of channel values holding the data for zero or more successive
-        /// samples to send.
-        /// </param>
-        /// <param name="timestamps">
-        /// The buffer holding one timestamp for each sample in the data buffer.
-        /// </param>
-        /// <param name="pushThrough">
-        /// Whether to push the sample through to the receivers instead of buffering
-        /// it with subsequent samples. Note that the chunk size, if specified at
-        /// outlet construction, takes precedence over the push through flag.
-        /// </param>
-        /// <exception cref="InvalidOperationException">
-        /// Thrown if this object is invalid.
-        /// </exception>
-        /// <exception cref="ArgumentNullException">
-        /// Thrown if the provided data buffer <paramref name="chunk"/> or timestamp
-        /// buffer <paramref name="timestamps"/> is null.
-        /// </exception>
-        /// <exception cref="ArgumentException">
-        /// Thrown if size of the provided buffer is too small.
-        /// </exception>
+        /// <inheritdoc cref="PushChunk(sbyte[], double[], bool)"/>
         public void PushChunk(sbyte[,] chunk, double[] timestamps, bool pushThrough)
         {
             ThrowIfInvalid();
@@ -2703,32 +1186,7 @@ namespace SharpLSL
             CheckError(lsl_push_chunk_ctnp(handle, chunk, (uint)chunk.Length, timestamps, pushThrough ? 1 : 0));
         }
 
-        /// <summary>
-        /// Pushes a chunk of multiplexed samples into the outlet. Handles type
-        /// checking and conversion.
-        /// </summary>
-        /// <param name="chunk">
-        /// A buffer of channel values holding the data for zero or more successive
-        /// samples to send.
-        /// </param>
-        /// <param name="timestamps">
-        /// The buffer holding one timestamp for each sample in the data buffer.
-        /// </param>
-        /// <param name="pushThrough">
-        /// Whether to push the sample through to the receivers instead of buffering
-        /// it with subsequent samples. Note that the chunk size, if specified at
-        /// outlet construction, takes precedence over the push through flag.
-        /// </param>
-        /// <exception cref="InvalidOperationException">
-        /// Thrown if this object is invalid.
-        /// </exception>
-        /// <exception cref="ArgumentNullException">
-        /// Thrown if the provided data buffer <paramref name="chunk"/> or timestamp
-        /// buffer <paramref name="timestamps"/> is null.
-        /// </exception>
-        /// <exception cref="ArgumentException">
-        /// Thrown if size of the provided buffer is too small.
-        /// </exception>
+        /// <inheritdoc cref="PushChunk(sbyte[], double[], bool)"/>
         public void PushChunk(short[,] chunk, double[] timestamps, bool pushThrough)
         {
             ThrowIfInvalid();
@@ -2739,32 +1197,7 @@ namespace SharpLSL
             CheckError(lsl_push_chunk_stnp(handle, chunk, (uint)chunk.Length, timestamps, pushThrough ? 1 : 0));
         }
 
-        /// <summary>
-        /// Pushes a chunk of multiplexed samples into the outlet. Handles type
-        /// checking and conversion.
-        /// </summary>
-        /// <param name="chunk">
-        /// A buffer of channel values holding the data for zero or more successive
-        /// samples to send.
-        /// </param>
-        /// <param name="timestamps">
-        /// The buffer holding one timestamp for each sample in the data buffer.
-        /// </param>
-        /// <param name="pushThrough">
-        /// Whether to push the sample through to the receivers instead of buffering
-        /// it with subsequent samples. Note that the chunk size, if specified at
-        /// outlet construction, takes precedence over the push through flag.
-        /// </param>
-        /// <exception cref="InvalidOperationException">
-        /// Thrown if this object is invalid.
-        /// </exception>
-        /// <exception cref="ArgumentNullException">
-        /// Thrown if the provided data buffer <paramref name="chunk"/> or timestamp
-        /// buffer <paramref name="timestamps"/> is null.
-        /// </exception>
-        /// <exception cref="ArgumentException">
-        /// Thrown if size of the provided buffer is too small.
-        /// </exception>
+        /// <inheritdoc cref="PushChunk(sbyte[], double[], bool)"/>
         public void PushChunk(int[,] chunk, double[] timestamps, bool pushThrough)
         {
             ThrowIfInvalid();
@@ -2775,32 +1208,7 @@ namespace SharpLSL
             CheckError(lsl_push_chunk_itnp(handle, chunk, (uint)chunk.Length, timestamps, pushThrough ? 1 : 0));
         }
 
-        /// <summary>
-        /// Pushes a chunk of multiplexed samples into the outlet. Handles type
-        /// checking and conversion.
-        /// </summary>
-        /// <param name="chunk">
-        /// A buffer of channel values holding the data for zero or more successive
-        /// samples to send.
-        /// </param>
-        /// <param name="timestamps">
-        /// The buffer holding one timestamp for each sample in the data buffer.
-        /// </param>
-        /// <param name="pushThrough">
-        /// Whether to push the sample through to the receivers instead of buffering
-        /// it with subsequent samples. Note that the chunk size, if specified at
-        /// outlet construction, takes precedence over the push through flag.
-        /// </param>
-        /// <exception cref="InvalidOperationException">
-        /// Thrown if this object is invalid.
-        /// </exception>
-        /// <exception cref="ArgumentNullException">
-        /// Thrown if the provided data buffer <paramref name="chunk"/> or timestamp
-        /// buffer <paramref name="timestamps"/> is null.
-        /// </exception>
-        /// <exception cref="ArgumentException">
-        /// Thrown if size of the provided buffer is too small.
-        /// </exception>
+        /// <inheritdoc cref="PushChunk(sbyte[], double[], bool)"/>
         public void PushChunk(long[,] chunk, double[] timestamps, bool pushThrough)
         {
             ThrowIfInvalid();
@@ -2811,32 +1219,7 @@ namespace SharpLSL
             CheckError(lsl_push_chunk_ltnp(handle, chunk, (uint)chunk.Length, timestamps, pushThrough ? 1 : 0));
         }
 
-        /// <summary>
-        /// Pushes a chunk of multiplexed samples into the outlet. Handles type
-        /// checking and conversion.
-        /// </summary>
-        /// <param name="chunk">
-        /// A buffer of channel values holding the data for zero or more successive
-        /// samples to send.
-        /// </param>
-        /// <param name="timestamps">
-        /// The buffer holding one timestamp for each sample in the data buffer.
-        /// </param>
-        /// <param name="pushThrough">
-        /// Whether to push the sample through to the receivers instead of buffering
-        /// it with subsequent samples. Note that the chunk size, if specified at
-        /// outlet construction, takes precedence over the push through flag.
-        /// </param>
-        /// <exception cref="InvalidOperationException">
-        /// Thrown if this object is invalid.
-        /// </exception>
-        /// <exception cref="ArgumentNullException">
-        /// Thrown if the provided data buffer <paramref name="chunk"/> or timestamp
-        /// buffer <paramref name="timestamps"/> is null.
-        /// </exception>
-        /// <exception cref="ArgumentException">
-        /// Thrown if size of the provided buffer is too small.
-        /// </exception>
+        /// <inheritdoc cref="PushChunk(sbyte[], double[], bool)"/>
         public void PushChunk(float[,] chunk, double[] timestamps, bool pushThrough)
         {
             ThrowIfInvalid();
@@ -2847,32 +1230,7 @@ namespace SharpLSL
             CheckError(lsl_push_chunk_ftnp(handle, chunk, (uint)chunk.Length, timestamps, pushThrough ? 1 : 0));
         }
 
-        /// <summary>
-        /// Pushes a chunk of multiplexed samples into the outlet. Handles type
-        /// checking and conversion.
-        /// </summary>
-        /// <param name="chunk">
-        /// A buffer of channel values holding the data for zero or more successive
-        /// samples to send.
-        /// </param>
-        /// <param name="timestamps">
-        /// The buffer holding one timestamp for each sample in the data buffer.
-        /// </param>
-        /// <param name="pushThrough">
-        /// Whether to push the sample through to the receivers instead of buffering
-        /// it with subsequent samples. Note that the chunk size, if specified at
-        /// outlet construction, takes precedence over the push through flag.
-        /// </param>
-        /// <exception cref="InvalidOperationException">
-        /// Thrown if this object is invalid.
-        /// </exception>
-        /// <exception cref="ArgumentNullException">
-        /// Thrown if the provided data buffer <paramref name="chunk"/> or timestamp
-        /// buffer <paramref name="timestamps"/> is null.
-        /// </exception>
-        /// <exception cref="ArgumentException">
-        /// Thrown if size of the provided buffer is too small.
-        /// </exception>
+        /// <inheritdoc cref="PushChunk(sbyte[], double[], bool)"/>
         public void PushChunk(double[,] chunk, double[] timestamps, bool pushThrough)
         {
             ThrowIfInvalid();
@@ -2883,32 +1241,7 @@ namespace SharpLSL
             CheckError(lsl_push_chunk_dtnp(handle, chunk, (uint)chunk.Length, timestamps, pushThrough ? 1 : 0));
         }
 
-        /// <summary>
-        /// Pushes a chunk of multiplexed samples into the outlet. Handles type
-        /// checking and conversion.
-        /// </summary>
-        /// <param name="chunk">
-        /// A buffer of channel values holding the data for zero or more successive
-        /// samples to send.
-        /// </param>
-        /// <param name="timestamps">
-        /// The buffer holding one timestamp for each sample in the data buffer.
-        /// </param>
-        /// <param name="pushThrough">
-        /// Whether to push the sample through to the receivers instead of buffering
-        /// it with subsequent samples. Note that the chunk size, if specified at
-        /// outlet construction, takes precedence over the push through flag.
-        /// </param>
-        /// <exception cref="InvalidOperationException">
-        /// Thrown if this object is invalid.
-        /// </exception>
-        /// <exception cref="ArgumentNullException">
-        /// Thrown if the provided data buffer <paramref name="chunk"/> or timestamp
-        /// buffer <paramref name="timestamps"/> is null.
-        /// </exception>
-        /// <exception cref="ArgumentException">
-        /// Thrown if size of the provided buffer is too small.
-        /// </exception>
+        /// <inheritdoc cref="PushChunk(sbyte[], double[], bool)"/>
         public void PushChunk(string[,] chunk, double[] timestamps, bool pushThrough)
         {
             ThrowIfInvalid();
@@ -2926,7 +1259,7 @@ namespace SharpLSL
         /// A boolean value indicates whether consumers are currently registered.
         /// </returns>
         /// <exception cref="InvalidOperationException">
-        /// Thrown if this object is invalid.
+        /// Thrown if this stream outlet object is invalid.
         /// </exception>
         /// <remarks>
         /// While it does not hurt, there is technically no reason to push samples
@@ -2951,7 +1284,7 @@ namespace SharpLSL
         /// if the wait was successful, false if the timeout expired.
         /// </returns>
         /// <exception cref="InvalidOperationException">
-        /// Thrown if this object is invalid.
+        /// Thrown if this stream outlet object is invalid.
         /// </exception>
         public bool WaitForConsumers(double timeout = Forever)
         {
@@ -2961,7 +1294,7 @@ namespace SharpLSL
         }
 
         /// <summary>
-        /// Destroys the outlet and associated underlying native resource.
+        /// Destroys the underlying native stream outlet handle.
         /// </summary>
         /// <remarks>
         /// The outlet will no longer be discoverable after destruction and all

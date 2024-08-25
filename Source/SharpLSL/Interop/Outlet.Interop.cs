@@ -1,4 +1,5 @@
 #pragma warning disable CS1591
+using System;
 using System.Runtime.InteropServices;
 
 using lsl_outlet = System.IntPtr;
@@ -25,10 +26,23 @@ namespace SharpLSL.Interop
         [DllImport("lsl", CallingConvention = CallingConvention.Cdecl, ExactSpelling = true)]
         public static extern int lsl_push_sample_d(lsl_outlet @out, double[] data);
 
+        // TODO: Encoding
         [DllImport("lsl", CallingConvention = CallingConvention.Cdecl, ExactSpelling = true)]
         public static extern int lsl_push_sample_str(
             lsl_outlet @out,
             [MarshalAs(UnmanagedType.LPArray, ArraySubType = UnmanagedType.LPStr)] string[] data);
+
+        [DllImport("lsl", CallingConvention = CallingConvention.Cdecl, ExactSpelling = true)]
+        public static extern int lsl_push_sample_buf(
+            lsl_outlet @out,
+            byte[][] data,
+            uint* lengths);
+
+        [DllImport("lsl", CallingConvention = CallingConvention.Cdecl, ExactSpelling = true)]
+        public static extern int lsl_push_sample_buf(
+            lsl_outlet @out,
+            IntPtr[] data,
+            uint* lengths);
 
         [DllImport("lsl", CallingConvention = CallingConvention.Cdecl, ExactSpelling = true)]
         public static extern int lsl_push_sample_ct(lsl_outlet @out, sbyte[] data, double timestamp);
@@ -54,6 +68,21 @@ namespace SharpLSL.Interop
             [MarshalAs(UnmanagedType.LPArray, ArraySubType = UnmanagedType.LPStr)] string[] data,
             double timestamp);
 
+
+        [DllImport("lsl", CallingConvention = CallingConvention.Cdecl, ExactSpelling = true)]
+        public static extern int lsl_push_sample_buft(
+            lsl_outlet @out,
+            byte[][] data,
+            uint[] lengths,
+            double timestamp);
+
+        [DllImport("lsl", CallingConvention = CallingConvention.Cdecl, ExactSpelling = true)]
+        public static extern int lsl_push_sample_buft(
+            lsl_outlet @out,
+            IntPtr[] data,
+            uint[] lengths,
+            double timestamp);
+
         [DllImport("lsl", CallingConvention = CallingConvention.Cdecl, ExactSpelling = true)]
         public static extern int lsl_push_sample_ctp(lsl_outlet @out, sbyte[] data, double timestamp, int pushthrough);
 
@@ -76,6 +105,22 @@ namespace SharpLSL.Interop
         public static extern int lsl_push_sample_strtp(
             lsl_outlet @out,
             [MarshalAs(UnmanagedType.LPArray, ArraySubType = UnmanagedType.LPStr)] string[] data,
+            double timestamp,
+            int pushthrough);
+
+        [DllImport("lsl", CallingConvention = CallingConvention.Cdecl, ExactSpelling = true)]
+        public static extern int lsl_push_sample_buftp(
+            lsl_outlet @out,
+            byte[][] data,
+            uint[] lengths,
+            double timestamp,
+            int pushthrough);
+
+        [DllImport("lsl", CallingConvention = CallingConvention.Cdecl, ExactSpelling = true)]
+        public static extern int lsl_push_sample_buftp(
+            lsl_outlet @out,
+            IntPtr[] data,
+            uint[] lengths,
             double timestamp,
             int pushthrough);
 
