@@ -3,11 +3,11 @@
 namespace SharpLSL
 {
     /// <summary>
-    /// Represents an error that occurs when a LSL stream is unexpectedly lost or
+    /// Represents an error that occurs when an LSL stream is unexpectedly lost or
     /// disconnected.
     /// </summary>
     /// <remarks>
-    /// This exception is thrown when an application attempts to access a LSL stream
+    /// This exception is thrown when an application attempts to access an LSL stream
     /// that is no longer available. It indicates that the connection to the stream
     /// has been lost, which may be due to network issues, stream termination, or other
     /// unforeseen circumstances. This exception extends the base <see cref="LSLException"/>

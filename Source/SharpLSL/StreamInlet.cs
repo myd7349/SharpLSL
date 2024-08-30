@@ -13,13 +13,13 @@ namespace SharpLSL
     /// </summary>
     /// <remarks>
     /// <para>
-    /// StreamInlet allows to retrieve samples from the lab network (in-order, with
-    /// reliable (re-)transmission, optional type conversion and optional failure
+    /// StreamInlet allows retrieval of samples from the lab network (in-order, with
+    /// reliable (re-)transmission, optional type conversion, and optional failure
     /// recovery).
     /// </para>
     /// <para>
-    /// Besides the samples, the metadata can be obtained (as XML blob or alternatively
-    /// through a small built-in DOM interface).
+    /// In addition to the samples, metadata can be obtained (as an XML blob or
+    /// alternatively through a small built-in DOM interface).
     /// </para>
     /// </remarks>
     public class StreamInlet : LSLObject
@@ -36,20 +36,20 @@ namespace SharpLSL
         /// Specifies the maximum size, in samples, at which chunks are transmitted.
         /// Default is 0, which uses the chunk sizes preferred by the sender. Recording
         /// applications can use a generous size here (leaving it to the network how
-        /// to pack things), while real time applications may prefer smaller values
+        /// to pack things), while real-time applications may prefer smaller values
         /// (perhaps 1-sample) for finer granularity.
         /// </param>
         /// <param name="maxBufferLength">
-        /// Specifies the maximum amount of the data to buffer (in seconds if there
+        /// Specifies the maximum amount of data to buffer (in seconds if there
         /// is a nominal sampling rate, otherwise x100 in samples). Larger values are
-        /// suitable for recording applications, while real time applications would
+        /// suitable for recording applications, while real-time applications would
         /// only buffer as much as they need to perform their next calculation. Default
         /// is 360, which corresponds to 6 minutes of data.
         /// </param>
         /// <param name="recover">
-        /// Specifies whether try to silently recover lost streams that are recoverable
-        /// (those that have a source id set). In all other cases (recover is false
-        /// or the stream is not recoverable) functions may throw a <see cref="StreamLostException"/>
+        /// Specifies whether to try to silently recover lost streams that are recoverable
+        /// (those that have a source ID set). In all other cases (recover is false
+        /// or the stream is not recoverable), functions may throw a <see cref="StreamLostException"/>
         /// if the stream's source is lost (e.g., due to an app or computer crash).
         /// It is generally a good idea to enable this, unless the application wants
         /// to act in a special way when a data provider has temporarily crashed.
@@ -63,7 +63,7 @@ namespace SharpLSL
         /// </exception>
         /// <remarks>
         /// The <see cref="StreamInlet"/> may also be constructed with a fully specified
-        /// <see cref="StreamInfo"/>, if the desired channel format and count is already
+        /// <see cref="StreamInfo"/>, if the desired channel format and count are already
         /// known up-front, but this is strongly discouraged and should only ever be done
         /// if there is no time to resolve the stream up-front (e.g., due to limitations
         /// in the client program).
@@ -82,14 +82,14 @@ namespace SharpLSL
         }
 
         /// <summary>
-        /// Constructs a new instance of <see cref="StreamInlet"/> object which wraps
+        /// Constructs a new instance of the <see cref="StreamInlet"/> class that wraps
         /// a pre-existing stream inlet handle.
         /// </summary>
         /// <param name="handle">
         /// Specifies the handle to be wrapped.
         /// </param>
         /// <param name="ownsHandle">
-        /// Speciies whether the wrapped handle should be released during the finalization
+        /// Specifies whether the wrapped handle should be released during the finalization
         /// phase.
         /// </param>
         /// <exception cref="LSLException">
@@ -106,7 +106,7 @@ namespace SharpLSL
         }
 
         /// <summary>
-        /// Gets number of channels of the stream.
+        /// Gets the number of channels in the stream.
         /// </summary>
         /// <seealso cref="StreamInfo.ChannelCount"/>
         public int ChannelCount { get; }
@@ -116,8 +116,8 @@ namespace SharpLSL
         /// extended description.
         /// </summary>
         /// <param name="timeout">
-        /// Specifies the timeout of the operation in seconds. Default value is
-        /// <see cref="Forever"/> which indicates no timeout.
+        /// Specifies the timeout of the operation in seconds. The default value is
+        /// <see cref="Forever"/>, which indicates no timeout.
         /// </param>
         /// <returns>
         /// An instance of <see cref="StreamInfo"/> containing detailed information
@@ -133,7 +133,7 @@ namespace SharpLSL
         /// Thrown if the timeout has expired.
         /// </exception>
         /// <remarks>
-        /// This method can be invoked at any time of the stream's lifetime.
+        /// This method can be invoked at any time during the stream's lifetime.
         /// </remarks>
         /// <seealso cref="Resolve(int, double)"/>
         /// <seealso cref="Resolve(string, string, int, int, double)"/>
@@ -160,8 +160,8 @@ namespace SharpLSL
         /// Subscribes to the data stream.
         /// </summary>
         /// <param name="timeout">
-        /// Specifies the timeout of the operation in seconds. Default value is
-        /// <see cref="Forever"/> which indicates no timeout.
+        /// Specifies the timeout of the operation in seconds. The default value is
+        /// <see cref="Forever"/>, which indicates no timeout.
         /// </param>
         /// <exception cref="InvalidOperationException">
         /// Thrown if this stream inlet object is invalid.
@@ -175,8 +175,8 @@ namespace SharpLSL
         /// <remarks>
         /// All samples pushed in at the other end from this moment onwards will be
         /// queued and eventually be delivered in response to PullSample() or
-        /// PullChunk() calls. Pulling a sample without some preceding OpenStream()
-        /// is permitted (the stream will then be opened implicitly).
+        /// PullChunk() calls. Pulling a sample without a preceding OpenStream()
+        /// call is permitted (the stream will then be opened implicitly).
         /// </remarks>
         /// <seealso cref="CloseStream"/>
         public void OpenStream(double timeout = Forever)
@@ -195,11 +195,11 @@ namespace SharpLSL
         /// Thrown if this stream inlet object is invalid.
         /// </exception>
         /// <remarks>
-        /// All samples that are still buffered or in flight will be dropped and
+        /// All samples that are still buffered or in flight will be dropped, and
         /// transmission and buffering of data for this inlet will be stopped. If
         /// an application stops being interested in data from a source (temporarily
-        /// or not) but keeps the outlet alive, it should call this method to not
-        /// waste unnecessary system and network resources.
+        /// or not) but keeps the outlet alive, it should call this method to avoid
+        /// wasting unnecessary system and network resources.
         /// </remarks>
         /// <seealso cref="OpenStream(double)"/>
         public void CloseStream()
@@ -214,7 +214,7 @@ namespace SharpLSL
         /// </summary>
         /// <param name="timeout">
         /// Specifies the timeout to acquire the first time correction estimate
-        /// in seconds. Default value is <see cref="Forever"/> which indicates
+        /// in seconds. The default value is <see cref="Forever"/>, which indicates
         /// no timeout.
         /// </param>
         /// <returns>
@@ -239,14 +239,14 @@ namespace SharpLSL
         /// </para>
         /// <para>
         /// On a well-behaved network, the precision of these estimates should be below
-        /// 1 ms(empirically it is within +/-0.2 ms).
+        /// 1 ms (empirically it is within +/-0.2 ms).
         /// </para>
         /// <para>
         /// To get a measure of whether the network is well-behaved, use the extended
         /// version <see cref="TimeCorrection(ref double, ref double, double)"/> and
-        /// check uncertainty (i.e. the round-trip-time). 0.2 ms is typical of wired
-        /// networks. 2 ms is typical of wireless networks. The number can be much
-        /// higher on poor networks.
+        /// check the uncertainty (i.e., the round-trip time). 0.2 ms is typical of
+        /// wired networks. 2 ms is typical of wireless networks. The number can be
+        /// much higher on poor networks.
         /// </para>
         /// </remarks>
         /// <seealso cref="TimeCorrection(ref double, ref double, double)"/>
@@ -263,12 +263,12 @@ namespace SharpLSL
 
         /// <param name="timeout">
         /// Specifies the timeout to acquire the first time correction estimate
-        /// in seconds. Default value is <see cref="Forever"/> which indicates
+        /// in seconds. The default value is <see cref="Forever"/>, which indicates
         /// no timeout.
         /// </param>
         /// <param name="remoteTime">
         /// The current time of the remote computer that was used to generate this
-        /// time correction. If desired, the client can fit time correction vs remote
+        /// time correction. If desired, the client can fit time correction versus remote
         /// time to improve the real-time time correction further.
         /// </param>
         /// <param name="uncertainty">
@@ -290,9 +290,9 @@ namespace SharpLSL
         /// Sets post-processing flags to use.
         /// </summary>
         /// <param name="postProcessingOptions">
-        /// The post-processing flags to use, this is the result of bitwise OR'ing
-        /// one or more options from <see cref="PostProcessingOptions"/> together;
-        /// a good setting is to use <see cref="PostProcessingOptions.All"/>.
+        /// The post-processing flags to use. This is the result of bitwise OR'ing
+        /// one or more options from <see cref="PostProcessingOptions"/> together.
+        /// A good setting is to use <see cref="PostProcessingOptions.All"/>.
         /// </param>
         /// <exception cref="InvalidOperationException">
         /// Thrown if this stream inlet object is invalid.
@@ -336,7 +336,7 @@ namespace SharpLSL
 #endif
 
         /// <summary>
-        /// Pulls a sample from the inlet and read it into an array of values. Handles
+        /// Pulls a sample from the inlet and reads it into an array of values. Handles
         /// type checking and conversion.
         /// </summary>
         /// <param name="sample">
@@ -345,7 +345,7 @@ namespace SharpLSL
         /// <param name="timeout">
         /// Specifies the timeout of the operation in seconds, if any. Default value
         /// is <see cref="Forever"/> which indicates no timeout. Use 0.0 to make a
-        /// non-blocking call, in this case a sample is only returned if one is
+        /// non-blocking call; in this case, a sample is only returned if one is
         /// currently buffered.
         /// </param>
         /// <returns>
@@ -361,14 +361,14 @@ namespace SharpLSL
         /// Thrown if the provided buffer <paramref name="sample"/> is null.
         /// </exception>
         /// <exception cref="ArgumentException">
-        /// Thrown if size of the provided buffer <paramref name="sample"/> does not
+        /// Thrown if the size of the provided buffer <paramref name="sample"/> does not
         /// match the channel count (<see cref="ChannelCount"/>) of the stream inlet.
         /// </exception>
         /// <exception cref="StreamLostException">
         /// Thrown if the stream source has been lost.
         /// </exception>
         /// <remarks>
-        /// If the timeout expires before a new sample was received, the function
+        /// If the timeout expires before a new sample is received, the function
         /// returns 0.0; this case is not considered an error condition.
         /// </remarks>
         public double PullSample(sbyte[] sample, double timeout = Forever)
@@ -443,7 +443,7 @@ namespace SharpLSL
         }
 
         /// <inheritdoc cref="PullSample(sbyte[], double)"/>
-        // TODO: string may contain 0's.
+        // TODO: Pull as byte sequence without calling PtrToString.
         public double PullSample(string[] sample, double timeout = Forever)
         {
             ThrowIfInvalid();
@@ -454,6 +454,7 @@ namespace SharpLSL
 
             try
             {
+                // lsl_pull_sample_str automatically appends a '\0' at the end.
                 var timestamp = lsl_pull_sample_str(handle, buffer, buffer.Length, timeout, ref errorCode);
                 CheckError(errorCode);
 
@@ -470,7 +471,7 @@ namespace SharpLSL
         }
 
         /// <summary>
-        /// Pulls a sample from the inlet and read it into a jagged array of byte
+        /// Pulls a sample from the inlet and reads it into a jagged array of byte
         /// values.
         /// </summary>
         /// <param name="sample">
@@ -479,16 +480,16 @@ namespace SharpLSL
         /// necessary. 
         /// </param>
         /// <param name="timeout">
-        /// Specifies the timeout of the operation in seconds, if any. Default value
-        /// is <see cref="Forever"/> which indicates no timeout. Use 0.0 to make a
-        /// non-blocking call, in this case a sample is only returned if one is
+        /// Specifies the timeout of the operation in seconds, if any. The default value
+        /// is <see cref="Forever"/>, which indicates no timeout. Use 0.0 to make a
+        /// non-blocking call, in which case a sample is only returned if one is
         /// currently buffered.
         /// </param>
         /// <exception cref="ArgumentNullException">
         /// Thrown if the provided buffer <paramref name="sample"/> is null.
         /// </exception>
         /// <exception cref="ArgumentException">
-        /// Thrown if size of the provided buffer <paramref name="sample"/> does not
+        /// Thrown if the size of the provided buffer <paramref name="sample"/> does not
         /// match the channel count (<see cref="ChannelCount"/>) of the stream inlet.
         /// </exception>
         /// <inheritdoc cref="PullSample(sbyte[], double)"/>
@@ -542,6 +543,10 @@ namespace SharpLSL
 
             try
             {
+                // lsl_pull_sample_buf does not add a '\0' at the end.
+                // Instead, lsl_pull_sample_buf returns the length of the sequence
+                // along with the received data.
+                // Besides, the received sample data may contain 0's.
                 var timestamp = lsl_pull_sample_buf(handle, buffer, lengths, buffer.Length, timeout, ref errorCode);
                 CheckError(errorCode);
 
@@ -556,25 +561,21 @@ namespace SharpLSL
 #endif
                     }
 
-                    if (sample[i].Length > 0)
+                    if (lengths[i] > 0)
                     {
-                        unsafe
+                        fixed (byte* dest = sample[i])
                         {
-                            fixed (byte* dest = sample[i])
-                            {
 #if NET35
-                                byte* src = (byte*)buffer[i].ToPointer();
-                                for (int c = 0; c < lengths[i]; ++c)
-                                    dest[c] = src[c];
+                            byte* src = (byte*)buffer[i].ToPointer();
+                            for (int c = 0; c < lengths[i]; ++c)
+                                dest[c] = src[c];
 #else
-                                Buffer.MemoryCopy(
-                                    buffer[i].ToPointer(),
-                                    dest,
-                                    lengths[i],
-                                    lengths[i]
-                                );
+                            Buffer.MemoryCopy(
+                                buffer[i].ToPointer(),
+                                dest,
+                                lengths[i],
+                                lengths[i]);
 #endif
-                            }
                         }
                     }
                 }
@@ -590,30 +591,30 @@ namespace SharpLSL
 #endif
 
         /// <summary>
-        /// Pulls a sample from the inlet and read it into a custom buffer. Overall
-        /// size checking but no type checking or conversion are done.
+        /// Pulls a sample from the inlet and reads it into a custom buffer. Overall
+        /// size checking is performed, but no type checking or conversion is done.
         /// </summary>
         /// <param name="sample">
         /// The buffer to hold the resulting values. The buffer length must match
         /// the <see cref="StreamInfo.SampleBytes"/> of the stream.
         /// </param>
         /// <param name="timeout">
-        /// Specifies the timeout of the operation in seconds, if any. Default value
-        /// is <see cref="Forever"/> which indicates no timeout. Use 0.0 to make a
-        /// non-blocking call, in this case a sample is only returned if one is
+        /// Specifies the timeout of the operation in seconds, if any. The default value
+        /// is <see cref="Forever"/>, which indicates no timeout. Use 0.0 to make a
+        /// non-blocking call; in this case, a sample is only returned if one is
         /// currently buffered.
         /// </param>
         /// <exception cref="ArgumentException">
-        /// Thrown if size of the provided buffer is too small to hold the data of
+        /// Thrown if the size of the provided buffer is too small to hold the data of
         /// a sample.
         /// </exception>
         /// <remarks>
         /// <para>
-        /// If the timeout expires before a new sample was received, the function
+        /// If the timeout expires before a new sample is received, the function
         /// returns 0.0; this case is not considered an error condition.
         /// </para>
         /// <para>
-        /// Do not use this method for variable size or string-formatted streams.
+        /// Do not use this method for variable-size or string-formatted streams.
         /// </para>
         /// </remarks>
         /// <inheritdoc cref="PullSample(sbyte[], double)"/>
@@ -648,20 +649,20 @@ namespace SharpLSL
         }
 
         /// <summary>
-        /// Pulls a chunk of samples from the inlet and read it into a buffer. Handles
-        /// type checking and conversion automatically.
+        /// Pulls a chunk of samples from the inlet and reads it into a buffer. Handles
+        /// type checking and conversion.
         /// </summary>
         /// <param name="chunk">
-        /// The buffer where the returned data chunk shall be stored.
+        /// The buffer where the returned data chunk will be stored.
         /// </param>
         /// <param name="timestamps">
-        /// The buffer where the returned timestamps shall be stored. If it is null,
+        /// The buffer where the returned timestamps will be stored. If it is null,
         /// no timestamps will be returned.
         /// </param>
         /// <param name="timeout">
         /// Specifies the timeout of the operation in seconds, if any. When the timeout
         /// expires, the function may return before the entire buffer is filled. The
-        /// default value of 0.0 will retrieve only data available for immediate pickup. 
+        /// default value of 0.0 will retrieve only data available for immediate pickup.
         /// </param>
         /// <returns>
         /// The number of channel data elements written to the data buffer.
@@ -670,9 +671,9 @@ namespace SharpLSL
         /// Thrown if the provided buffer <paramref name="chunk"/> is null.
         /// </exception>
         /// <exception cref="ArgumentException">
-        /// Thrown if size of the provided buffer is not a multiple of the stream's
-        /// channel count, if <paramref name="timestamps"/> is provided but its length
-        /// does not match the channel count.
+        /// Thrown if the size of the provided buffer is not a multiple of the stream's
+        /// channel count, or if <paramref name="timestamps"/> is provided but its length
+        /// does not match the number of samples in the chunk.
         /// </exception>
         /// <inheritdoc cref="PullSample(sbyte[], double)"/>
         // TODO: Test pass null timestamps.
@@ -760,7 +761,6 @@ namespace SharpLSL
         }
 
         /// <inheritdoc cref="PullChunk(sbyte[], double[], double)"/>
-        // TODO: Test
         public uint PullChunk(string[] chunk, double[] timestamps, double timeout = 0.0)
         {
             ThrowIfInvalid();
@@ -790,12 +790,26 @@ namespace SharpLSL
         }
 
         /// <summary>
-        /// Pulls a chunk of data from the inlet and read it into an array of byte
-        /// buffer. Inner arrays will be resized if necessary. 
+        /// Pulls a chunk of data from the inlet and reads it into a jagged array of
+        /// byte buffers. Inner arrays will be resized if necessary. 
         /// </summary>
+        /// <param name="chunk">
+        /// A jagged array to hold the resulting values. The outer array length must
+        /// be a multiple of the stream's channel count. Inner arrays will be resized
+        /// if necessary. 
+        /// </param>
+        /// <param name="timestamps">
+        /// The buffer where the returned timestamps will be stored. If it is null,
+        /// no timestamps will be returned.
+        /// </param>
+        /// <param name="timeout">
+        /// Specifies the timeout of the operation in seconds, if any. When the timeout
+        /// expires, the function may return before the entire buffer is filled. The
+        /// default value of 0.0 will retrieve only data available for immediate pickup. 
+        /// </param>
         /// <inheritdoc cref="PullChunk(sbyte[], double[], double)"/>
         // TODO: Test
-        public uint PullChunk(byte[][] chunk, double[] timestamps, double timeout = 0.0)
+        public unsafe uint PullChunk(byte[][] chunk, double[] timestamps, double timeout = 0.0)
         {
             ThrowIfInvalid();
 
@@ -804,7 +818,7 @@ namespace SharpLSL
 
             var errorCode = (int)lsl_error_code_t.lsl_no_error;
             var buffer = new IntPtr[chunk.Length];
-            var lengths = new uint[ChannelCount];
+            var lengths = stackalloc uint[ChannelCount];
             uint result = 0;
 
             try
@@ -823,25 +837,21 @@ namespace SharpLSL
 #endif
                     }
 
-                    if (chunk[i].Length > 0)
+                    if (lengths[i] > 0)
                     {
-                        unsafe
+                        fixed (byte* dest = chunk[i])
                         {
-                            fixed (byte* dest = chunk[i])
-                            {
 #if NET35
-                                byte* src = (byte*)buffer[i].ToPointer();
-                                for (int c = 0; c < lengths[i]; ++c)
-                                    dest[c] = src[c];
+                            byte* src = (byte*)buffer[i].ToPointer();
+                            for (int c = 0; c < lengths[i]; ++c)
+                                dest[c] = src[c];
 #else
-                                Buffer.MemoryCopy(
-                                    buffer[i].ToPointer(),
-                                    dest,
-                                    lengths[i],
-                                    lengths[i]
-                                );
+                            Buffer.MemoryCopy(
+                                buffer[i].ToPointer(),
+                                dest,
+                                lengths[i],
+                                lengths[i]);
 #endif
-                            }
                         }
                     }
                 }
@@ -857,8 +867,8 @@ namespace SharpLSL
 
         /// <exception cref="ArgumentException">
         /// Thrown if the number of columns in <paramref name="chunk"/> does not match
-        /// the <see cref="ChannelCount"/>, or <paramref name="timestamps"/> is not null
-        /// and its length does not equal the number of rows in <paramref name="chunk"/>..
+        /// the <see cref="ChannelCount"/>, or if <paramref name="timestamps"/> is not null
+        /// and its length does not equal the number of rows in <paramref name="chunk"/>.
         /// </exception>
         /// <inheritdoc cref="PullChunk(sbyte[], double[], double)"/>
         public uint PullChunk(sbyte[,] chunk, double[] timestamps, double timeout = 0.0)
@@ -981,7 +991,7 @@ namespace SharpLSL
         }
 
         /// <summary>
-        /// Queries whether samles are currently available for immediate pickup.
+        /// Queries whether samples are currently available for immediate pickup.
         /// </summary>
         /// <returns>
         /// The number of samples available, if the underlying implementation supports
@@ -1023,15 +1033,15 @@ namespace SharpLSL
         /// <see cref="WasClockReset"/>.
         /// </summary>
         /// <returns>
-        /// A boolean value indicates whether the clock was potentially reset.
+        /// A boolean value indicating whether the clock was potentially reset.
         /// </returns>
         /// <exception cref="InvalidOperationException">
         /// Thrown if this stream inlet object is invalid.
         /// </exception>
         /// <remarks>
-        /// This is a rarely used function is only needed for applications that
+        /// This is a rarely used function that is only needed for applications that
         /// combine multiple time correction values to estimate precise clock drift
-        /// if they should tolerate cases where the source machine was hot swapped
+        /// if they should tolerate cases where the source machine was hot-swapped
         /// or restarted.
         /// </remarks>
         public bool WasClockReset()
@@ -1056,8 +1066,8 @@ namespace SharpLSL
         /// The default is 90 seconds unless a different value is set in the config
         /// file. Using a longer window will yield lower jitter in the timestamps,
         /// but longer windows will have trouble tracking changes in the clock rate
-        /// (usually due to temperature changes); the default is able to track changes
-        /// up to 10 degrees C per minute sufficiently well.
+        /// (usually due to temperature changes). The default is able to track changes
+        /// of up to 10 degrees C per minute sufficiently well.
         /// </remarks>
         public void SetSmoothingHalfTime(float halfTime)
         {
@@ -1087,3 +1097,4 @@ namespace SharpLSL
 // https://learn.microsoft.com/en-us/dotnet/api/system.runtime.compilerservices.unsafe.copyblock?view=net-8.0
 // [How to Convert IntPtr to native c++ object](https://stackoverflow.com/questions/4277681/how-to-convert-intptr-to-native-c-object)
 // [Documenting overloaded methods with the same XML comments](https://stackoverflow.com/questions/3667784/documenting-overloaded-methods-with-the-same-xml-comments)
+// [Alternative to Buffer.MemoryCopy pre .NET 4.6](https://stackoverflow.com/questions/54453119/alternative-to-buffer-memorycopy-pre-net-4-6)

@@ -86,7 +86,7 @@ namespace SharpLSL
         /// Specifies the handle to be wrapped.
         /// </param>
         /// <param name="ownsHandle">
-        /// Speciies whether the wrapped handle should be released during the finalization
+        /// Specifies whether the wrapped handle should be released during the finalization
         /// phase.
         /// </param>
         /// <exception cref="LSLException">
@@ -138,12 +138,23 @@ namespace SharpLSL
 
             var result = lsl_resolver_results(handle, streamInfoPointers, (uint)streamInfoPointers.Length);
             CheckError(result);
+    
+            if (result > 0)
+            {
+                var streamInfos = new StreamInfo[result];
+                for (int i = 0; i < result; ++i)
+                    streamInfos[i] = new StreamInfo(streamInfoPointers[i], true);
 
-            var streamInfos = new StreamInfo[result];
-            for (int i = 0; i < result; ++i)
-                streamInfos[i] = new StreamInfo(streamInfoPointers[i], true);
-
-            return streamInfos;
+                return streamInfos;
+            }
+            else
+            {
+#if NET35
+                return new StreamInfo[0];
+#else
+                return Array.Empty<StreamInfo>();
+#endif
+            }
         }
 
         /// <summary>

@@ -24,7 +24,7 @@ namespace SharpLSL
         /// Performs clock synchronization automatically.
         /// </summary>
         /// <remarks>
-        /// This option indicates a time correction to the timestamps will be
+        /// This option indicates that a time correction to the timestamps will be
         /// performed automatically. It is equivalent to manually adding the
         /// <see cref="StreamInlet.TimeCorrection(double)"/> value to the received
         /// timestamps.

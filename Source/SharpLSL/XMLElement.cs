@@ -14,12 +14,13 @@ namespace SharpLSL
     /// Each element has a name and can contain multiple named child elements or
     /// have text content as its value; attributes are omitted. The interface is
     /// modeled after a subset of pugixml's node type and is compatible with it.
-    /// See https://pugixml.org/docs/manual.html#access for more details.
+    /// See <see href="https://pugixml.org/docs/manual.html#access"/> for more details.
     /// </remarks>
-    public class XMLElement // TODO: IEnumerable, ToString, C# XML libraries
+    // TODO: IEnumerable, ToString, C# XML libraries
+    public class XMLElement
     {
         /// <summary>
-        /// Constructs a new instance of the <see cref="XMLElement"/> class which
+        /// Constructs a new instance of the <see cref="XMLElement"/> class that
         /// wraps a pre-existing native XML node handle.
         /// </summary>
         /// <param name="handle">
@@ -53,7 +54,7 @@ namespace SharpLSL
 
         /// <summary>
         /// Gets a value indicating whether this element is a text body (instead of
-        /// an XML element). True both for plain char data and CData.
+        /// an XML element). True for both plain character data and CData.
         /// </summary>
         /// <exception cref="InvalidOperationException">
         /// Thrown when the handle is invalid.
@@ -74,7 +75,7 @@ namespace SharpLSL
         /// Thrown when the handle is invalid.
         /// </exception>
         /// <exception cref="LSLException">
-        /// Thrown if setting name of the element fails.
+        /// Thrown when setting the name of the element fails.
         /// </exception>
         public string Name
         {
@@ -105,7 +106,7 @@ namespace SharpLSL
         /// Thrown when the handle is invalid.
         /// </exception>
         /// <exception cref="LSLException">
-        /// Thrown if setting value of the element fails.
+        /// Thrown when setting the value of the element fails.
         /// </exception>
         public string Value
         {
@@ -137,30 +138,34 @@ namespace SharpLSL
         /// doesn't exist.
         /// </returns>
         /// <exception cref="InvalidOperationException">
-        /// Thrown if current element is invalid.
+        /// Thrown if the current element is invalid.
         /// </exception>
-        public XMLElement GetParent()
+        public XMLElement Parent
         {
-            ThrowIfInvalid();
+            get
+            {
+                ThrowIfInvalid();
 
-            var parent = lsl_parent(handle_);
-            if (parent != IntPtr.Zero)
-                return new XMLElement(parent);
+                var parent = lsl_parent(handle_);
+                if (parent != IntPtr.Zero)
+                    return new XMLElement(parent);
 
-            return Null;
+                return Null;
+            }
         }
 
         /// <summary>
-        /// Finds the first child of the element.
+        /// Gets the first child of the element.
         /// </summary>
         /// <returns>
         /// The first child of the element, or <see cref="Null"/> if the element has
         /// no children.
         /// </returns>
         /// <exception cref="InvalidOperationException">
-        /// Thrown if current element is invalid.
+        /// Thrown if the current element is invalid.
         /// </exception>
-        public XMLElement FindFirstChild()
+        /// <seealso cref="LastChild"/>
+        public XMLElement FirstChild()
         {
             ThrowIfInvalid();
 
@@ -172,16 +177,17 @@ namespace SharpLSL
         }
 
         /// <summary>
-        /// Finds the last child of the element.
+        /// Gets the last child of the element.
         /// </summary>
         /// <returns>
         /// The last child of the element, or <see cref="Null"/> if the element has
         /// no children.
         /// </returns>
         /// <exception cref="InvalidOperationException">
-        /// Thrown if current element is invalid.
+        /// Thrown if the current element is invalid.
         /// </exception>
-        public XMLElement FindLastChild()
+        /// <seealso cref="FirstChild"/>
+        public XMLElement LastChild()
         {
             ThrowIfInvalid();
 
@@ -193,7 +199,7 @@ namespace SharpLSL
         }
 
         /// <summary>
-        /// Finds a child of the element with the specified name.
+        /// Gets a child of the element with the specified name.
         /// </summary>
         /// <param name="name">The name of the child.</param>
         /// <returns>
@@ -201,9 +207,9 @@ namespace SharpLSL
         /// if no such child exists.
         /// </returns>
         /// <exception cref="InvalidOperationException">
-        /// Thrown if current element is invalid.
+        /// Thrown if the current element is invalid.
         /// </exception>
-        public XMLElement FindChild(string name)
+        public XMLElement Child(string name)
         {
             ThrowIfInvalid();
 
@@ -221,9 +227,10 @@ namespace SharpLSL
         /// The value of the first child that is text, or null if no such child exists.
         /// </returns>
         /// <exception cref="InvalidOperationException">
-        /// Thrown if current element is invalid.
+        /// Thrown if the current element is invalid.
         /// </exception>
-        public string GetChildValue()
+        /// <seealso cref="ChildValue(string)"/>
+        public string ChildValue()
         {
             ThrowIfInvalid();
 
@@ -246,9 +253,11 @@ namespace SharpLSL
         /// The value of the first child that is text, or null if no such child exists.
         /// </returns>
         /// <exception cref="InvalidOperationException">
-        /// Thrown if current element is invalid.
+        /// Thrown if the current element is invalid.
         /// </exception>
-        public string GetChildValue(string name)
+        /// <seealso cref="ChildValue()"/>
+        /// <seealso cref="SetChildValue(string, string)"/>
+        public string ChildValue(string name)
         {
             ThrowIfInvalid();
 
@@ -265,11 +274,12 @@ namespace SharpLSL
         /// <param name="name">The name of the child.</param>
         /// <param name="value">The value of the child.</param>
         /// <exception cref="InvalidOperationException">
-        /// Thrown if current element is invalid.
+        /// Thrown if the current element is invalid.
         /// </exception>
         /// <exception cref="LSLException">
-        /// Thrown if setting child value fails.
+        /// Thrown if setting the child value fails.
         /// </exception>
+        /// <seealso cref="ChildValue(string)"/>
         public void SetChildValue(string name, string value)
         {
             ThrowIfInvalid();
@@ -280,16 +290,18 @@ namespace SharpLSL
         }
 
         /// <summary>
-        /// Finds the next sibling of the element.
+        /// Gets the next sibling of the element.
         /// </summary>
         /// <returns>
         /// The next sibling of the element, or <see cref="Null"/> if the element
         /// is the last node in the list.
         /// </returns>
         /// <exception cref="InvalidOperationException">
-        /// Thrown if current element is invalid.
+        /// Thrown if the current element is invalid.
         /// </exception>
-        public XMLElement FindNextSibling()
+        /// <seealso cref="NextSibling(string)"/>
+        /// <seealso cref="PreviousSibling()"/>
+        public XMLElement NextSibling()
         {
             ThrowIfInvalid();
 
@@ -301,7 +313,7 @@ namespace SharpLSL
         }
 
         /// <summary>
-        /// Finds the next sibling of the element with the specified name.
+        /// Gets the next sibling of the element with the specified name.
         /// </summary>
         /// <param name="name">The name of the sibling.</param>
         /// <returns>
@@ -309,9 +321,11 @@ namespace SharpLSL
         /// if no such sibling exists.
         /// </returns>
         /// <exception cref="InvalidOperationException">
-        /// Thrown if current element is invalid.
+        /// Thrown if the current element is invalid.
         /// </exception>
-        public XMLElement FindNextSibling(string name)
+        /// <seealso cref="NextSibling()"/>
+        /// <seealso cref="PreviousSibling(string)"/>
+        public XMLElement NextSibling(string name)
         {
             ThrowIfInvalid();
 
@@ -323,16 +337,18 @@ namespace SharpLSL
         }
 
         /// <summary>
-        /// Finds the previous sibling of the element.
+        /// Gets the previous sibling of the element.
         /// </summary>
         /// <returns>
         /// The previous sibling of the element, or <see cref="Null"/> if the element
         /// is the first node in the list.
         /// </returns>
         /// <exception cref="InvalidOperationException">
-        /// Thrown if current element is invalid.
+        /// Thrown if the current element is invalid.
         /// </exception>
-        public XMLElement FindPreviousSibling()
+        /// <seealso cref="PreviousSibling(string)"/>
+        /// <seealso cref="NextSibling()"/>
+        public XMLElement PreviousSibling()
         {
             ThrowIfInvalid();
 
@@ -344,7 +360,7 @@ namespace SharpLSL
         }
 
         /// <summary>
-        /// Finds the previous sibling of the element with the specified name.
+        /// Gets the previous sibling of the element with the specified name.
         /// </summary>
         /// <param name="name">The name of the sibling.</param>
         /// <returns>
@@ -352,9 +368,11 @@ namespace SharpLSL
         /// if no such sibling exists.
         /// </returns>
         /// <exception cref="InvalidOperationException">
-        /// Thrown if current element is invalid.
+        /// Thrown if the current element is invalid.
         /// </exception>
-        public XMLElement FindPreviousSibling(string name)
+        /// <seealso cref="PreviousSibling()"/>
+        /// <seealso cref="NextSibling(string)"/>
+        public XMLElement PreviousSibling(string name)
         {
             ThrowIfInvalid();
 
@@ -368,13 +386,19 @@ namespace SharpLSL
         /// <summary>
         /// Appends a new child element with the specified name to the current element.
         /// </summary>
-        /// <param name="name">The name of the child.</param>
+        /// <param name="name">The name of the child element.</param>
         /// <returns>
         /// An <see cref="XMLElement"/> representing the newly created child element.
         /// </returns>
         /// <exception cref="InvalidOperationException">
-        /// Thrown if current element is invalid.
+        /// Thrown if the current element is invalid.
         /// </exception>
+        /// <exception cref="LSLException">
+        /// Thrown when appending a child element with the specified name fails.
+        /// </exception>
+        /// <seealso cref="AppendChild(string, string)"/>
+        /// <seealso cref="AppendChild(XMLElement)"/>
+        /// <seealso cref="PrependChild(string)"/>
         public XMLElement AppendChild(string name)
         {
             ThrowIfInvalid();
@@ -394,8 +418,15 @@ namespace SharpLSL
         /// <param name="value">The value of the child.</param>
         /// <returns>The current element.</returns>
         /// <exception cref="InvalidOperationException">
-        /// Thrown if current element is invalid.
+        /// Thrown if the current element is invalid.
         /// </exception>
+        /// <exception cref="LSLException">
+        /// Thrown when appending a child element with the specified name and value
+        /// fails.
+        /// </exception>
+        /// <seealso cref="AppendChild(string)"/>
+        /// <seealso cref="AppendChild(XMLElement)"/>
+        /// <seealso cref="PrependChild(string, string)"/>
         public XMLElement AppendChild(string name, string value)
         {
             ThrowIfInvalid();
@@ -416,11 +447,14 @@ namespace SharpLSL
         /// Thrown if the element to be copied is null.
         /// </exception>
         /// <exception cref="InvalidOperationException">
-        /// Thrown if current element or the element to be copied is invalid.
+        /// Thrown if the current element or the element to be copied is invalid.
         /// </exception>
         /// <exception cref="LSLException">
-        /// Thrown if appending a copy of the specified element as child fails.
+        /// Thrown if appending a copy of the specified element as a child fails.
         /// </exception>
+        /// <seealso cref="AppendChild(string)"/>
+        /// <seealso cref="AppendChild(string, string)"/>
+        /// <seealso cref="PrependChild(XMLElement)"/>
         public XMLElement AppendChild(XMLElement element)
         {
             ThrowIfInvalid();
@@ -445,8 +479,14 @@ namespace SharpLSL
         /// An <see cref="XMLElement"/> representing the newly created child element.
         /// </returns>
         /// <exception cref="InvalidOperationException">
-        /// Thrown if current element is invalid.
+        /// Thrown if the current element is invalid.
         /// </exception>
+        /// <exception cref="LSLException">
+        /// Thrown when prepending a child element with the specified name fails.
+        /// </exception>
+        /// <seealso cref="PrependChild(string, string)"/>
+        /// <seealso cref="PrependChild(XMLElement)"/>
+        /// <seealso cref="AppendChild(string)"/>
         public XMLElement PrependChild(string name)
         {
             ThrowIfInvalid();
@@ -462,12 +502,19 @@ namespace SharpLSL
         /// Prepends a child element with a given name, which has a (nameless) plain-text
         /// child with the given text value.
         /// </summary>
-        /// <param name="name">The name of the child.</param>
-        /// <param name="value">The value of the child.</param>
+        /// <param name="name">The name of the child element.</param>
+        /// <param name="value">The text value of the child element.</param>
         /// <returns>The current element.</returns>
         /// <exception cref="InvalidOperationException">
-        /// Thrown if current element is invalid.
+        /// Thrown if the current element is invalid.
         /// </exception>
+        /// <exception cref="LSLException">
+        /// Thrown when prepending a child element with the specified name and value
+        /// fails.
+        /// </exception>
+        /// <seealso cref="PrependChild(string)"/>
+        /// <seealso cref="PrependChild(XMLElement)"/>
+        /// <seealso cref="AppendChild(string, string)"/>
         public XMLElement PrependChild(string name, string value)
         {
             ThrowIfInvalid();
@@ -488,11 +535,14 @@ namespace SharpLSL
         /// Thrown if the element to be copied is null.
         /// </exception>
         /// <exception cref="InvalidOperationException">
-        /// Thrown if current element or the element to be copied is invalid.
+        /// Thrown if the current element or the element to be copied is invalid.
         /// </exception>
         /// <exception cref="LSLException">
-        /// Thrown if prepending a copy of the specified element as child fails.
+        /// Thrown if prepending a copy of the specified element as a child fails.
         /// </exception>
+        /// <seealso cref="PrependChild(string)"/>
+        /// <seealso cref="PrependChild(string, string)"/>
+        /// <seealso cref="AppendChild(XMLElement)"/>
         public XMLElement PrependChild(XMLElement element)
         {
             ThrowIfInvalid();
@@ -514,8 +564,9 @@ namespace SharpLSL
         /// </summary>
         /// <param name="name">The name of the child.</param>
         /// <exception cref="InvalidOperationException">
-        /// Thrown when the handle is invalid.
+        /// Thrown if the handle is invalid.
         /// </exception>
+        /// <seealso cref="RemoveChild(XMLElement)"/>
         public void RemoveChild(string name)
         {
             ThrowIfInvalid();
@@ -524,15 +575,16 @@ namespace SharpLSL
         }
 
         /// <summary>
-        /// Remove a specified child element.
+        /// Removes a specified child element.
         /// </summary>
         /// <param name="element">The child element to be removed.</param>
         /// <exception cref="ArgumentNullException">
         /// Thrown if the element to be removed is null.
         /// </exception>
         /// <exception cref="InvalidOperationException">
-        /// Thrown if current element or the element to be removed is invalid.
+        /// Thrown if the current element or the element to be removed is invalid.
         /// </exception>
+        /// <seealso cref="RemoveChild(string)"/>
         public void RemoveChild(XMLElement element)
         {
             ThrowIfInvalid();
@@ -559,7 +611,7 @@ namespace SharpLSL
         /// Throws an <see cref="InvalidOperationException"/> if the handle is invalid.
         /// </summary>
         /// <exception cref="InvalidOperationException">
-        /// Thrown when the handle is invalid.
+        /// Thrown if the handle is invalid.
         /// </exception>
         protected void ThrowIfInvalid()
         {

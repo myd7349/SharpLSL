@@ -6,7 +6,7 @@ namespace SharpLSL
     /// Represents an internal error within the LSL (Lab Streaming Layer) library.
     /// </summary>
     /// <remarks>
-    /// This exception is used to indicate errors that occur within the internal of LSL.
+    /// This exception is used to indicate errors that occur within the internals of LSL.
     /// This class extends <see cref="LSLException"/> to provide a more specific exception
     /// type for internal LSL errors.
     /// </remarks>

@@ -33,6 +33,9 @@ namespace SharpLSL.Interop
             [MarshalAs(UnmanagedType.LPArray, ArraySubType = UnmanagedType.LPStr)] string[] data);
 
         [DllImport("lsl", CallingConvention = CallingConvention.Cdecl, ExactSpelling = true)]
+        public static extern int lsl_push_sample_v(lsl_outlet @out, byte[] data);
+
+        [DllImport("lsl", CallingConvention = CallingConvention.Cdecl, ExactSpelling = true)]
         public static extern int lsl_push_sample_buf(
             lsl_outlet @out,
             byte[][] data,
@@ -68,19 +71,21 @@ namespace SharpLSL.Interop
             [MarshalAs(UnmanagedType.LPArray, ArraySubType = UnmanagedType.LPStr)] string[] data,
             double timestamp);
 
+        [DllImport("lsl", CallingConvention = CallingConvention.Cdecl, ExactSpelling = true)]
+        public static extern int lsl_push_sample_vt(lsl_outlet @out, byte[] data, double timestamp);
 
         [DllImport("lsl", CallingConvention = CallingConvention.Cdecl, ExactSpelling = true)]
         public static extern int lsl_push_sample_buft(
             lsl_outlet @out,
             byte[][] data,
-            uint[] lengths,
+            uint* lengths,
             double timestamp);
 
         [DllImport("lsl", CallingConvention = CallingConvention.Cdecl, ExactSpelling = true)]
         public static extern int lsl_push_sample_buft(
             lsl_outlet @out,
             IntPtr[] data,
-            uint[] lengths,
+            uint* lengths,
             double timestamp);
 
         [DllImport("lsl", CallingConvention = CallingConvention.Cdecl, ExactSpelling = true)]
@@ -109,10 +114,17 @@ namespace SharpLSL.Interop
             int pushthrough);
 
         [DllImport("lsl", CallingConvention = CallingConvention.Cdecl, ExactSpelling = true)]
+        public static extern int lsl_push_sample_vtp(
+            lsl_outlet @out,
+            byte[] data,
+            double timestamp,
+            int pushthrough);
+
+        [DllImport("lsl", CallingConvention = CallingConvention.Cdecl, ExactSpelling = true)]
         public static extern int lsl_push_sample_buftp(
             lsl_outlet @out,
             byte[][] data,
-            uint[] lengths,
+            uint* lengths,
             double timestamp,
             int pushthrough);
 
@@ -120,7 +132,7 @@ namespace SharpLSL.Interop
         public static extern int lsl_push_sample_buftp(
             lsl_outlet @out,
             IntPtr[] data,
-            uint[] lengths,
+            uint* lengths,
             double timestamp,
             int pushthrough);
 

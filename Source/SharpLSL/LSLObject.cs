@@ -20,7 +20,7 @@ namespace SharpLSL
         /// Initializes a new instance of the <see cref="LSLObject"/> class.
         /// </summary>
         /// <param name="ownsHandle">
-        /// Speciies whether the wrapped handle should be released during the finalization
+        /// Specifies whether the wrapped handle should be released during the finalization
         /// phase.
         /// </param>
         protected LSLObject(bool ownsHandle = true)
@@ -36,7 +36,7 @@ namespace SharpLSL
         /// Specifies the handle to be wrapped.
         /// </param>
         /// <param name="ownsHandle">
-        /// Speciies whether the wrapped handle should be released during the finalization
+        /// Specifies whether the wrapped handle should be released during the finalization
         /// phase.
         /// </param>
         /// <exception cref="LSLException">
@@ -59,7 +59,7 @@ namespace SharpLSL
         /// <summary>
         /// Releases the wrapped LSL native handle by calling <see cref="DestroyLSLObject"/>.
         /// </summary>
-        /// <returns>A value indicates if the handle is released successfully.</returns>
+        /// <returns>A value indicating if the handle is released successfully.</returns>
         /// <seealso cref="DestroyLSLObject"/>
         protected override bool ReleaseHandle()
         {

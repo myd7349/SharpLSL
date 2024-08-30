@@ -18,8 +18,8 @@ namespace SharpLSL
         /// </summary>
         /// <remarks>
         /// This format is suitable for measurements that require up to 24-bit precision,
-        /// such as physical quantities measured in microvolts. Accurately represents
-        /// integers within the range of -16,777,216~16,777,216.
+        /// such as physical quantities measured in microvolts. It accurately represents
+        /// integers within the range of -16,777,216 to 16,777,216.
         /// </remarks>
         Float = lsl_channel_format_t.cft_float32,
 
@@ -29,7 +29,7 @@ namespace SharpLSL
         /// <remarks>
         /// This format is used for representing numerical data with high precision.
         /// It is suitable for universal numeric data as long as permitted by network
-        /// and disk budget. Can accurately represent integers up to 53 bits.
+        /// and disk budget. It can accurately represent integers up to 53 bits.
         /// </remarks>
         Double = lsl_channel_format_t.cft_double64,
 
@@ -38,7 +38,7 @@ namespace SharpLSL
         /// </summary>
         /// <remarks>
         /// This format is suitable for data that cannot be easily represented as
-        /// numeric values, such as video frames, or complex event descriptions.
+        /// numeric values, such as video frames or complex event descriptions.
         /// </remarks>
         String = lsl_channel_format_t.cft_string,
 
@@ -49,9 +49,10 @@ namespace SharpLSL
         /// This format is used for transmitting data that requires 32-bit integer
         /// precision. It is suitable for high-rate digitized formats and cases
         /// where the data is represented as discrete numeric values, such as
-        /// application event codes or other coded data. Depends critically on
+        /// application event codes or other coded data. It depends critically on
         /// meta-data to represent meaningful units.
         /// </remarks>
+        // TODO: unsigned
         Int32 = lsl_channel_format_t.cft_int32,
 
         /// <summary>

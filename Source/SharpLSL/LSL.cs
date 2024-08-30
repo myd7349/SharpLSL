@@ -88,7 +88,7 @@ namespace SharpLSL
         /// <summary>
         /// Retrieves the LSL protocol version encoded as a single integer.
         /// </summary>
-        /// <returns>The LSL protocol version as a integer.</returns>
+        /// <returns>The LSL protocol version as an integer.</returns>
         /// <remarks>
         /// The protocol version is encoded as follows:
         /// <list type="bullet">
@@ -118,7 +118,7 @@ namespace SharpLSL
         /// Retrieves the version of the underlying liblsl library encoded as a
         /// single integer.
         /// </summary>
-        /// <returns>The liblsl library version as an integer. </returns>
+        /// <returns>The liblsl library version as an integer.</returns>
         /// <remarks>
         /// The library version is encoded as follows:
         /// <list type="bullet">

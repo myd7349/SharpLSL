@@ -46,22 +46,22 @@ namespace SharpLSL.Examples
                             Console.WriteLine(streamInletInfo.ToXML());
 
                             Console.WriteLine("\nThe manufacturer is: {0}",
-                                streamInletInfo.Description.GetChildValue("manufacturer"));
+                                streamInletInfo.Description.ChildValue("manufacturer"));
 
                             // TODO: inf.desc().child("cap").child_value("size")
                             Console.WriteLine("\nThe cap circumference is: {0}",
-                                streamInletInfo.Description.FindChild("cap").GetChildValue("size"));
+                                streamInletInfo.Description.Child("cap").ChildValue("size"));
 
                             Console.WriteLine("\nThe channel labels are as follows:\n");
 
                             var channel = streamInletInfo
                                 .Description
-                                .FindChild("channels")
-                                .FindChild("channel");
+                                .Child("channels")
+                                .Child("channel");
                             for (int c = 0; c < streamInletInfo.ChannelCount; ++c)
                             {
-                                Console.WriteLine("  {0}", channel.GetChildValue("label"));
-                                channel = channel.FindNextSibling();
+                                Console.WriteLine("  {0}", channel.ChildValue("label"));
+                                channel = channel.NextSibling();
                             }
                         }
                     }
