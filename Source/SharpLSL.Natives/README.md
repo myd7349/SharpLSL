@@ -13,6 +13,7 @@ The following NuGet packages contain pre-compiled binaries of [liblsl](https://g
 | linux-arm     |  [![SharpLSL.Native.linux-arm-badge]][SharpLSL.Native.linux-arm-nuget]   |
 | linux-arm64   |  [![SharpLSL.Native.linux-arm64-badge]][SharpLSL.Native.linux-arm64-nuget]   |
 | linux-x64     |  [![SharpLSL.Native.linux-x64-badge]][SharpLSL.Native.linux-x64-nuget]   |
+| osx           |  [![SharpLSL.Native.osx-badge]][SharpLSL.Native.osx-nuget]   |
 | osx-arm64     |  [![SharpLSL.Native.osx-arm64-badge]][SharpLSL.Native.osx-arm64-nuget]   |
 | osx-x64       |  [![SharpLSL.Native.osx-x64-badge]][SharpLSL.Native.osx-x64-nuget]   |
 | win-arm64     |  [![SharpLSL.Native.win-arm64-badge]][SharpLSL.Native.win-arm64-nuget]   |
@@ -37,6 +38,8 @@ The following NuGet packages contain pre-compiled binaries of [liblsl](https://g
 [SharpLSL.Native.linux-arm64-nuget]: https://www.nuget.org/packages/SharpLSL.Native.linux-arm64
 [SharpLSL.Native.linux-x64-badge]: https://img.shields.io/nuget/v/SharpLSL.Native.linux-x64.svg
 [SharpLSL.Native.linux-x64-nuget]: https://www.nuget.org/packages/SharpLSL.Native.linux-x64
+[SharpLSL.Native.osx-badge]: https://img.shields.io/nuget/v/SharpLSL.Native.osx.svg
+[SharpLSL.Native.osx-nuget]: https://www.nuget.org/packages/SharpLSL.Native.osx
 [SharpLSL.Native.osx-arm64-badge]: https://img.shields.io/nuget/v/SharpLSL.Native.osx-arm64.svg
 [SharpLSL.Native.osx-arm64-nuget]: https://www.nuget.org/packages/SharpLSL.Native.osx-arm64
 [SharpLSL.Native.osx-x64-badge]: https://img.shields.io/nuget/v/SharpLSL.Native.osx-x64.svg
