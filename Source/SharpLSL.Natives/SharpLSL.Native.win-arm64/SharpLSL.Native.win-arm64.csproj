@@ -15,7 +15,8 @@
 
   <ItemGroup>
     <NativeLibs Include="$(ProjectDir)$(BaseIntermediateOutputPath)bin/**/*.dll" />
-    <None Include="@(NativeLibs)">
+    <NativePdbs Include="$(ProjectDir)$(BaseIntermediateOutputPath)bin/**/*.pdb" />
+    <None Include="@(NativeLibs);@(NativePdbs)">
       <Pack>true</Pack>
       <PackagePath>runtimes/$(RID)/native</PackagePath>
       <Link>runtimes/$(RID)/native/%(FileName)%(Extension)</Link>

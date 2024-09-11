@@ -16,7 +16,7 @@
   </PropertyGroup>
 
   <PropertyGroup Label="Package">
-    <LSLBuildCITagVersion>2024.09.10</LSLBuildCITagVersion>
+    <LSLBuildCITagVersion>2024.09.11</LSLBuildCITagVersion>
     <ExcludeSymbolsFromPackage>false</ExcludeSymbolsFromPackage>
     <IncludeBuildOutput>false</IncludeBuildOutput>
     <PackageLicenseFile>LICENSE</PackageLicenseFile>
