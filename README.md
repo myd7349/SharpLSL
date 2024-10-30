@@ -1,8 +1,6 @@
 # [SharpLSL](https://github.com/myd7349/SharpLSL)
 
-[![NuGet](https://img.shields.io/nuget/v/SharpLSL.svg)](https://www.nuget.org/packages/SharpLSL/) [![Downloads](https://img.shields.io/nuget/dt/SharpLSL)](https://www.nuget.org/packages/SharpLSL) [![Build](https://github.com/myd7349/SharpLSL/actions/workflows/build.yml/badge.svg)](https://github.com/myd7349/SharpLSL/actions)
-
-[![Build History](https://buildstats.info/github/chart/myd7349/SharpLSL?branch=main&includeBuildsFromPullRequest=false)](https://github.com/myd7349/SharpLSL/actions)
+[![NuGet](https://img.shields.io/nuget/v/SharpLSL.svg)](https://www.nuget.org/packages/SharpLSL/) [![Downloads](https://img.shields.io/nuget/dt/SharpLSL)](https://www.nuget.org/packages/SharpLSL) [![Build](https://github.com/myd7349/SharpLSL/actions/workflows/build.yml/badge.svg)](https://github.com/myd7349/SharpLSL/actions) ![GitHub code size in bytes](https://img.shields.io/github/languages/code-size/myd7349/SharpLSL) ![GitHub repo size](https://img.shields.io/github/repo-size/myd7349/SharpLSL) [![License](https://img.shields.io/github/license/myd7349/SharpLSL)](https://github.com/myd7349/SharpLSL/blob/main/LICENSE)
 
 SharpLSL is a cross-platform C# binding of [**L**ab **S**treaming **L**ayer](https://github.com/sccn/labstreaminglayer).
 

@@ -5,18 +5,18 @@ The following NuGet packages contain pre-compiled binaries of [liblsl](https://g
 | RID           |                        NuGet Package                         |
 | :------------ | :----------------------------------------------------------: |
 | *             |  [![SharpLSL.Native.all-badge]][SharpLSL.Native.all-nuget]   |
-| android-arm   |  [![SharpLSL.Native.android-arm-badge]][SharpLSL.Native.android-arm-nuget]   |
-| android-arm64 |  [![SharpLSL.Native.android-arm64-badge]][SharpLSL.Native.android-arm64-nuget]   |
-| android-x64   |  [![SharpLSL.Native.android-x64-badge]][SharpLSL.Native.android-x64-nuget]   |
-| android-x86   |  [![SharpLSL.Native.android-x86-badge]][SharpLSL.Native.android-x86-nuget]   |
-| ios-arm64     |  [![SharpLSL.Native.ios-arm64-badge]][SharpLSL.Native.ios-arm64-nuget]   |
-| linux-arm     |  [![SharpLSL.Native.linux-arm-badge]][SharpLSL.Native.linux-arm-nuget]   |
-| linux-arm64   |  [![SharpLSL.Native.linux-arm64-badge]][SharpLSL.Native.linux-arm64-nuget]   |
-| linux-x64     |  [![SharpLSL.Native.linux-x64-badge]][SharpLSL.Native.linux-x64-nuget]   |
-| osx           |  [![SharpLSL.Native.osx-badge]][SharpLSL.Native.osx-nuget]   |
-| osx-arm64     |  [![SharpLSL.Native.osx-arm64-badge]][SharpLSL.Native.osx-arm64-nuget]   |
-| osx-x64       |  [![SharpLSL.Native.osx-x64-badge]][SharpLSL.Native.osx-x64-nuget]   |
-| win-arm64     |  [![SharpLSL.Native.win-arm64-badge]][SharpLSL.Native.win-arm64-nuget]   |
+| android-arm   | [![SharpLSL.Native.android-arm-badge]][SharpLSL.Native.android-arm-nuget] |
+| android-arm64 | [![SharpLSL.Native.android-arm64-badge]][SharpLSL.Native.android-arm64-nuget] |
+| android-x64   | [![SharpLSL.Native.android-x64-badge]][SharpLSL.Native.android-x64-nuget] |
+| android-x86   | [![SharpLSL.Native.android-x86-badge]][SharpLSL.Native.android-x86-nuget] |
+| ios-arm64     | [![SharpLSL.Native.ios-arm64-badge]][SharpLSL.Native.ios-arm64-nuget] |
+| linux-arm     | [![SharpLSL.Native.linux-arm-badge]][SharpLSL.Native.linux-arm-nuget] |
+| linux-arm64   | [![SharpLSL.Native.linux-arm64-badge]][SharpLSL.Native.linux-arm64-nuget] |
+| linux-x64     | [![SharpLSL.Native.linux-x64-badge]][SharpLSL.Native.linux-x64-nuget] |
+| osx[^1]       |  [![SharpLSL.Native.osx-badge]][SharpLSL.Native.osx-nuget]   |
+| osx-arm64     | [![SharpLSL.Native.osx-arm64-badge]][SharpLSL.Native.osx-arm64-nuget] |
+| osx-x64       | [![SharpLSL.Native.osx-x64-badge]][SharpLSL.Native.osx-x64-nuget] |
+| win-arm64     | [![SharpLSL.Native.win-arm64-badge]][SharpLSL.Native.win-arm64-nuget] |
 | win-x64       | [![SharpLSL.Native.win-x64-badge]][SharpLSL.Native.win-x64-nuget] |
 | win-x86       | [![SharpLSL.Native.win-x86-badge]][SharpLSL.Native.win-x86-nuget] |
 
@@ -52,6 +52,8 @@ The following NuGet packages contain pre-compiled binaries of [liblsl](https://g
 [SharpLSL.Native.win-x86-nuget]: https://www.nuget.org/packages/SharpLSL.Native.win-x86
 
 During the packaging process, liblsl binary archives are automatically downloaded from the [liblsl-ci-build](https://github.com/myd7349/liblsl-ci-build) release page and then packed into the corresponding NuGet packages named `SharpLSL.Native.[rid]`.
+
+[^1]: This package is compatible with both Intel-based and Apple Silicon (M1, M2, etc.) Mac computers, effectively serving as a combined package of both osx-arm64 and osx-x64.
 
 # License
 
