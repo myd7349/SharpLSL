@@ -40,6 +40,8 @@ jobs:
         run: dotnet build ./SharpLSL.Full.sln -c Release
       - name: Run example
         run: dotnet run --project ./Examples/GetLocalClock/GetLocalClock.csproj -c Release
+      - name: Run LSLVer
+        run: dotnet run --project ./Examples/LSLVer/LSLVer.csproj -c Release
       - name: Run unit tests
         run: dotnet test -c Release
       - name: Pack SharpLSL
