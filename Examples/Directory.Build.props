@@ -8,14 +8,14 @@
 
   <ItemGroup>
     <!--
-    <PackageReference Include="SharpLSL.Native.all" Version="1.16.2.1" />
+    <PackageReference Include="SharpLSL.Native.all" />
     -->
-    <PackageReference Include="SharpLSL.Native.linux-arm64" Version="1.16.2.3" Condition="$([MSBuild]::IsOsPlatform('Linux'))" />
-    <PackageReference Include="SharpLSL.Native.linux-x64" Version="1.16.2.3" Condition="$([MSBuild]::IsOsPlatform('Linux'))" />
-    <PackageReference Include="SharpLSL.Native.osx" Version="1.16.2.3" Condition="$([MSBuild]::IsOsPlatform('OSX'))" />
-    <PackageReference Include="SharpLSL.Native.win-arm64" Version="1.16.2.3" Condition="$([MSBuild]::IsOsPlatform('Windows'))" />
-    <PackageReference Include="SharpLSL.Native.win-x64" Version="1.16.2.3" Condition="$([MSBuild]::IsOsPlatform('Windows'))" />
-    <PackageReference Include="SharpLSL.Native.win-x86" Version="1.16.2.3" Condition="$([MSBuild]::IsOsPlatform('Windows'))" />
+    <PackageReference Include="SharpLSL.Native.linux-arm64" Condition="$([MSBuild]::IsOsPlatform('Linux'))" />
+    <PackageReference Include="SharpLSL.Native.linux-x64" Condition="$([MSBuild]::IsOsPlatform('Linux'))" />
+    <PackageReference Include="SharpLSL.Native.osx" Condition="$([MSBuild]::IsOsPlatform('OSX'))" />
+    <PackageReference Include="SharpLSL.Native.win-arm64" Condition="$([MSBuild]::IsOsPlatform('Windows'))" />
+    <PackageReference Include="SharpLSL.Native.win-x64" Condition="$([MSBuild]::IsOsPlatform('Windows'))" />
+    <PackageReference Include="SharpLSL.Native.win-x86" Condition="$([MSBuild]::IsOsPlatform('Windows'))" />
   </ItemGroup>
 
   <ItemGroup>

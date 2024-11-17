@@ -12,14 +12,19 @@
   </ItemGroup>
 
   <ItemGroup Label="Package References">
-    <PackageReference Include="coverlet.collector" PrivateAssets="all" Version="3.1.2">
+    <PackageReference Include="coverlet.collector" PrivateAssets="all">
       <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
     </PackageReference>
-    <PackageReference Include="Microsoft.NET.Test.Sdk" Version="17.3.0" />
-    <PackageReference Include="Moq" Version="4.18.2" />
-    <PackageReference Include="SharpLSL.Native.all" Version="1.16.2.3" />
-    <PackageReference Include="xunit" Version="2.4.2" />
-    <PackageReference Include="xunit.runner.visualstudio" PrivateAssets="all" Version="2.4.5">
+    <PackageReference Include="Microsoft.NET.Test.Sdk" />
+    <PackageReference Include="Moq" />
+    <PackageReference Include="SharpLSL.Native.linux-arm64" Condition="$([MSBuild]::IsOsPlatform('Linux'))" />
+    <PackageReference Include="SharpLSL.Native.linux-x64" Condition="$([MSBuild]::IsOsPlatform('Linux'))" />
+    <PackageReference Include="SharpLSL.Native.osx" Condition="$([MSBuild]::IsOsPlatform('OSX'))" />
+    <PackageReference Include="SharpLSL.Native.win-arm64" Condition="$([MSBuild]::IsOsPlatform('Windows'))" />
+    <PackageReference Include="SharpLSL.Native.win-x64" Condition="$([MSBuild]::IsOsPlatform('Windows'))" />
+    <PackageReference Include="SharpLSL.Native.win-x86" Condition="$([MSBuild]::IsOsPlatform('Windows'))" />
+    <PackageReference Include="xunit" />
+    <PackageReference Include="xunit.runner.visualstudio" PrivateAssets="all">
       <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
     </PackageReference>
   </ItemGroup>
