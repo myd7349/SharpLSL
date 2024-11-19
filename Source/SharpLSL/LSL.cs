@@ -8,7 +8,7 @@ using SharpLSL.Interop;
 using static SharpLSL.Interop.LSL;
 
 namespace SharpLSL
-{
+
     /// <summary>
     /// Provides static methods and constants for interacting with the LSL library.
     /// </summary>
