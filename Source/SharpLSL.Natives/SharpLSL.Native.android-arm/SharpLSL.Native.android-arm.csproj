@@ -35,6 +35,6 @@
            DestinationFolder="$(ProjectDir)$(BaseIntermediateOutputPath)"
            ContinueOnError="true"
            OverwriteReadOnlyFiles="true"
-           Condition="!Exists('$(ProjectDir)$(BaseIntermediateOutputPath)bin/$(LSLAssetFile)')" />
+           Condition="!Exists('$(ProjectDir)$(BaseIntermediateOutputPath)lib/$(LSLAssetFile)')" />
   </Target>
 </Project>
