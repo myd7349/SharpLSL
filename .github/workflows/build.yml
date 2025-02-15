@@ -7,7 +7,7 @@ on:
   workflow_dispatch:
 
 env:
-  DOTNET_VERSION: 6.0.x
+  DOTNET_VERSION: 8.0.x
   # Disable the .NET logo in the console output.
   DOTNET_NOLOGO: true
   # Disable the .NET first time experience to skip caching NuGet packages and speed up the build.
@@ -33,7 +33,9 @@ jobs:
       - name: Install .NET SDK
         uses: actions/setup-dotnet@v4
         with:
-          dotnet-version: ${{ env.DOTNET_VERSION }}
+          dotnet-version: |
+            6.0.x
+            8.0.x
       - name: List installed .NET SDKs
         run: dotnet --list-sdks
       - name: Build SharpLSL
@@ -59,10 +61,10 @@ jobs:
     needs: build
     if: startsWith(github.ref, 'refs/tags/')
     steps:
-      - name: Setup NuGet
-        uses: NuGet/setup-nuget@v2
+      - name: Install .NET SDK
+        uses: actions/setup-dotnet@v4
         with:
-          nuget-version: latest
+          dotnet-version: ${{ env.DOTNET_VERSION }}
       - name: Download artifacts
         uses: actions/download-artifact@v4
         with:
