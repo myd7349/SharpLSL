@@ -5,6 +5,7 @@
   <PropertyGroup>
     <LSLTagVersion>1.16.2</LSLTagVersion>
     <Version>$(LSLTagVersion).5</Version>
+    <LSLBuildCITagVersion>2024.11.04</LSLBuildCITagVersion>
   </PropertyGroup>
 
   <PropertyGroup Label="Build">
@@ -16,10 +17,10 @@
   </PropertyGroup>
 
   <PropertyGroup Label="Package">
-    <LSLBuildCITagVersion>2024.11.04</LSLBuildCITagVersion>
     <ExcludeSymbolsFromPackage>false</ExcludeSymbolsFromPackage>
     <IncludeBuildOutput>false</IncludeBuildOutput>
     <PackageLicenseFile>LICENSE</PackageLicenseFile>
+    <SuppressDependenciesWhenPacking>true</SuppressDependenciesWhenPacking>
   </PropertyGroup>
 
   <ItemGroup>

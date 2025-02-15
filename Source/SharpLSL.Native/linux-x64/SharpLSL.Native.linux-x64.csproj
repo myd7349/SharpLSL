@@ -2,39 +2,10 @@
 
   <PropertyGroup>
     <RID>linux-x64</RID>
-    <LSLAssetArchive>liblsl-v$(LSLTagVersion)-$(RID)-dynamic.zip</LSLAssetArchive>
-    <LSLAssetFile>liblsl.so</LSLAssetFile>
-    <LSLAssetUrl>https://github.com/myd7349/liblsl-ci-build/releases/download/$(LSLBuildCITagVersion)/$(LSLAssetArchive)</LSLAssetUrl>
+    <NativeLibBaseDir>lib</NativeLibBaseDir>
+    <NativeLibPrefix>lib</NativeLibPrefix>
+    <NativeLibExt>so</NativeLibExt>
+    <DebugSymbolExt></DebugSymbolExt>
   </PropertyGroup>
 
-  <PropertyGroup>
-    <PackageId>SharpLSL.Native.$(RID)</PackageId>
-    <Description>liblsl native assets for $(RID).</Description>
-    <SuppressDependenciesWhenPacking>true</SuppressDependenciesWhenPacking>
-  </PropertyGroup>
-
-  <ItemGroup>
-    <NativeLibs Include="$(ProjectDir)$(BaseIntermediateOutputPath)lib/**/*.so" />
-    <None Include="@(NativeLibs)">
-      <Pack>true</Pack>
-      <PackagePath>runtimes/$(RID)/native</PackagePath>
-      <Link>runtimes/$(RID)/native/%(FileName)%(Extension)</Link>
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </None>
-  </ItemGroup>
-
-  <Target Name="DownloadNativeAssets" BeforeTargets="UnzipNativeAssets">
-    <DownloadFile SourceUrl="$(LSLAssetUrl)"
-                  DestinationFolder="$(ProjectDir)$(BaseIntermediateOutputPath)"
-                  DestinationFileName="$(LSLAssetArchive)"
-                  Condition="!Exists('$(ProjectDir)$(BaseIntermediateOutputPath)$(LSLAssetArchive)')" />
-  </Target>
-
-  <Target Name="UnzipNativeAssets" BeforeTargets="Build">
-    <Unzip SourceFiles="$(ProjectDir)$(BaseIntermediateOutputPath)$(LSLAssetArchive)"
-           DestinationFolder="$(ProjectDir)$(BaseIntermediateOutputPath)"
-           ContinueOnError="true"
-           OverwriteReadOnlyFiles="true"
-           Condition="!Exists('$(ProjectDir)$(BaseIntermediateOutputPath)lib/$(LSLAssetFile)')" />
-  </Target>
 </Project>

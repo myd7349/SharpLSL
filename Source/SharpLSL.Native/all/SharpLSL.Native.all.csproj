@@ -1,34 +1,13 @@
 <Project Sdk="Microsoft.NET.Sdk">
+
   <PropertyGroup>
-    <PackageId>SharpLSL.Native.all</PackageId>
-    <Description>liblsl native assets for all supported platforms.</Description>
+    <RID>all</RID>
+  </PropertyGroup>
+
+  <PropertyGroup>
     <SuppressDependenciesWhenPacking>false</SuppressDependenciesWhenPacking>
-    <TargetsForTfmSpecificContentInPackage>$(TargetsForTfmSpecificContentInPackage);_IncludeAdditionalTfmSpecificPackageFiles</TargetsForTfmSpecificContentInPackage>
+    <TargetsForTfmSpecificContentInPackage>$(TargetsForTfmSpecificContentInPackage);_IncludeAdditionalTfmSpecificPackageFilesPrepare</TargetsForTfmSpecificContentInPackage>
   </PropertyGroup>
-
-  <Target Name="_IncludeAdditionalTfmSpecificPackageFilesPrepare">
-    <GetNuGetShortFolderName TargetFrameworkMoniker="$(TargetFrameworkMoniker)" TargetPlatformMoniker="$(TargetPlatformMoniker)">
-      <Output TaskParameter="NuGetShortFolderName" PropertyName="NuGetShortFolderName" />
-    </GetNuGetShortFolderName>
-  </Target>
-
-  <Target Name="_IncludePlaceholders" AfterTargets="_IncludeAdditionalTfmSpecificPackageFilesPrepare">
-    <Touch Files="$(IntermediateOutputPath)_._" AlwaysCreate="True" />
-    <ItemGroup>
-      <FileWrites Include="$(IntermediateOutputPath)_._" />
-      <TfmSpecificPackageFile Include="$(IntermediateOutputPath)_._"
-                              PackagePath="lib\$(NuGetShortFolderName)\_._" />
-    </ItemGroup>
-  </Target>
-
-  <PropertyGroup>
-    <_IncludeAdditionalTfmSpecificPackageFilesDependsOn>
-      _IncludeAdditionalTfmSpecificPackageFilesPrepare;
-    </_IncludeAdditionalTfmSpecificPackageFilesDependsOn>
-  </PropertyGroup>
-
-  <Target Name="_IncludeAdditionalTfmSpecificPackageFiles"
-          DependsOnTargets="$(_IncludeAdditionalTfmSpecificPackageFilesDependsOn)" />
   
   <ItemGroup Condition=" '$(TargetFramework)' != 'net35' ">
     <ProjectReference Include="..\android-arm64\SharpLSL.Native.android-arm64.csproj" />
