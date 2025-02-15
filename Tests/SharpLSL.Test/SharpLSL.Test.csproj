@@ -6,7 +6,7 @@
 
   <ItemGroup Label="Project References">
     <!--
-    <ProjectReference Include="..\..\Source\SharpLSL.Natives\SharpLSL.Native.all\SharpLSL.Native.all.csproj" />
+    <ProjectReference Include="..\..\Source\SharpLSL.Native\all\SharpLSL.Native.all.csproj" />
     -->
     <ProjectReference Include="..\..\Source\SharpLSL\SharpLSL.csproj" />
   </ItemGroup>
