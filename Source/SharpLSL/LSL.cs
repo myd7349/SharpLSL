@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Diagnostics;
 using System.Runtime.CompilerServices;
 using System.Runtime.InteropServices;
@@ -25,14 +25,10 @@ namespace SharpLSL
         /// </summary>
         /// <remarks>
         /// This constant serves as an optional optimization to transmit less data
-        /// per sample. When used, the timestamp is automatically calculated based
-        /// on the following rules:
-        /// <list type="bullet">
-        ///     <item>For streams with a regular sampling rate: The timestamp is deduced from 
-        ///     the preceding sample's timestamp according to the stream's sampling rate.</item>
-        ///     <item>For streams with an irregular sampling rate: The timestamp is assumed to be 
-        ///     the same as the previous sample's timestamp.</item>
-        /// </list>
+        /// per sample. When used, the timestamp is then automatically deduced from
+        /// the preceding one according to the stream's sampling rate. For streams
+        /// with an irregular sampling rate, the timestamp is assumed to be the same
+        /// as the previous sample's timestamp.
         /// </remarks>
         public const double DeducedTimestamp = LSL_DEDUCED_TIMESTAMP;
 
@@ -95,20 +91,8 @@ namespace SharpLSL
         ///     <item>Major version = <c>GetProtocolVersion() / 100</c></item>
         ///     <item>Minor version = <c>GetProtocolVersion() % 100</c></item>
         /// </list>
-        /// 
-        /// Version compatibility:
-        /// <list type="bullet">
-        ///     <item>Clients with different minor versions are considered protocol-compatible.</item>
-        ///     <item>Clients with different major versions are not compatible and will refuse to work together.</item>
-        /// </list>
-        /// 
-        /// Example:
-        /// <code>
-        /// var version = LSL.GetProtocolVersion();
-        /// var majorVersion = version / 100;
-        /// var minorVersion = version % 100;
-        /// Console.WriteLine($"LSL Protocol Version: {majorVersion}.{minorVersion}");
-        /// </code>
+        /// Clients with different minor versions are considered protocol-compatible,
+        /// while clients with different major versions will refuse to work together.
         /// </remarks>
         /// <seealso cref="CompileHeaderVersion"/>
         /// <seealso cref="StreamInfo.Version"/>
@@ -125,14 +109,6 @@ namespace SharpLSL
         ///     <item>Major version = <c>GetLibraryVersion() / 100</c></item>
         ///     <item>Minor version = <c>GetLibraryVersion() % 100</c></item>
         /// </list>
-        /// 
-        /// Example:
-        /// <code>
-        /// var version = LSL.GetLibraryVersion();
-        /// var majorVersion = version / 100;
-        /// var minorVersion = version % 100;
-        /// Console.WriteLine($"liblsl Version: {majorVersion}.{minorVersion}");
-        /// </code>
         /// </remarks>
         public static int GetLibraryVersion() => lsl_library_version();
 
@@ -152,23 +128,15 @@ namespace SharpLSL
         /// <returns>The current local system timestamp in seconds.</returns>
         /// <remarks>
         /// This function provides a high-precision local system timestamp with
-        /// resolution better than a millisecond. It can be used for various timing
-        /// purposes, particularly:
-        /// 
-        /// <list type="bullet">
-        ///     <item>Assigning timestamps to samples as they are acquired.</item>
-        ///     <item>Calculating precise time differences or durations.</item>
-        ///     <item>Synchronizing data streams or events in multi-modal applications.</item>
-        /// </list>
-        /// 
-        /// For improved accuracy when dealing with known sample delays:
+        /// resolution better than a millisecond. It can be used to assign timestamps to
+        /// samples as they are being acquired. If the "age" of a sample is known at a
+        /// particular time (e.g., from USB transmission delays), it can be used as an
+        /// offset to <see cref="GetLocalClock"/> to obtain a better estimate of when a
+        /// sample was actually captured.
         /// <code>
         /// double sampleAge = knownDelayInSeconds;
         /// double adjustedTimestamp = LSL.GetLocalClock() - sampleAge;
         /// </code>
-        /// 
-        /// This adjustment can compensate for known delays (e.g., USB transmission delays)
-        /// to more accurately reflect when a sample was captured.
         /// </remarks>
         /// <seealso cref="StreamOutlet.PushSample(short[], double)"/>
         /// <seealso cref="StreamOutlet.PushSample(int[], double)"/>
@@ -245,11 +213,20 @@ namespace SharpLSL
             var result = lsl_resolve_all(streamInfoPointers, (uint)streamInfoPointers.Length, waitTime);
             CheckError(result);
 
-            var streamInfos = new StreamInfo[result];
-            for (int i = 0; i < result; ++i)
-                streamInfos[i] = new StreamInfo(streamInfoPointers[i], true);
+            if (result > 0)
+            {
+                var streamInfos = new StreamInfo[result];
+                for (int i = 0; i < result; ++i)
+                    streamInfos[i] = new StreamInfo(streamInfoPointers[i], true);
 
-            return streamInfos;
+                return streamInfos;
+            }
+
+#if NET35
+            return new StreamInfo[0];
+#else
+            return Array.Empty<StreamInfo>();
+#endif
         }
 
         /// <summary>
@@ -257,7 +234,7 @@ namespace SharpLSL
         /// </summary>
         /// <param name="property">
         /// The stream info property that should have a specific value (e.g., "name",
-        /// "type", "source_id", or "desc/manufacturer").
+        /// "type", "source_id", or "desc/manufacturer" if present).
         /// </param>
         /// <param name="value">
         /// The string value that the property should have (e.g., "EEG" as the "type"
@@ -435,7 +412,7 @@ namespace SharpLSL
 #if !NET35
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
 #endif
-        internal static void CheckError(int errorCode)
+        internal static void CheckError(int errorCode) // TODO: GetLastError
         {
             if (errorCode < 0)
             {
@@ -496,8 +473,9 @@ namespace SharpLSL
             if (chunk == null)
                 throw new ArgumentNullException(nameof(chunk));
 
+            // TODO: chunk.Length == 0
             if (chunk.Length == 0 || (chunk.Length % channelCount) != 0)
-                throw new ArgumentException(nameof(chunk));
+                throw new ArgumentException($"The number of data values ({chunk.Length}) in the chunk must be a multiple of the channel count ({channelCount}).", nameof(chunk));
 
             return chunk.Length / channelCount;
         }
@@ -527,7 +505,7 @@ namespace SharpLSL
             if (timestamps != null)
             {
                 if (timestamps.Length != samples)
-                    throw new ArgumentException($"Timestamps buffer size ({timestamps.Length}) does not match the number of samples ({samples}).");
+                    throw new ArgumentException($"Timestamps buffer size ({timestamps.Length}) does not match the number of samples ({samples}).", nameof(timestamps));
             }
         }
 
@@ -542,7 +520,7 @@ namespace SharpLSL
                 throw new ArgumentNullException(nameof(timestamps));
 
             if (timestamps.Length != samples)
-                throw new ArgumentException($"Timestamps buffer size ({timestamps.Length}) does not match the number of samples ({samples}).");
+                throw new ArgumentException($"Timestamps buffer size ({timestamps.Length}) does not match the number of samples ({samples}).", nameof(timestamps));
         }
     }
 }

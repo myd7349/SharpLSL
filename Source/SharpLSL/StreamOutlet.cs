@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 
 using SharpLSL.Interop;
 
@@ -8,7 +8,8 @@ using static SharpLSL.LSL;
 namespace SharpLSL
 {
     /// <summary>
-    /// Represents a stream outlet for pushing time series data to the lab network.
+    /// Represents a stream outlet for pushing time series data to all connected
+    /// stream inlets in the lab network.
     /// </summary>
     /// <remarks>
     /// <para>
@@ -199,7 +200,7 @@ namespace SharpLSL
             ThrowIfInvalid();
             CheckSampleBuffer(sample, ChannelCount);
 
-            
+
         }
 
         /// <inheritdoc cref="PushSample(sbyte[])"/>
@@ -336,7 +337,7 @@ namespace SharpLSL
         /// </param>
         /// <param name="timestamp">
         /// The capture time of the sample, in agreement with <see cref="GetLocalClock"/>.
-        /// If the timestamp is 0.0, the current time is used.
+        /// If the timestamp is omitted (set to 0.0), the current time is used.
         /// </param>
         /// <inheritdoc cref="PushSample(sbyte[])"/>
         public void PushSample(sbyte[] sample, double timestamp)
@@ -398,7 +399,7 @@ namespace SharpLSL
             ThrowIfInvalid();
             CheckSampleBuffer(sample, ChannelCount);
 
-            CheckError(lsl_push_sample_strt(handle, sample, timestamp));
+            CheckError(lsl_push_sample_strt(handle, sample, timestamp)); // TODO: Test
         }
 
         /// <inheritdoc cref="PushSample(sbyte[], double)"/>
@@ -441,7 +442,7 @@ namespace SharpLSL
         /// </param>
         /// <param name="timestamp">
         /// The capture time of the sample, in agreement with <see cref="GetLocalClock"/>.
-        /// If the timestamp is 0.0, the current time is used.
+        /// If the timestamp is omitted (set to 0.0), the current time is used.
         /// </param>
         /// <exception cref="ArgumentNullException">
         /// Thrown if <paramref name="sample"/> is null, or if any of the inner byte
@@ -504,7 +505,7 @@ namespace SharpLSL
         /// </param>
         /// <param name="timestamp">
         /// The capture time of the sample, in agreement with <see cref="GetLocalClock"/>.
-        /// If the timestamp is 0.0, the current time is used.
+        /// If the timestamp is omitted (set to 0.0), the current time is used.
         /// </param>
         /// <exception cref="ArgumentNullException">
         /// Thrown if <paramref name="sample"/> or <paramref name="lengths"/> is
@@ -543,7 +544,7 @@ namespace SharpLSL
         /// </param>
         /// <param name="timestamp">
         /// The capture time of the sample, in agreement with <see cref="GetLocalClock"/>.
-        /// If the timestamp is 0.0, the current time is used.
+        /// If the timestamp is omitted (set to 0.0), the current time is used.
         /// </param>
         /// <param name="pushThrough">
         /// Whether to push the sample through to the receivers instead of buffering
@@ -624,13 +625,13 @@ namespace SharpLSL
 
             CheckError(lsl_push_sample_vtp(handle, sample, timestamp, pushThrough ? 1 : 0));
         }
-        
+
         /// <param name="sample">
         /// The sample data to push.
         /// </param>
         /// <param name="timestamp">
         /// The capture time of the sample, in agreement with <see cref="GetLocalClock"/>.
-        /// If the timestamp is 0.0, the current time is used.
+        /// If the timestamp is omitted (set to 0.0), the current time is used.
         /// </param>
         /// <param name="pushThrough">
         /// Whether to push the sample through to the receivers instead of buffering
@@ -664,7 +665,7 @@ namespace SharpLSL
         /// </param>
         /// <param name="timestamp">
         /// The capture time of the sample, in agreement with <see cref="GetLocalClock"/>.
-        /// If the timestamp is 0.0, the current time is used.
+        /// If the timestamp is omitted (set to 0.0), the current time is used.
         /// </param>
         /// <param name="pushThrough">
         /// Whether to push the sample through to the receivers instead of buffering
@@ -715,7 +716,7 @@ namespace SharpLSL
                     ulengths[i] = (uint)lengths[i];
                 }
             }
-            
+
             CheckError(lsl_push_sample_buftp(handle, sample, ulengths, timestamp, pushThrough ? 1 : 0));
         }
 
@@ -733,7 +734,7 @@ namespace SharpLSL
         /// </param>
         /// <param name="timestamp">
         /// The capture time of the sample, in agreement with <see cref="GetLocalClock"/>.
-        /// If the timestamp is 0.0, the current time is used.
+        /// If the timestamp is omitted (set to 0.0), the current time is used.
         /// </param>
         /// <param name="pushThrough">
         /// Whether to push the sample through to the receivers instead of buffering
@@ -791,7 +792,7 @@ namespace SharpLSL
         /// Thrown if the size of the provided buffer is not a multiple of the stream's
         /// channel count.
         /// </exception>
-        public void PushChunk(sbyte[] chunk)
+        public void PushChunk(sbyte[] chunk) // TODO: chunk.Length == 0 test.
         {
             ThrowIfInvalid();
             CheckChunkBuffer(chunk, ChannelCount);
@@ -925,8 +926,8 @@ namespace SharpLSL
         /// samples to send.
         /// </param>
         /// <param name="timestamp">
-        /// The capture time of the most recent sample, in agreement with
-        /// <see cref="GetLocalClock"/>. If omitted, the current time is used.
+        /// The capture time of the most recent sample, in agreement with <see cref="GetLocalClock"/>.
+        /// If the timestamp is omitted (set to 0.0), the current time is used.
         /// The timestamps of other samples are automatically derived based on the
         /// sampling rate of the stream.
         /// </param>
@@ -1065,8 +1066,8 @@ namespace SharpLSL
         /// samples to send.
         /// </param>
         /// <param name="timestamp">
-        /// The capture time of the most recent sample, in agreement with
-        /// <see cref="GetLocalClock"/>. If omitted, the current time is used.
+        /// The capture time of the most recent sample, in agreement with <see cref="GetLocalClock"/>.
+        /// If the timestamp is omitted (set to 0.0), the current time is used.
         /// The timestamps of other samples are automatically derived based on the
         /// sampling rate of the stream.
         /// </param>

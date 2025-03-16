@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Diagnostics;
 
 using static SharpLSL.Interop.LSL;
@@ -7,8 +7,8 @@ using static SharpLSL.LSL;
 namespace SharpLSL
 {
     /// <summary>
-    /// Represents a lightweight XML element tree, modeling the <see cref="StreamInfo.Description"/>
-    /// field of <see cref="StreamInfo"/>.
+    /// Represents a lightweight XML element tree that models the <see cref="StreamInfo.Description"/>  
+    /// property of <see cref="StreamInfo"/>.
     /// </summary>
     /// <remarks>
     /// Each element has a name and can contain multiple named child elements or
@@ -75,7 +75,8 @@ namespace SharpLSL
         /// Thrown when the handle is invalid.
         /// </exception>
         /// <exception cref="LSLException">
-        /// Thrown when setting the name of the element fails.
+        /// Thrown when setting the element's name fails, either due to an empty node
+        /// or insufficient memory.
         /// </exception>
         public string Name
         {
@@ -106,7 +107,8 @@ namespace SharpLSL
         /// Thrown when the handle is invalid.
         /// </exception>
         /// <exception cref="LSLException">
-        /// Thrown when setting the value of the element fails.
+        /// Thrown when setting the element's value fails, either due to an empty node
+        /// or insufficient memory.
         /// </exception>
         public string Value
         {
@@ -290,11 +292,11 @@ namespace SharpLSL
         }
 
         /// <summary>
-        /// Gets the next sibling of the element.
+        /// Gets the next sibling of the element in the parent's child list.
         /// </summary>
         /// <returns>
-        /// The next sibling of the element, or <see cref="Null"/> if the element
-        /// is the last node in the list.
+        /// The next sibling of the element in the parent's child list, or
+        /// <see cref="Null"/> if the element is the last node in the list.
         /// </returns>
         /// <exception cref="InvalidOperationException">
         /// Thrown if the current element is invalid.
@@ -313,7 +315,8 @@ namespace SharpLSL
         }
 
         /// <summary>
-        /// Gets the next sibling of the element with the specified name.
+        /// Gets the next sibling of the element in the parent's child list with the
+        /// specified name.
         /// </summary>
         /// <param name="name">The name of the sibling.</param>
         /// <returns>
@@ -337,11 +340,11 @@ namespace SharpLSL
         }
 
         /// <summary>
-        /// Gets the previous sibling of the element.
+        /// Gets the previous sibling of the element in the parent's child list.
         /// </summary>
         /// <returns>
-        /// The previous sibling of the element, or <see cref="Null"/> if the element
-        /// is the first node in the list.
+        /// The previous sibling of the element in the parent's child list, or
+        /// <see cref="Null"/> if the element is the first node in the list.
         /// </returns>
         /// <exception cref="InvalidOperationException">
         /// Thrown if the current element is invalid.
@@ -360,7 +363,8 @@ namespace SharpLSL
         }
 
         /// <summary>
-        /// Gets the previous sibling of the element with the specified name.
+        /// Gets the previous sibling of the element in the parent's child list with the
+        /// specified name.
         /// </summary>
         /// <param name="name">The name of the sibling.</param>
         /// <returns>
@@ -427,7 +431,7 @@ namespace SharpLSL
         /// <seealso cref="AppendChild(string)"/>
         /// <seealso cref="AppendChild(XMLElement)"/>
         /// <seealso cref="PrependChild(string, string)"/>
-        public XMLElement AppendChild(string name, string value)
+        public XMLElement AppendChild(string name, string value) // TODO: Rename to AppendChildValue, like the C++ API?
         {
             ThrowIfInvalid();
 
@@ -455,7 +459,7 @@ namespace SharpLSL
         /// <seealso cref="AppendChild(string)"/>
         /// <seealso cref="AppendChild(string, string)"/>
         /// <seealso cref="PrependChild(XMLElement)"/>
-        public XMLElement AppendChild(XMLElement element)
+        public XMLElement AppendChild(XMLElement element) // TODO: Rename to AppendCopy, like the C++ API?
         {
             ThrowIfInvalid();
 
@@ -515,7 +519,7 @@ namespace SharpLSL
         /// <seealso cref="PrependChild(string)"/>
         /// <seealso cref="PrependChild(XMLElement)"/>
         /// <seealso cref="AppendChild(string, string)"/>
-        public XMLElement PrependChild(string name, string value)
+        public XMLElement PrependChild(string name, string value) // TODO: Rename to PrependChildValue, like the C++ API?
         {
             ThrowIfInvalid();
 
@@ -543,7 +547,7 @@ namespace SharpLSL
         /// <seealso cref="PrependChild(string)"/>
         /// <seealso cref="PrependChild(string, string)"/>
         /// <seealso cref="AppendChild(XMLElement)"/>
-        public XMLElement PrependChild(XMLElement element)
+        public XMLElement PrependChild(XMLElement element) // TODO: Rename to AppendCopy, like the C++ API?
         {
             ThrowIfInvalid();
 

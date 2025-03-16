@@ -28,8 +28,8 @@ namespace SharpLSL
         /// parameter in inlet/outlet creation methods represents the maximum number
         /// of samples to buffer.
         /// This option is mutually exclusive with BufferSizeThousandths.
-        /// TODO:
         /// </remarks>
+        // TODO:
         BufferSizeInSamples = lsl_transport_options_t.transp_bufsize_samples,
 
         /// <summary>
@@ -37,8 +37,8 @@ namespace SharpLSL
         /// </summary>
         /// <remarks>
         /// This option is mutually exclusive with BufferSizeInSamples.
-        /// TODO:
         /// </remarks>
+        // TODO:
         BufferSizeThousandths = lsl_transport_options_t.transp_bufsize_thousandths,
     }
 }

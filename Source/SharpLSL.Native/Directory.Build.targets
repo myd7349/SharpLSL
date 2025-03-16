@@ -7,21 +7,21 @@
   </PropertyGroup>
 
   <PropertyGroup Condition="'$(PackageId)' == 'SharpLSL.Native.all'">
-  	<Description>liblsl native library for all supported platforms.</Description>
-  	<IsUmbrellaPackage>true</IsUmbrellaPackage>
+    <Description>liblsl native library for all supported platforms.</Description>
+    <IsUmbrellaPackage>true</IsUmbrellaPackage>
   </PropertyGroup>
 
   <PropertyGroup Condition="'$(IsUmbrellaPackage)' == 'false'">
-  	<NativeAssetTitle>liblsl-v$(LSLTagVersion)-$(RID)-dynamic</NativeAssetTitle>
-  	<NativeAssetArchive>$(NativeAssetTitle).zip</NativeAssetArchive>
-  	<NativeAssetUrl>https://github.com/myd7349/liblsl-ci-build/releases/download/$(LSLBuildCITagVersion)/$(NativeAssetArchive)</NativeAssetUrl>
-  	<NativeLibFile>$(NativeLibPrefix)lsl.$(NativeLibExt)</NativeLibFile>
-  	<NativeLibUnpackDir>$(ProjectDir)$(BaseIntermediateOutputPath)$(NativeAssetTitle)/</NativeLibUnpackDir>
+    <NativeAssetTitle>liblsl-v$(LSLTagVersion)-$(RID)-dynamic</NativeAssetTitle>
+    <NativeAssetArchive>$(NativeAssetTitle).zip</NativeAssetArchive>
+    <NativeAssetUrl>https://github.com/myd7349/liblsl-ci-build/releases/download/$(LSLBuildCITagVersion)/$(NativeAssetArchive)</NativeAssetUrl>
+    <NativeLibFile>$(NativeLibPrefix)lsl.$(NativeLibExt)</NativeLibFile>
+    <NativeLibUnpackDir>$(ProjectDir)$(BaseIntermediateOutputPath)$(NativeAssetTitle)/</NativeLibUnpackDir>
   </PropertyGroup>
 
   <Target Name="_DownloadNativeAsset"
-  	      BeforeTargets="_UnpackNativeAsset"
-  	      Condition="'$(IsUmbrellaPackage)' == 'false'">
+          BeforeTargets="_UnpackNativeAsset"
+          Condition="'$(IsUmbrellaPackage)' == 'false'">
     <DownloadFile SourceUrl="$(NativeAssetUrl)"
                   DestinationFolder="$(ProjectDir)$(BaseIntermediateOutputPath)"
                   DestinationFileName="$(NativeAssetArchive)"
@@ -29,8 +29,8 @@
   </Target>
 
   <Target Name="_UnpackNativeAsset"
-  	      BeforeTargets="_CollectNativeLibs"
-  	      Condition="'$(IsUmbrellaPackage)' == 'false'">
+          BeforeTargets="_CollectNativeLibs"
+          Condition="'$(IsUmbrellaPackage)' == 'false'">
     <Unzip SourceFiles="$(ProjectDir)$(BaseIntermediateOutputPath)$(NativeAssetArchive)"
            DestinationFolder="$(NativeLibUnpackDir)"
            OverwriteReadOnlyFiles="true"
@@ -69,7 +69,7 @@
   </Target>
 
   <Target Name="_IncludeAdditionalTfmSpecificPackageFiles">
-    <ItemGroup Condition=" '$(TargetFramework)' == 'net35'">
+    <ItemGroup Condition="'$(TargetFramework)' == 'net35'">
       <TfmSpecificPackageFile Include="$(ProjectDir)build\net35\$(PackageId).targets"
                               PackagePath="build\net35\$(PackageId).targets" />
       <TfmSpecificPackageFile Include="$(ProjectDir)build\net35\$(PackageId).targets"

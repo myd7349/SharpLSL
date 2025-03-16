@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 
 using static SharpLSL.Interop.LSL;
 using static SharpLSL.LSL;
@@ -9,10 +9,11 @@ namespace SharpLSL
     /// Represents a continuous resolver for resolving streams on the lab network.
     /// </summary>
     /// <remarks>
-    /// The <see cref="ContinuousResolver"/> class provides functionality to resolve
-    /// all streams continuously in the background throughout its lifetime and which
-    /// can be queried at any time for the set of streams that are currently visible
-    /// on the network.
+    /// Streams can be resolved at a single time point once or continuously in the
+    /// background. The <see cref="ContinuousResolver"/> class provides functionality
+    /// to resolve all streams continuously in the background throughout its lifetime
+    /// and which can be queried at any time for the set of streams that are currently
+    /// visible on the network.
     /// </remarks>
     public class ContinuousResolver : LSLObject
     {
@@ -28,6 +29,10 @@ namespace SharpLSL
         /// <exception cref="LSLException">
         /// Thrown when creating a new instance of <see cref="ContinuousResolver"/> fails.
         /// </exception>
+        /// <remarks>
+        /// This is analogous to the functionality offered by the free function
+        /// <see cref="LSL.Resolve(int, double)"/>.
+        /// </remarks>
         /// <seealso cref="LSL.Resolve(int, double)"/>
         public ContinuousResolver(double forgetAfter = 5.0)
             : base(lsl_create_continuous_resolver(forgetAfter))
@@ -40,7 +45,7 @@ namespace SharpLSL
         /// </summary>
         /// <param name="property">
         /// The stream info property that should have a specific value (e.g., "name",
-        /// "type", "source_id", or "desc/manufacturer").
+        /// "type", "source_id", or "desc/manufacturer" if present).
         /// </param>
         /// <param name="value">
         /// The string value that the property should have (e.g., "EEG" as the "type"
@@ -51,6 +56,10 @@ namespace SharpLSL
         /// network (e.g., due to shutdown) will not be reported by the resolver. The
         /// recommended default value is 5.0 seconds.
         /// </param>
+        /// <remarks>
+        /// This is analogous to the functionality provided by the free function
+        /// <see cref="LSL.Resolve(string, string, int, int, double)"/>.
+        /// </remarks>
         /// <inheritdoc cref="ContinuousResolver(double)"/>
         /// <seealso cref="Resolve(string, string, int, int, double)"/>
         public ContinuousResolver(string property, string value, double forgetAfter = 5.0)
@@ -71,6 +80,10 @@ namespace SharpLSL
         /// network (e.g., due to shutdown) will not be reported by the resolver. The
         /// recommended default value is 5.0 seconds.
         /// </param>
+        /// <remarks>
+        /// This is analogous to the functionality provided by the free function
+        /// <see cref="LSL.Resolve(string, int, int, double)"/>.
+        /// </remarks>
         /// <inheritdoc cref="ContinuousResolver(double)"/>
         /// <seealso cref="Resolve(string, int, int, double)"/>
         public ContinuousResolver(string predicate, double forgetAfter = 5.0)
@@ -138,7 +151,7 @@ namespace SharpLSL
 
             var result = lsl_resolver_results(handle, streamInfoPointers, (uint)streamInfoPointers.Length);
             CheckError(result);
-    
+
             if (result > 0)
             {
                 var streamInfos = new StreamInfo[result];

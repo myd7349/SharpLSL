@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 
 using SharpLSL.Interop;
 
@@ -49,14 +49,13 @@ namespace SharpLSL
         /// <param name="recover">
         /// Specifies whether to try to silently recover lost streams that are recoverable
         /// (those that have a source ID set). In all other cases (recover is false
-        /// or the stream is not recoverable), functions may throw a <see cref="StreamLostException"/>
+        /// or the stream is not recoverable), most outlet functions may throw a <see cref="StreamLostException"/>
         /// if the stream's source is lost (e.g., due to an app or computer crash).
         /// It is generally a good idea to enable this, unless the application wants
         /// to act in a special way when a data provider has temporarily crashed.
         /// </param>
         /// <param name="transportOptions">
         /// Specifies additional options for data transport. Default is <see cref="TransportOptions.Default"/>.
-        /// TODO:
         /// </param>
         /// <exception cref="LSLException">
         /// Thrown when creating a new instance of <see cref="StreamInlet"/> fails.
@@ -68,6 +67,10 @@ namespace SharpLSL
         /// if there is no time to resolve the stream up-front (e.g., due to limitations
         /// in the client program).
         /// </remarks>
+        // TODO:
+        // Comment on flags from liblsl:
+        // An integer that is the result of bitwise OR'ing one or more options from
+        // #lsl_transport_options_t together (e.g., #transp_bufsize_samples)
         public StreamInlet(
             StreamInfo streamInfo, int maxChunkLength = 0, int maxBufferLength = 360,
             bool recover = true, TransportOptions transportOptions = TransportOptions.Default)
@@ -102,7 +105,7 @@ namespace SharpLSL
             {
                 ChannelCount = streamInfo.ChannelCount;
                 sampleBytes_ = streamInfo.SampleBytes;
-            }             
+            }
         }
 
         /// <summary>
@@ -120,8 +123,8 @@ namespace SharpLSL
         /// <see cref="Forever"/>, which indicates no timeout.
         /// </param>
         /// <returns>
-        /// An instance of <see cref="StreamInfo"/> containing detailed information
-        /// about the stream, including its extended description.
+        /// An instance of <see cref="StreamInfo"/> containing a copy of the full stream
+        /// information about the stream, including its extended description.
         /// </returns>
         /// <exception cref="InvalidOperationException">
         /// Thrown if this stream inlet object is invalid.
@@ -261,18 +264,19 @@ namespace SharpLSL
             return result;
         }
 
+        /// <param name="remoteTime">
+        /// The current time of the remote computer that was used to generate this
+        /// time correction. If desired, the client can fit time correction versus
+        /// <paramref name="remoteTime"/> to improve the real-time time correction
+        /// further.
+        /// </param>
+        /// <param name="uncertainty">
+        /// The maximum uncertainty of the given time correction.
+        /// </param>
         /// <param name="timeout">
         /// Specifies the timeout to acquire the first time correction estimate
         /// in seconds. The default value is <see cref="Forever"/>, which indicates
         /// no timeout.
-        /// </param>
-        /// <param name="remoteTime">
-        /// The current time of the remote computer that was used to generate this
-        /// time correction. If desired, the client can fit time correction versus remote
-        /// time to improve the real-time time correction further.
-        /// </param>
-        /// <param name="uncertainty">
-        /// The maximum uncertainty of the given time correction.
         /// </param>
         /// <seealso cref="TimeCorrection(double)"/>
         /// <inheritdoc cref="TimeCorrection(double)"/>
@@ -292,7 +296,8 @@ namespace SharpLSL
         /// <param name="postProcessingOptions">
         /// The post-processing flags to use. This is the result of bitwise OR'ing
         /// one or more options from <see cref="PostProcessingOptions"/> together.
-        /// A good setting is to use <see cref="PostProcessingOptions.All"/>.
+        /// The default is to use <see cref="PostProcessingOptions.All"/> to enable
+        /// all options.
         /// </param>
         /// <exception cref="InvalidOperationException">
         /// Thrown if this stream inlet object is invalid.
@@ -368,8 +373,9 @@ namespace SharpLSL
         /// Thrown if the stream source has been lost.
         /// </exception>
         /// <remarks>
-        /// If the timeout expires before a new sample is received, the function
-        /// returns 0.0; this case is not considered an error condition.
+        /// If the timeout expires before a new sample is received, the function returns 0.0.  
+        /// This is not considered an error condition, so calling <see cref="GetLastError"/>
+        /// will not return a timeout error.
         /// </remarks>
         public double PullSample(sbyte[] sample, double timeout = Forever)
         {
@@ -649,15 +655,20 @@ namespace SharpLSL
         }
 
         /// <summary>
-        /// Pulls a chunk of samples from the inlet and reads it into a buffer. Handles
+        /// Pulls a chunk of data from the inlet and reads it into a buffer. Handles
         /// type checking and conversion.
         /// </summary>
         /// <param name="chunk">
         /// The buffer where the returned data chunk will be stored.
+        /// <para>
+        /// Note that the size of the provided data buffer must be a multiple of the
+        /// stream's channel count.
+        /// </para>
         /// </param>
         /// <param name="timestamps">
-        /// The buffer where the returned timestamps will be stored. If it is null,
-        /// no timestamps will be returned.
+        /// The buffer for storing returned timestamps. If null, no timestamps will be
+        /// returned. If provided, it must correspond to the same number of samples as
+        /// <paramref name="chunk"/>.
         /// </param>
         /// <param name="timeout">
         /// Specifies the timeout of the operation in seconds, if any. When the timeout
@@ -676,7 +687,6 @@ namespace SharpLSL
         /// does not match the number of samples in the chunk.
         /// </exception>
         /// <inheritdoc cref="PullSample(sbyte[], double)"/>
-        // TODO: Test pass null timestamps.
         public uint PullChunk(sbyte[] chunk, double[] timestamps, double timeout = 0.0)
         {
             ThrowIfInvalid();
@@ -685,7 +695,9 @@ namespace SharpLSL
             CheckTimestampBufferAllowNull(timestamps, samples);
 
             var errorCode = (int)lsl_error_code_t.lsl_no_error;
-            var result = lsl_pull_chunk_c(handle, chunk, timestamps, (uint)chunk.Length, (uint)timestamps.Length, timeout, ref errorCode);
+            var result = lsl_pull_chunk_c(
+                handle, chunk, timestamps, (uint)chunk.Length,
+                (uint)(timestamps?.Length ?? 0), timeout, ref errorCode);
             CheckError(errorCode);
             return result;
         }
@@ -699,7 +711,9 @@ namespace SharpLSL
             CheckTimestampBufferAllowNull(timestamps, samples);
 
             var errorCode = (int)lsl_error_code_t.lsl_no_error;
-            var result = lsl_pull_chunk_s(handle, chunk, timestamps, (uint)chunk.Length, (uint)timestamps.Length, timeout, ref errorCode);
+            var result = lsl_pull_chunk_s(
+                handle, chunk, timestamps, (uint)chunk.Length,
+                (uint)(timestamps?.Length ?? 0), timeout, ref errorCode);
             CheckError(errorCode);
             return result;
         }
@@ -713,7 +727,9 @@ namespace SharpLSL
             CheckTimestampBufferAllowNull(timestamps, samples);
 
             var errorCode = (int)lsl_error_code_t.lsl_no_error;
-            var result = lsl_pull_chunk_i(handle, chunk, timestamps, (uint)chunk.Length, (uint)timestamps.Length, timeout, ref errorCode);
+            var result = lsl_pull_chunk_i(
+                handle, chunk, timestamps, (uint)chunk.Length,
+                (uint)(timestamps?.Length ?? 0), timeout, ref errorCode);
             CheckError(errorCode);
             return result;
         }
@@ -727,7 +743,9 @@ namespace SharpLSL
             CheckTimestampBufferAllowNull(timestamps, samples);
 
             var errorCode = (int)lsl_error_code_t.lsl_no_error;
-            var result = lsl_pull_chunk_l(handle, chunk, timestamps, (uint)chunk.Length, (uint)timestamps.Length, timeout, ref errorCode);
+            var result = lsl_pull_chunk_l(
+                handle, chunk, timestamps, (uint)chunk.Length,
+                (uint)(timestamps?.Length ?? 0), timeout, ref errorCode);
             CheckError(errorCode);
             return result;
         }
@@ -741,7 +759,9 @@ namespace SharpLSL
             CheckTimestampBufferAllowNull(timestamps, samples);
 
             var errorCode = (int)lsl_error_code_t.lsl_no_error;
-            var result = lsl_pull_chunk_f(handle, chunk, timestamps, (uint)chunk.Length, (uint)timestamps.Length, timeout, ref errorCode);
+            var result = lsl_pull_chunk_f(
+                handle, chunk, timestamps, (uint)chunk.Length,
+                (uint)(timestamps?.Length ?? 0), timeout, ref errorCode);
             CheckError(errorCode);
             return result;
         }
@@ -755,7 +775,9 @@ namespace SharpLSL
             CheckTimestampBufferAllowNull(timestamps, samples);
 
             var errorCode = (int)lsl_error_code_t.lsl_no_error;
-            var result = lsl_pull_chunk_d(handle, chunk, timestamps, (uint)chunk.Length, (uint)timestamps.Length, timeout, ref errorCode);
+            var result = lsl_pull_chunk_d(
+                handle, chunk, timestamps, (uint)chunk.Length,
+                (uint)(timestamps?.Length ?? 0), timeout, ref errorCode);
             CheckError(errorCode);
             return result;
         }
@@ -774,7 +796,9 @@ namespace SharpLSL
 
             try
             {
-                result = lsl_pull_chunk_str(handle, buffer, timestamps, (uint)chunk.Length, (uint)timestamps.Length, timeout, ref errorCode);
+                result = lsl_pull_chunk_str(
+                    handle, buffer, timestamps, (uint)chunk.Length,
+                    (uint)(timestamps?.Length ?? 0), timeout, ref errorCode);
                 CheckError(errorCode);
 
                 for (int i = 0; i < result; ++i)
@@ -823,7 +847,9 @@ namespace SharpLSL
 
             try
             {
-                result = lsl_pull_chunk_buf(handle, buffer, lengths, timestamps, (uint)chunk.Length, (uint)timestamps.Length, timeout, ref errorCode);
+                result = lsl_pull_chunk_buf(
+                    handle, buffer, lengths, timestamps, (uint)chunk.Length,
+                    (uint)(timestamps?.Length ?? 0), timeout, ref errorCode);
                 CheckError(errorCode);
 
                 for (int i = 0; i < result; ++i)
@@ -879,7 +905,9 @@ namespace SharpLSL
             CheckTimestampBufferAllowNull(timestamps, chunk.GetLength(0));
 
             var errorCode = (int)lsl_error_code_t.lsl_no_error;
-            var result = lsl_pull_chunk_c(handle, chunk, timestamps, (uint)chunk.Length, (uint)timestamps.Length, timeout, ref errorCode);
+            var result = lsl_pull_chunk_c(
+                handle, chunk, timestamps, (uint)chunk.Length,
+                (uint)(timestamps?.Length ?? 0), timeout, ref errorCode);
             CheckError(errorCode);
             return result;
         }
@@ -893,7 +921,9 @@ namespace SharpLSL
             CheckTimestampBufferAllowNull(timestamps, chunk.GetLength(0));
 
             var errorCode = (int)lsl_error_code_t.lsl_no_error;
-            var result = lsl_pull_chunk_s(handle, chunk, timestamps, (uint)chunk.Length, (uint)timestamps.Length, timeout, ref errorCode);
+            var result = lsl_pull_chunk_s(
+                handle, chunk, timestamps, (uint)chunk.Length,
+                (uint)(timestamps?.Length ?? 0), timeout, ref errorCode);
             CheckError(errorCode);
             return result;
         }
@@ -907,7 +937,9 @@ namespace SharpLSL
             CheckTimestampBufferAllowNull(timestamps, chunk.GetLength(0));
 
             var errorCode = (int)lsl_error_code_t.lsl_no_error;
-            var result = lsl_pull_chunk_i(handle, chunk, timestamps, (uint)chunk.Length, (uint)timestamps.Length, timeout, ref errorCode);
+            var result = lsl_pull_chunk_i(
+                handle, chunk, timestamps, (uint)chunk.Length,
+                (uint)(timestamps?.Length ?? 0), timeout, ref errorCode);
             CheckError(errorCode);
             return result;
         }
@@ -921,7 +953,9 @@ namespace SharpLSL
             CheckTimestampBufferAllowNull(timestamps, chunk.GetLength(0));
 
             var errorCode = (int)lsl_error_code_t.lsl_no_error;
-            var result = lsl_pull_chunk_l(handle, chunk, timestamps, (uint)chunk.Length, (uint)timestamps.Length, timeout, ref errorCode);
+            var result = lsl_pull_chunk_l(
+                handle, chunk, timestamps, (uint)chunk.Length,
+                (uint)(timestamps?.Length ?? 0), timeout, ref errorCode);
             CheckError(errorCode);
             return result;
         }
@@ -935,7 +969,9 @@ namespace SharpLSL
             CheckTimestampBufferAllowNull(timestamps, chunk.GetLength(0));
 
             var errorCode = (int)lsl_error_code_t.lsl_no_error;
-            var result = lsl_pull_chunk_f(handle, chunk, timestamps, (uint)chunk.Length, (uint)timestamps.Length, timeout, ref errorCode);
+            var result = lsl_pull_chunk_f(
+                handle, chunk, timestamps, (uint)chunk.Length,
+                (uint)(timestamps?.Length ?? 0), timeout, ref errorCode);
             CheckError(errorCode);
             return result;
         }
@@ -949,7 +985,9 @@ namespace SharpLSL
             CheckTimestampBufferAllowNull(timestamps, chunk.GetLength(0));
 
             var errorCode = (int)lsl_error_code_t.lsl_no_error;
-            var result = lsl_pull_chunk_d(handle, chunk, timestamps, (uint)chunk.Length, (uint)timestamps.Length, timeout, ref errorCode);
+            var result = lsl_pull_chunk_d(
+                handle, chunk, timestamps, (uint)chunk.Length,
+                (uint)(timestamps?.Length ?? 0), timeout, ref errorCode);
             CheckError(errorCode);
             return result;
         }
@@ -968,7 +1006,7 @@ namespace SharpLSL
 
             try
             {
-                var result = lsl_pull_chunk_str(handle, buffer, timestamps, (uint)chunk.Length, (uint)timestamps.Length, timeout, ref errorCode);
+                var result = lsl_pull_chunk_str(handle, buffer, timestamps, (uint)chunk.Length, (uint)(timestamps?.Length ?? 0), timeout, ref errorCode);
                 CheckError(errorCode);
 
                 samples = result / (uint)ChannelCount;
