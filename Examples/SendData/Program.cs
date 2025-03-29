@@ -1,4 +1,8 @@
-﻿// Port of: https://github.com/sccn/liblsl/blob/master/examples/SendData.cpp
+// Port of: https://github.com/sccn/liblsl/blob/master/examples/SendData.cpp
+// This example program offers an 8-channel stream, float-formatted, that resembles EEG data.
+// The example demonstrates also how per-channel meta-data can be specified using the .desc() field
+// of the stream information object.
+// Note that the timer used in the send loop of this program is not particularly accurate.
 namespace SharpLSL.Examples
 {
     internal class SendData

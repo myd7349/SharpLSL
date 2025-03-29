@@ -1,4 +1,4 @@
-﻿// Port of: https://github.com/sccn/liblsl/blob/master/examples/HandleMetaData.cpp
+// Port of: https://github.com/sccn/liblsl/blob/master/examples/HandleMetaData.cpp
 namespace SharpLSL.Examples
 {
     internal class HandleMetaData
@@ -48,7 +48,6 @@ namespace SharpLSL.Examples
                             Console.WriteLine("\nThe manufacturer is: {0}",
                                 streamInletInfo.Description.ChildValue("manufacturer"));
 
-                            // TODO: inf.desc().child("cap").child_value("size")
                             Console.WriteLine("\nThe cap circumference is: {0}",
                                 streamInletInfo.Description.Child("cap").ChildValue("size"));
 
