@@ -14,6 +14,15 @@
     <SymbolPackageFormat>snupkg</SymbolPackageFormat>
   </PropertyGroup>
 
+  <ItemGroup Condition="'$(IsNet7OrHigher)' == 'true'">
+    <Compile Remove="Interop\Common.g.cs" />
+    <Compile Remove="Interop\Inlet.g.cs" />
+    <Compile Remove="Interop\Inlet.Interop.cs" />
+    <!--
+    <IsAotCompatible>true</IsAotCompatible>
+    -->
+  </ItemGroup>
+
   <ItemGroup>
     <None Include="../../README.md" Pack="true" PackagePath="/" />
   </ItemGroup>
