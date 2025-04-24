@@ -79,6 +79,10 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "GetLocalClock", "Examples\G
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "SharpLSL.Native.osx", "Source\SharpLSL.Native\osx\SharpLSL.Native.osx.csproj", "{B4BC99C4-50D1-457E-8A30-F1B2BFDFDDD3}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SharpLSL.Native.iossimulator-arm64", "Source\SharpLSL.Native\iossimulator-arm64\SharpLSL.Native.iossimulator-arm64.csproj", "{CEA936DC-B17E-9BD5-C6C8-8EF0D5E5C9AB}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SharpLSL.Native.iossimulator-x64", "Source\SharpLSL.Native\iossimulator-x64\SharpLSL.Native.iossimulator-x64.csproj", "{3071FCD0-E792-A86A-C9CC-6E8B9E6840D3}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -221,6 +225,14 @@ Global
 		{B4BC99C4-50D1-457E-8A30-F1B2BFDFDDD3}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{B4BC99C4-50D1-457E-8A30-F1B2BFDFDDD3}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{B4BC99C4-50D1-457E-8A30-F1B2BFDFDDD3}.Release|Any CPU.Build.0 = Release|Any CPU
+		{CEA936DC-B17E-9BD5-C6C8-8EF0D5E5C9AB}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{CEA936DC-B17E-9BD5-C6C8-8EF0D5E5C9AB}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{CEA936DC-B17E-9BD5-C6C8-8EF0D5E5C9AB}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{CEA936DC-B17E-9BD5-C6C8-8EF0D5E5C9AB}.Release|Any CPU.Build.0 = Release|Any CPU
+		{3071FCD0-E792-A86A-C9CC-6E8B9E6840D3}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{3071FCD0-E792-A86A-C9CC-6E8B9E6840D3}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{3071FCD0-E792-A86A-C9CC-6E8B9E6840D3}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{3071FCD0-E792-A86A-C9CC-6E8B9E6840D3}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -261,6 +273,8 @@ Global
 		{19AA1751-FDCC-43EF-B171-86D250F23F41} = {6D86CC19-E8B3-4C47-89CE-452D1BC2F3BB}
 		{92048813-11B8-4342-8E7F-751C0502EA74} = {6D86CC19-E8B3-4C47-89CE-452D1BC2F3BB}
 		{B4BC99C4-50D1-457E-8A30-F1B2BFDFDDD3} = {30345775-2B80-4BE0-8895-474046CE9C11}
+		{CEA936DC-B17E-9BD5-C6C8-8EF0D5E5C9AB} = {30345775-2B80-4BE0-8895-474046CE9C11}
+		{3071FCD0-E792-A86A-C9CC-6E8B9E6840D3} = {30345775-2B80-4BE0-8895-474046CE9C11}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {DC951642-0519-4898-B040-D6869C5CF3B2}

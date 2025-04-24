@@ -15,6 +15,8 @@
     <ProjectReference Include="..\android-x64\SharpLSL.Native.android-x64.csproj" />
     <ProjectReference Include="..\android-x86\SharpLSL.Native.android-x86.csproj" />
     <ProjectReference Include="..\ios-arm64\SharpLSL.Native.ios-arm64.csproj" />
+    <ProjectReference Include="..\iossimulator-arm64\SharpLSL.Native.iossimulator-arm64.csproj" />
+    <ProjectReference Include="..\iossimulator-x64\SharpLSL.Native.iossimulator-x64.csproj" />
     <ProjectReference Include="..\linux-arm64\SharpLSL.Native.linux-arm64.csproj" />
     <ProjectReference Include="..\linux-arm\SharpLSL.Native.linux-arm.csproj" />
     <ProjectReference Include="..\linux-x64\SharpLSL.Native.linux-x64.csproj" />

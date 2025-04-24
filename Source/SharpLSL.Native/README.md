@@ -10,6 +10,9 @@ The following NuGet packages contain pre-compiled binaries of [liblsl](https://g
 | android-x64   | [![SharpLSL.Native.android-x64-badge]][SharpLSL.Native.android-x64-nuget] |
 | android-x86   | [![SharpLSL.Native.android-x86-badge]][SharpLSL.Native.android-x86-nuget] |
 | ios-arm64     | [![SharpLSL.Native.ios-arm64-badge]][SharpLSL.Native.ios-arm64-nuget] |
+| iossimulator-arm64 | [![SharpLSL.Native.iossimulator-arm64-badge]][SharpLSL.Native.iossimulator-arm64-nuget] |
+| iossimulator-x64 | [![SharpLSL.Native.iossimulator-x64-badge]][SharpLSL.Native.iossimulator-x64-nuget] |
+| ios-arm64     | [![SharpLSL.Native.ios-arm64-badge]][SharpLSL.Native.ios-arm64-nuget] |
 | linux-arm     | [![SharpLSL.Native.linux-arm-badge]][SharpLSL.Native.linux-arm-nuget] |
 | linux-arm64   | [![SharpLSL.Native.linux-arm64-badge]][SharpLSL.Native.linux-arm64-nuget] |
 | linux-x64     | [![SharpLSL.Native.linux-x64-badge]][SharpLSL.Native.linux-x64-nuget] |
@@ -32,6 +35,10 @@ The following NuGet packages contain pre-compiled binaries of [liblsl](https://g
 [SharpLSL.Native.android-x86-nuget]: https://www.nuget.org/packages/SharpLSL.Native.android-x86
 [SharpLSL.Native.ios-arm64-badge]: https://img.shields.io/nuget/v/SharpLSL.Native.ios-arm64.svg
 [SharpLSL.Native.ios-arm64-nuget]: https://www.nuget.org/packages/SharpLSL.Native.ios-arm64
+[SharpLSL.Native.iossimulator-arm64-badge]: https://img.shields.io/nuget/v/SharpLSL.Native.iossimulator-arm64.svg
+[SharpLSL.Native.iossimulator-arm64-nuget]: https://www.nuget.org/packages/SharpLSL.Native.iossimulator-arm64
+[SharpLSL.Native.iossimulator-x64-badge]: https://img.shields.io/nuget/v/SharpLSL.Native.iossimulator-x64.svg
+[SharpLSL.Native.iossimulator-x64-nuget]: https://www.nuget.org/packages/SharpLSL.Native.iossimulator-x64
 [SharpLSL.Native.linux-arm-badge]: https://img.shields.io/nuget/v/SharpLSL.Native.linux-arm.svg
 [SharpLSL.Native.linux-arm-nuget]: https://www.nuget.org/packages/SharpLSL.Native.linux-arm
 [SharpLSL.Native.linux-arm64-badge]: https://img.shields.io/nuget/v/SharpLSL.Native.linux-arm64.svg
