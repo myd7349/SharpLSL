@@ -1,7 +1,7 @@
 <Project>
 
   <PropertyGroup Label="Build">
-    <TargetFrameworks>net35;netcoreapp3.1;netstandard2.0;net6.0</TargetFrameworks>
+    <TargetFrameworks>net35;netcoreapp3.1;netstandard2.0;net6.0;net7.0;net8.0;net9.0</TargetFrameworks>
     <AnalysisLevel>latest</AnalysisLevel>
     <AppendTargetFrameworkToOutputPath>true</AppendTargetFrameworkToOutputPath>
     <EnableNETAnalyzers>true</EnableNETAnalyzers>
