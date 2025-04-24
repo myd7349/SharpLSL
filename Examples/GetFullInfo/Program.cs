@@ -1,4 +1,4 @@
-﻿// Port of: https://github.com/sccn/liblsl/blob/master/examples/GetFullinfo.cpp
+// Port of: https://github.com/sccn/liblsl/blob/master/examples/GetFullinfo.cpp
 // This example demonstrates how the full version of the stream info (i.e. including the
 // potentially large .desc field) can be obtained from an inlet. Note that the output of
 // the resolve functions only includes the core information otherwise.
@@ -59,7 +59,7 @@ namespace SharpLSL.Examples
             }
             catch (Exception ex)
             {
-                Console.WriteLine($"Got an exception: {ex}");
+                Console.WriteLine($"Got an exception:\n{ex}");
                 Console.WriteLine("Press any key to exit.");
                 Console.ReadKey();
             }

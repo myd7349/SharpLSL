@@ -1,5 +1,6 @@
-﻿// Port of https://github.com/sccn/liblsl/blob/master/examples/GetAllStreams.cpp
-
+// Port of https://github.com/sccn/liblsl/blob/master/examples/GetAllStreams.cpp
+// This example program shows how all streams that are currently present on the
+// lab network can be resolved and displayed. This is useful for browsing applications.
 namespace SharpLSL.Examples
 {
     internal class GetAllStreams

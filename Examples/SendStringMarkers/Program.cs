@@ -1,4 +1,4 @@
-﻿// Port of: https://github.com/sccn/liblsl/blob/master/examples/SendStringMarkers.cpp
+// Port of: https://github.com/sccn/liblsl/blob/master/examples/SendStringMarkers.cpp
 // This example program offers a 1-channel stream which contains strings.
 // The stream has the "Marker" content type and irregular sampling rate.
 // The name of the stream can be chosen as a startup parameter.
@@ -21,7 +21,7 @@ namespace SharpLSL.Examples
 
                     var markerTypes = new string[]
                     {
-                    "Test", "Blah", "Marker", "XXX", "Testtest", "Test-1-2-3"
+                        "Test", "Blah", "Marker", "XXX", "Testtest", "Test-1-2-3"
                     };
 
                     var rng = new Random();
@@ -29,8 +29,8 @@ namespace SharpLSL.Examples
 
                     while (true)
                     {
-                        // Wait for 20ms.
-                        Thread.Sleep(20);
+                        // Wait for 0~1000ms.
+                        Thread.Sleep(rng.Next(1000));
 
                         // And choose the marker to send.
                         marker[0] = markerTypes[rng.Next(markerTypes.Length)];

@@ -1,4 +1,4 @@
-﻿// Port of: https://github.com/sccn/liblsl/blob/master/examples/GetTimeCorrection.cpp
+// Port of: https://github.com/sccn/liblsl/blob/master/examples/GetTimeCorrection.cpp
 // This example demonstrates how a time correction value can be obtained on demand for a particular
 // stream on the net. This time correction value, when added to the timestamp of an obtained
 // sample, remaps the sample's timestamp into the local clock domain (so it is in the same domain
@@ -63,7 +63,7 @@ namespace SharpLSL.Examples
             }
             catch (Exception ex)
             {
-                Console.WriteLine($"Got an exception: {ex}");
+                Console.WriteLine($"Got an exception:\n{ex}");
                 Console.WriteLine("Press any key to exit.");
                 Console.ReadKey();
             }

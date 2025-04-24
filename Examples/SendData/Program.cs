@@ -1,4 +1,10 @@
-﻿// Port of: https://github.com/sccn/liblsl/blob/master/examples/SendData.cpp
+// Port of: https://github.com/sccn/liblsl/blob/master/examples/SendData.cpp
+// This example program offers an 8-channel stream, float-formatted, that resembles EEG data.
+// The example demonstrates also how per-channel meta-data can be specified using the .desc() field
+// of the stream information object.
+// Note that the timer used in the send loop of this program is not particularly accurate.
+using System.Diagnostics;
+
 namespace SharpLSL.Examples
 {
     internal class SendData
@@ -114,10 +120,15 @@ namespace SharpLSL.Examples
                 var samples = Convert.ToInt32(timeSliceInMilliseconds / 1000.0 * (srate > 0 ? srate : 100));
 
                 Console.WriteLine($"Time slice: {timeSliceInMilliseconds}ms, samples: {samples}.");
+                Console.WriteLine("Now sending data...");
 
                 var rng = new Random();
 
                 uint t = 0;
+
+                var stopwatch = Stopwatch.StartNew();
+                long expectedElapsedMs = 0;
+
                 while (true)
                 {
                     for (int s = 0; s < samples; ++s, ++t)
@@ -134,8 +145,13 @@ namespace SharpLSL.Examples
                         streamOutlet.PushSample(sample);
                     }
 
-                    // Wait until the next expected sample time.
-                    Thread.Sleep(timeSliceInMilliseconds);
+                    expectedElapsedMs += timeSliceInMilliseconds;
+                    var elapsedMs = stopwatch.ElapsedMilliseconds;
+                    if (expectedElapsedMs > elapsedMs)
+                    {
+                        // Wait until the next expected sample time.
+                        Thread.Sleep((int)(expectedElapsedMs - elapsedMs));
+                    }
                 }
             }
             catch (Exception ex)
