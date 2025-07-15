@@ -1,6 +1,6 @@
 {
   "solution": {
-    "path": "..\\SharpLSL.Full.sln",
+    "path": "..\\SharpLSL.slnx",
     "projects": [
       "Source\\SharpLSL.Native\\all\\SharpLSL.Native.all.csproj",
       "Source\\SharpLSL.Native\\android-arm64\\SharpLSL.Native.android-arm64.csproj",

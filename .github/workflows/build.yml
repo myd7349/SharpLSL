@@ -41,13 +41,13 @@ jobs:
       - name: List installed .NET SDKs
         run: dotnet --list-sdks
       - name: Build SharpLSL
-        run: dotnet build ./SharpLSL.Full.sln -c Release
+        run: dotnet build ./SharpLSL.slnx -c Release
       - name: Run example
         run: dotnet run --project ./Examples/GetLocalClock/GetLocalClock.csproj -c Release
       - name: Run LSLVer
         run: dotnet run --project ./Examples/LSLVer/LSLVer.csproj -c Release
       - name: Run unit tests
-        run: dotnet test -c Release
+        run: dotnet test ./SharpLSL.slnx -c Release
       - name: Pack SharpLSL
         run: dotnet pack ./Source/SharpLSL.slnf -c Release --no-build
       - name: Upload artifacts

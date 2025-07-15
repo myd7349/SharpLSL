@@ -1,6 +1,6 @@
 {
   "solution": {
-    "path": "..\\SharpLSL.Full.sln",
+    "path": "..\\SharpLSL.slnx",
     "projects": [
       "Examples\\GetAllStreams\\GetAllStreams.csproj",
       "Examples\\GetFullInfo\\GetFullInfo.csproj",

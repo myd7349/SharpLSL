@@ -1,0 +1,46 @@
+<Solution>
+  <Folder Name="/Examples/">
+    <Project Path="Examples/GetAllStreams/GetAllStreams.csproj" />
+    <Project Path="Examples/GetFullInfo/GetFullInfo.csproj" />
+    <Project Path="Examples/GetLocalClock/GetLocalClock.csproj" />
+    <Project Path="Examples/GetTimeCorrection/GetTimeCorrection.csproj" />
+    <Project Path="Examples/HandleMetaData/HandleMetaData.csproj" />
+    <Project Path="Examples/LSLVer/LSLVer.csproj" />
+    <Project Path="Examples/ReceiveData/ReceiveData.csproj" />
+    <Project Path="Examples/ReceiveDataInChunks/ReceiveDataInChunks.csproj" />
+    <Project Path="Examples/ReceiveDataSample/ReceiveDataSample.csproj" />
+    <Project Path="Examples/ReceiveStringMarkers/ReceiveStringMarkers.csproj" />
+    <Project Path="Examples/SendData/SendData.csproj" />
+    <Project Path="Examples/SendDataInChunks/SendDataInChunks.csproj" />
+    <Project Path="Examples/SendDataMinimal/SendDataMinimal.csproj" />
+    <Project Path="Examples/SendDataSimple/SendDataSimple.csproj" />
+    <Project Path="Examples/SendMultipleStreams/SendMultipleStreams.csproj" />
+    <Project Path="Examples/SendStringMarkers/SendStringMarkers.csproj" />
+    <Project Path="Examples/TestSyncWithoutData/TestSyncWithoutData.csproj" />
+  </Folder>
+  <Folder Name="/Source/">
+    <Project Path="Source/SharpLSL/SharpLSL.csproj" />
+  </Folder>
+  <Folder Name="/Source/Native Packages/">
+    <Project Path="Source/SharpLSL.Native/all/SharpLSL.Native.all.csproj" />
+    <Project Path="Source/SharpLSL.Native/android-arm/SharpLSL.Native.android-arm.csproj" />
+    <Project Path="Source/SharpLSL.Native/android-arm64/SharpLSL.Native.android-arm64.csproj" />
+    <Project Path="Source/SharpLSL.Native/android-x64/SharpLSL.Native.android-x64.csproj" />
+    <Project Path="Source/SharpLSL.Native/android-x86/SharpLSL.Native.android-x86.csproj" />
+    <Project Path="Source/SharpLSL.Native/ios-arm64/SharpLSL.Native.ios-arm64.csproj" />
+    <Project Path="Source/SharpLSL.Native/iossimulator-arm64/SharpLSL.Native.iossimulator-arm64.csproj" />
+    <Project Path="Source/SharpLSL.Native/iossimulator-x64/SharpLSL.Native.iossimulator-x64.csproj" />
+    <Project Path="Source/SharpLSL.Native/linux-arm/SharpLSL.Native.linux-arm.csproj" />
+    <Project Path="Source/SharpLSL.Native/linux-arm64/SharpLSL.Native.linux-arm64.csproj" />
+    <Project Path="Source/SharpLSL.Native/linux-x64/SharpLSL.Native.linux-x64.csproj" />
+    <Project Path="Source/SharpLSL.Native/osx-arm64/SharpLSL.Native.osx-arm64.csproj" />
+    <Project Path="Source/SharpLSL.Native/osx-x64/SharpLSL.Native.osx-x64.csproj" />
+    <Project Path="Source/SharpLSL.Native/osx/SharpLSL.Native.osx.csproj" />
+    <Project Path="Source/SharpLSL.Native/win-arm64/SharpLSL.Native.win-arm64.csproj" />
+    <Project Path="Source/SharpLSL.Native/win-x64/SharpLSL.Native.win-x64.csproj" />
+    <Project Path="Source/SharpLSL.Native/win-x86/SharpLSL.Native.win-x86.csproj" />
+  </Folder>
+  <Folder Name="/Tests/">
+    <Project Path="Tests/SharpLSL.Test/SharpLSL.Test.csproj" />
+  </Folder>
+</Solution>
