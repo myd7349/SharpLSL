@@ -28,14 +28,14 @@ namespace SharpLSL
         /// </param>
         internal XMLElement(IntPtr handle)
         {
-            handle_ = handle;
+            _handle = handle;
         }
 
         /// <summary>
         /// Gets a value indicating whether the element is null.
         /// </summary>
         /// <seealso cref="Null"/>
-        public bool IsNull => handle_ == IntPtr.Zero;
+        public bool IsNull => _handle == IntPtr.Zero;
 
         /// <summary>
         /// Gets a value indicating whether the element is empty.
@@ -48,7 +48,7 @@ namespace SharpLSL
             get
             {
                 ThrowIfInvalid();
-                return Convert.ToBoolean(lsl_empty(handle_));
+                return Convert.ToBoolean(lsl_empty(_handle));
             }
         }
 
@@ -64,7 +64,7 @@ namespace SharpLSL
             get
             {
                 ThrowIfInvalid();
-                return Convert.ToBoolean(lsl_is_text(handle_));
+                return Convert.ToBoolean(lsl_is_text(_handle));
             }
         }
 
@@ -86,7 +86,7 @@ namespace SharpLSL
 
                 unsafe
                 {
-                    return PtrToXmlString((IntPtr)lsl_name(handle_));
+                    return PtrToXmlString((IntPtr)lsl_name(_handle));
                 }
             }
 
@@ -94,7 +94,7 @@ namespace SharpLSL
             {
                 ThrowIfInvalid();
 
-                var result = Convert.ToBoolean(lsl_set_name(handle_, value));
+                var result = Convert.ToBoolean(lsl_set_name(_handle, value));
                 if (!result)
                     throw new LSLException($"Failed to set name of element to {value}.");
             }
@@ -118,7 +118,7 @@ namespace SharpLSL
 
                 unsafe
                 {
-                    return PtrToXmlString((IntPtr)lsl_value(handle_));
+                    return PtrToXmlString((IntPtr)lsl_value(_handle));
                 }
             }
 
@@ -126,7 +126,7 @@ namespace SharpLSL
             {
                 ThrowIfInvalid();
 
-                var result = Convert.ToBoolean(lsl_set_value(handle_, value));
+                var result = Convert.ToBoolean(lsl_set_value(_handle, value));
                 if (!result)
                     throw new LSLException($"Failed to set value of element to {value}.");
             }
@@ -148,7 +148,7 @@ namespace SharpLSL
             {
                 ThrowIfInvalid();
 
-                var parent = lsl_parent(handle_);
+                var parent = lsl_parent(_handle);
                 if (parent != IntPtr.Zero)
                     return new XMLElement(parent);
 
@@ -171,7 +171,7 @@ namespace SharpLSL
         {
             ThrowIfInvalid();
 
-            var node = lsl_first_child(handle_);
+            var node = lsl_first_child(_handle);
             if (node != IntPtr.Zero)
                 return new XMLElement(node);
 
@@ -193,7 +193,7 @@ namespace SharpLSL
         {
             ThrowIfInvalid();
 
-            var node = lsl_last_child(handle_);
+            var node = lsl_last_child(_handle);
             if (node != IntPtr.Zero)
                 return new XMLElement(node);
 
@@ -215,7 +215,7 @@ namespace SharpLSL
         {
             ThrowIfInvalid();
 
-            var node = lsl_child(handle_, name);
+            var node = lsl_child(_handle, name);
             if (node != IntPtr.Zero)
                 return new XMLElement(node);
 
@@ -238,7 +238,7 @@ namespace SharpLSL
 
             unsafe
             {
-                var str = (IntPtr)lsl_child_value(handle_);
+                var str = (IntPtr)lsl_child_value(_handle);
                 if (str != IntPtr.Zero) // TODO:
                     return PtrToXmlString(str);
             }
@@ -263,7 +263,7 @@ namespace SharpLSL
         {
             ThrowIfInvalid();
 
-            var str = lsl_child_value_n(handle_, name);
+            var str = lsl_child_value_n(_handle, name);
             if (str != IntPtr.Zero) // TODO:
                 return PtrToXmlString(str);
 
@@ -286,7 +286,7 @@ namespace SharpLSL
         {
             ThrowIfInvalid();
 
-            var result = Convert.ToBoolean(lsl_set_child_value(handle_, name, value));
+            var result = Convert.ToBoolean(lsl_set_child_value(_handle, name, value));
             if (!result)
                 throw new LSLException($"Failed to set child value: {name}={value}.");
         }
@@ -307,7 +307,7 @@ namespace SharpLSL
         {
             ThrowIfInvalid();
 
-            var node = lsl_next_sibling(handle_);
+            var node = lsl_next_sibling(_handle);
             if (node != IntPtr.Zero)
                 return new XMLElement(node);
 
@@ -332,7 +332,7 @@ namespace SharpLSL
         {
             ThrowIfInvalid();
 
-            var node = lsl_next_sibling_n(handle_, name);
+            var node = lsl_next_sibling_n(_handle, name);
             if (node != IntPtr.Zero)
                 return new XMLElement(node);
 
@@ -355,7 +355,7 @@ namespace SharpLSL
         {
             ThrowIfInvalid();
 
-            var node = lsl_previous_sibling(handle_);
+            var node = lsl_previous_sibling(_handle);
             if (node != IntPtr.Zero)
                 return new XMLElement(node);
 
@@ -380,7 +380,7 @@ namespace SharpLSL
         {
             ThrowIfInvalid();
 
-            var node = lsl_previous_sibling_n(handle_, name);
+            var node = lsl_previous_sibling_n(_handle, name);
             if (node != IntPtr.Zero)
                 return new XMLElement(node);
 
@@ -407,7 +407,7 @@ namespace SharpLSL
         {
             ThrowIfInvalid();
 
-            var node = lsl_append_child(handle_, name);
+            var node = lsl_append_child(_handle, name);
             if (node != IntPtr.Zero)
                 return new XMLElement(node);
 
@@ -435,8 +435,8 @@ namespace SharpLSL
         {
             ThrowIfInvalid();
 
-            var node = lsl_append_child_value(handle_, name, value);
-            Debug.Assert(node == handle_); // TODO:
+            var node = lsl_append_child_value(_handle, name, value);
+            Debug.Assert(node == _handle); // TODO:
             return this; // TODO:
         }
 
@@ -468,7 +468,7 @@ namespace SharpLSL
 
             element.ThrowIfInvalid();
 
-            var node = lsl_append_copy(handle_, element.handle_);
+            var node = lsl_append_copy(_handle, element._handle);
             if (node != IntPtr.Zero) // TODO:
                 return new XMLElement(node);
 
@@ -495,7 +495,7 @@ namespace SharpLSL
         {
             ThrowIfInvalid();
 
-            var node = lsl_prepend_child(handle_, name);
+            var node = lsl_prepend_child(_handle, name);
             if (node != IntPtr.Zero)
                 return new XMLElement(node);
 
@@ -523,8 +523,8 @@ namespace SharpLSL
         {
             ThrowIfInvalid();
 
-            var node = lsl_prepend_child_value(handle_, name, value);
-            Debug.Assert(node == handle_); // TODO:
+            var node = lsl_prepend_child_value(_handle, name, value);
+            Debug.Assert(node == _handle); // TODO:
             return this; // TODO:
         }
 
@@ -556,7 +556,7 @@ namespace SharpLSL
 
             element.ThrowIfInvalid();
 
-            var node = lsl_prepend_copy(handle_, element.handle_);
+            var node = lsl_prepend_copy(_handle, element._handle);
             if (node != IntPtr.Zero) // TODO:
                 return new XMLElement(node);
 
@@ -575,7 +575,7 @@ namespace SharpLSL
         {
             ThrowIfInvalid();
 
-            lsl_remove_child_n(handle_, name);
+            lsl_remove_child_n(_handle, name);
         }
 
         /// <summary>
@@ -598,7 +598,7 @@ namespace SharpLSL
 
             element.ThrowIfInvalid();
 
-            lsl_remove_child(handle_, element.handle_);
+            lsl_remove_child(_handle, element._handle);
         }
 
         /// <summary>
@@ -619,11 +619,11 @@ namespace SharpLSL
         /// </exception>
         protected void ThrowIfInvalid()
         {
-            if (handle_ == IntPtr.Zero)
+            if (_handle == IntPtr.Zero)
                 throw new InvalidOperationException("The XML node handle is invalid.");
         }
 
-        private readonly IntPtr handle_;
+        private readonly IntPtr _handle;
     }
 }
 

@@ -81,7 +81,7 @@ namespace SharpLSL
                 (lsl_transport_options_t)transportOptions))
         {
             ChannelCount = streamInfo.ChannelCount;
-            sampleBytes_ = streamInfo.SampleBytes;
+            _sampleBytes = streamInfo.SampleBytes;
         }
 
         /// <summary>
@@ -104,7 +104,7 @@ namespace SharpLSL
             using (var streamInfo = GetStreamInfo())
             {
                 ChannelCount = streamInfo.ChannelCount;
-                sampleBytes_ = streamInfo.SampleBytes;
+                _sampleBytes = streamInfo.SampleBytes;
             }
         }
 
@@ -649,7 +649,7 @@ namespace SharpLSL
             //    throw new ArgumentException(nameof(length));
 
             var errorCode = (int)lsl_error_code_t.lsl_no_error;
-            var timestamp = lsl_pull_sample_v(handle, sample, sampleBytes_, timeout, ref errorCode);
+            var timestamp = lsl_pull_sample_v(handle, sample, _sampleBytes, timeout, ref errorCode);
             CheckError(errorCode);
             return timestamp;
         }
@@ -1125,7 +1125,7 @@ namespace SharpLSL
             lsl_destroy_inlet(handle);
         }
 
-        private int sampleBytes_;
+        private int _sampleBytes;
     }
 }
 
