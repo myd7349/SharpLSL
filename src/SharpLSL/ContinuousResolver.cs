@@ -162,7 +162,7 @@ namespace SharpLSL
             }
             else
             {
-#if NET35
+#if NET35 || NET45
                 return new StreamInfo[0];
 #else
                 return Array.Empty<StreamInfo>();

@@ -69,11 +69,11 @@
   </Target>
 
   <Target Name="_IncludeAdditionalTfmSpecificPackageFiles">
-    <ItemGroup Condition="'$(TargetFramework)' == 'net35'">
+    <ItemGroup Condition="'$(TargetFramework)' == 'net35' Or '$(TargetFramework)' == 'net45'">
       <TfmSpecificPackageFile Include="$(ProjectDir)build\net35\$(PackageId).targets"
-                              PackagePath="build\net35\$(PackageId).targets" />
+                              PackagePath="build\$(TargetFramework)\$(PackageId).targets" />
       <TfmSpecificPackageFile Include="$(ProjectDir)build\net35\$(PackageId).targets"
-                              PackagePath="buildTransitive\net35\$(PackageId).targets" />
+                              PackagePath="buildTransitive\$(TargetFramework)\$(PackageId).targets" />
     </ItemGroup>
   </Target>
 

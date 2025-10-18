@@ -9,7 +9,7 @@
     <TargetsForTfmSpecificContentInPackage>$(TargetsForTfmSpecificContentInPackage);_IncludeAdditionalTfmSpecificPackageFilesPrepare</TargetsForTfmSpecificContentInPackage>
   </PropertyGroup>
   
-  <ItemGroup Condition=" '$(TargetFramework)' != 'net35' ">
+  <ItemGroup Condition="'$(TargetFramework)' != 'net35' And '$(TargetFramework)' != 'net45'">
     <ProjectReference Include="..\android-arm64\SharpLSL.Native.android-arm64.csproj" />
     <ProjectReference Include="..\android-arm\SharpLSL.Native.android-arm.csproj" />
     <ProjectReference Include="..\android-x64\SharpLSL.Native.android-x64.csproj" />

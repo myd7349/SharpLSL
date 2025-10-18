@@ -222,7 +222,7 @@ namespace SharpLSL
                 return streamInfos;
             }
 
-#if NET35
+#if NET35 || NET45
             return new StreamInfo[0];
 #else
             return Array.Empty<StreamInfo>();
@@ -456,6 +456,20 @@ namespace SharpLSL
 
 #if !NET35
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        internal static void CheckSampleBuffer<T>(ReadOnlySpan<T> sample, int channelCount)
+        {
+            CheckChannelCount(channelCount, sample.Length);
+        }
+
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        internal static void CheckSampleBuffer<T>(Span<T> sample, int channelCount)
+        {
+            CheckChannelCount(channelCount, sample.Length);
+        }
+#endif
+
+#if !NET35
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
 #endif
         internal static void CheckLengthBuffer<T>(T[] lengths, int channelCount)
         {
@@ -479,6 +493,26 @@ namespace SharpLSL
 
             return chunk.Length / channelCount;
         }
+
+#if !NET35
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        internal static int CheckChunkBuffer<T>(ReadOnlySpan<T> chunk, int channelCount)
+        {
+            if (chunk.Length == 0 || (chunk.Length % channelCount) != 0)
+                throw new ArgumentException($"The number of data values ({chunk.Length}) in the chunk must be a multiple of the channel count ({channelCount}).", nameof(chunk));
+
+            return chunk.Length / channelCount;
+        }
+
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        internal static int CheckChunkBuffer<T>(Span<T> chunk, int channelCount)
+        {
+            if (chunk.Length == 0 || (chunk.Length % channelCount) != 0)
+                throw new ArgumentException($"The number of data values ({chunk.Length}) in the chunk must be a multiple of the channel count ({channelCount}).", nameof(chunk));
+
+            return chunk.Length / channelCount;
+        }
+#endif
 
 #if !NET35
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
@@ -511,6 +545,20 @@ namespace SharpLSL
 
 #if !NET35
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        internal static void CheckTimestampBufferAllowNull(Span<double> timestamps, int samples)
+        {
+            Debug.Assert(samples > 0);
+
+            if (timestamps.Length > 0)
+            {
+                if (timestamps.Length != samples)
+                    throw new ArgumentException($"Timestamps buffer size ({timestamps.Length}) does not match the number of samples ({samples}).", nameof(timestamps));
+            }
+        }
+#endif
+
+#if !NET35
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
 #endif
         internal static void CheckTimestampBuffer(double[] timestamps, int samples)
         {
@@ -522,5 +570,16 @@ namespace SharpLSL
             if (timestamps.Length != samples)
                 throw new ArgumentException($"Timestamps buffer size ({timestamps.Length}) does not match the number of samples ({samples}).", nameof(timestamps));
         }
+
+#if !NET35
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        internal static void CheckTimestampBuffer(ReadOnlySpan<double> timestamps, int samples)
+        {
+            Debug.Assert(samples > 0);
+
+            if (timestamps.Length != samples)
+                throw new ArgumentException($"Timestamps buffer size ({timestamps.Length}) does not match the number of samples ({samples}).", nameof(timestamps));
+        }
+#endif
     }
 }

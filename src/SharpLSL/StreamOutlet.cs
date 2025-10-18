@@ -140,6 +140,23 @@ namespace SharpLSL
             CheckError(lsl_push_sample_c(handle, sample));
         }
 
+#if !NET35
+        /// <inheritdoc cref="PushSample(sbyte[])"/>
+        public void PushSample(ReadOnlySpan<sbyte> sample)
+        {
+            ThrowIfInvalid();
+            CheckSampleBuffer(sample, ChannelCount);
+
+            unsafe
+            {
+                fixed (sbyte* buffer = sample)
+                {
+                    CheckError(lsl_push_sample_c(handle, buffer));
+                }
+            }
+        }
+#endif
+
         /// <inheritdoc cref="PushSample(sbyte[])"/>
         public void PushSample(short[] sample)
         {
@@ -148,6 +165,23 @@ namespace SharpLSL
 
             CheckError(lsl_push_sample_s(handle, sample));
         }
+
+#if !NET35
+        /// <inheritdoc cref="PushSample(sbyte[])"/>
+        public void PushSample(ReadOnlySpan<short> sample)
+        {
+            ThrowIfInvalid();
+            CheckSampleBuffer(sample, ChannelCount);
+
+            unsafe
+            {
+                fixed (short* buffer = sample)
+                {
+                    CheckError(lsl_push_sample_s(handle, buffer));
+                }
+            }
+        }
+#endif
 
         /// <inheritdoc cref="PushSample(sbyte[])"/>
         public void PushSample(int[] sample)
@@ -158,6 +192,23 @@ namespace SharpLSL
             CheckError(lsl_push_sample_i(handle, sample));
         }
 
+#if !NET35
+        /// <inheritdoc cref="PushSample(sbyte[])"/>
+        public void PushSample(ReadOnlySpan<int> sample)
+        {
+            ThrowIfInvalid();
+            CheckSampleBuffer(sample, ChannelCount);
+
+            unsafe
+            {
+                fixed (int* buffer = sample)
+                {
+                    CheckError(lsl_push_sample_i(handle, buffer));
+                }
+            }
+        }
+#endif
+
         /// <inheritdoc cref="PushSample(sbyte[])"/>
         public void PushSample(long[] sample)
         {
@@ -166,6 +217,23 @@ namespace SharpLSL
 
             CheckError(lsl_push_sample_l(handle, sample));
         }
+
+#if !NET35
+        /// <inheritdoc cref="PushSample(sbyte[])"/>
+        public void PushSample(ReadOnlySpan<long> sample)
+        {
+            ThrowIfInvalid();
+            CheckSampleBuffer(sample, ChannelCount);
+
+            unsafe
+            {
+                fixed (long* buffer = sample)
+                {
+                    CheckError(lsl_push_sample_l(handle, buffer));
+                }
+            }
+        }
+#endif
 
         /// <inheritdoc cref="PushSample(sbyte[])"/>
         public void PushSample(float[] sample)
@@ -176,6 +244,23 @@ namespace SharpLSL
             CheckError(lsl_push_sample_f(handle, sample));
         }
 
+#if !NET35
+        /// <inheritdoc cref="PushSample(sbyte[])"/>
+        public void PushSample(ReadOnlySpan<float> sample)
+        {
+            ThrowIfInvalid();
+            CheckSampleBuffer(sample, ChannelCount);
+
+            unsafe
+            {
+                fixed (float* buffer = sample)
+                {
+                    CheckError(lsl_push_sample_f(handle, buffer));
+                }
+            }
+        }
+#endif
+
         /// <inheritdoc cref="PushSample(sbyte[])"/>
         public void PushSample(double[] sample)
         {
@@ -184,6 +269,23 @@ namespace SharpLSL
 
             CheckError(lsl_push_sample_d(handle, sample));
         }
+
+#if !NET35
+        /// <inheritdoc cref="PushSample(sbyte[])"/>
+        public void PushSample(ReadOnlySpan<double> sample)
+        {
+            ThrowIfInvalid();
+            CheckSampleBuffer(sample, ChannelCount);
+
+            unsafe
+            {
+                fixed (double* buffer = sample)
+                {
+                    CheckError(lsl_push_sample_d(handle, buffer));
+                }
+            }
+        }
+#endif
 
         /// <inheritdoc cref="PushSample(sbyte[])"/>
         public void PushSample(string[] sample)
@@ -213,6 +315,23 @@ namespace SharpLSL
 
             CheckError(lsl_push_sample_v(handle, sample));
         }
+
+#if !NET35
+        /// <inheritdoc cref="PushSample(sbyte[])"/>
+        public void PushSample(ReadOnlySpan<byte> sample)
+        {
+            ThrowIfInvalid();
+            CheckSampleBuffer(sample, ChannelCount);
+
+            unsafe
+            {
+                fixed (byte* buffer = sample)
+                {
+                    CheckError(lsl_push_sample_v(handle, buffer));
+                }
+            }
+        }
+#endif
 
         /// <summary>
         /// Pushes a pointer to some values as a sample into the outlet.
@@ -348,6 +467,23 @@ namespace SharpLSL
             CheckError(lsl_push_sample_ct(handle, sample, timestamp));
         }
 
+#if !NET35
+        /// <inheritdoc cref="PushSample(sbyte[], double)"/>
+        public void PushSample(ReadOnlySpan<sbyte> sample, double timestamp)
+        {
+            ThrowIfInvalid();
+            CheckSampleBuffer(sample, ChannelCount);
+
+            unsafe
+            {
+                fixed (sbyte* buffer = sample)
+                {
+                    CheckError(lsl_push_sample_ct(handle, buffer, timestamp));
+                }
+            }
+        }
+#endif
+
         /// <inheritdoc cref="PushSample(sbyte[], double)"/>
         public void PushSample(short[] sample, double timestamp)
         {
@@ -356,6 +492,23 @@ namespace SharpLSL
 
             CheckError(lsl_push_sample_st(handle, sample, timestamp));
         }
+
+#if !NET35
+        /// <inheritdoc cref="PushSample(sbyte[], double)"/>
+        public void PushSample(ReadOnlySpan<short> sample, double timestamp)
+        {
+            ThrowIfInvalid();
+            CheckSampleBuffer(sample, ChannelCount);
+
+            unsafe
+            {
+                fixed (short* buffer = sample)
+                {
+                    CheckError(lsl_push_sample_st(handle, buffer, timestamp));
+                }
+            }
+        }
+#endif
 
         /// <inheritdoc cref="PushSample(sbyte[], double)"/>
         public void PushSample(int[] sample, double timestamp)
@@ -366,6 +519,23 @@ namespace SharpLSL
             CheckError(lsl_push_sample_it(handle, sample, timestamp));
         }
 
+#if !NET35
+        /// <inheritdoc cref="PushSample(sbyte[], double)"/>
+        public void PushSample(ReadOnlySpan<int> sample, double timestamp)
+        {
+            ThrowIfInvalid();
+            CheckSampleBuffer(sample, ChannelCount);
+
+            unsafe
+            {
+                fixed (int* buffer = sample)
+                {
+                    CheckError(lsl_push_sample_it(handle, buffer, timestamp));
+                }
+            }
+        }
+#endif
+
         /// <inheritdoc cref="PushSample(sbyte[], double)"/>
         public void PushSample(long[] sample, double timestamp)
         {
@@ -374,6 +544,23 @@ namespace SharpLSL
 
             CheckError(lsl_push_sample_lt(handle, sample, timestamp));
         }
+
+#if !NET35
+        /// <inheritdoc cref="PushSample(sbyte[], double)"/>
+        public void PushSample(ReadOnlySpan<long> sample, double timestamp)
+        {
+            ThrowIfInvalid();
+            CheckSampleBuffer(sample, ChannelCount);
+
+            unsafe
+            {
+                fixed (long* buffer = sample)
+                {
+                    CheckError(lsl_push_sample_lt(handle, buffer, timestamp));
+                }
+            }
+        }
+#endif
 
         /// <inheritdoc cref="PushSample(sbyte[], double)"/>
         public void PushSample(float[] sample, double timestamp)
@@ -384,6 +571,23 @@ namespace SharpLSL
             CheckError(lsl_push_sample_ft(handle, sample, timestamp));
         }
 
+#if !NET35
+        /// <inheritdoc cref="PushSample(sbyte[], double)"/>
+        public void PushSample(ReadOnlySpan<float> sample, double timestamp)
+        {
+            ThrowIfInvalid();
+            CheckSampleBuffer(sample, ChannelCount);
+
+            unsafe
+            {
+                fixed (float* buffer = sample)
+                {
+                    CheckError(lsl_push_sample_ft(handle, buffer, timestamp));
+                }
+            }
+        }
+#endif
+
         /// <inheritdoc cref="PushSample(sbyte[], double)"/>
         public void PushSample(double[] sample, double timestamp)
         {
@@ -392,6 +596,23 @@ namespace SharpLSL
 
             CheckError(lsl_push_sample_dt(handle, sample, timestamp));
         }
+
+#if !NET35
+        /// <inheritdoc cref="PushSample(sbyte[], double)"/>
+        public void PushSample(ReadOnlySpan<double> sample, double timestamp)
+        {
+            ThrowIfInvalid();
+            CheckSampleBuffer(sample, ChannelCount);
+
+            unsafe
+            {
+                fixed (double* buffer = sample)
+                {
+                    CheckError(lsl_push_sample_dt(handle, buffer, timestamp));
+                }
+            }
+        }
+#endif
 
         /// <inheritdoc cref="PushSample(sbyte[], double)"/>
         public void PushSample(string[] sample, double timestamp)
@@ -412,6 +633,23 @@ namespace SharpLSL
 
             CheckError(lsl_push_sample_vt(handle, sample, timestamp));
         }
+
+#if !NET35
+        /// <inheritdoc cref="PushSample(sbyte[], double)"/>
+        public void PushSample(ReadOnlySpan<byte> sample, double timestamp)
+        {
+            ThrowIfInvalid();
+            CheckSampleBuffer(sample, ChannelCount);
+
+            unsafe
+            {
+                fixed (byte* buffer = sample)
+                {
+                    CheckError(lsl_push_sample_vt(handle, buffer, timestamp));
+                }
+            }
+        }
+#endif
 
         /// <summary>
         /// Pushes a sample consisting of values pointed to by a pointer into the outlet.
@@ -561,6 +799,23 @@ namespace SharpLSL
             CheckError(lsl_push_sample_ctp(handle, sample, timestamp, pushThrough ? 1 : 0));
         }
 
+#if !NET35
+        /// <inheritdoc cref="PushSample(sbyte[], double, bool)"/>
+        public void PushSample(ReadOnlySpan<sbyte> sample, double timestamp, bool pushThrough)
+        {
+            ThrowIfInvalid();
+            CheckSampleBuffer(sample, ChannelCount);
+
+            unsafe
+            {
+                fixed (sbyte* buffer = sample)
+                {
+                    CheckError(lsl_push_sample_ctp(handle, buffer, timestamp, pushThrough ? 1 : 0));
+                }
+            }
+        }
+#endif
+
         /// <inheritdoc cref="PushSample(sbyte[], double, bool)"/>
         public void PushSample(short[] sample, double timestamp, bool pushThrough)
         {
@@ -569,6 +824,23 @@ namespace SharpLSL
 
             CheckError(lsl_push_sample_stp(handle, sample, timestamp, pushThrough ? 1 : 0));
         }
+
+#if !NET35
+        /// <inheritdoc cref="PushSample(sbyte[], double, bool)"/>
+        public void PushSample(ReadOnlySpan<short> sample, double timestamp, bool pushThrough)
+        {
+            ThrowIfInvalid();
+            CheckSampleBuffer(sample, ChannelCount);
+
+            unsafe
+            {
+                fixed (short* buffer = sample)
+                {
+                    CheckError(lsl_push_sample_stp(handle, buffer, timestamp, pushThrough ? 1 : 0));
+                }
+            }
+        }
+#endif
 
         /// <inheritdoc cref="PushSample(sbyte[], double, bool)"/>
         public void PushSample(int[] sample, double timestamp, bool pushThrough)
@@ -579,6 +851,23 @@ namespace SharpLSL
             CheckError(lsl_push_sample_itp(handle, sample, timestamp, pushThrough ? 1 : 0));
         }
 
+#if !NET35
+        /// <inheritdoc cref="PushSample(sbyte[], double, bool)"/>
+        public void PushSample(ReadOnlySpan<int> sample, double timestamp, bool pushThrough)
+        {
+            ThrowIfInvalid();
+            CheckSampleBuffer(sample, ChannelCount);
+
+            unsafe
+            {
+                fixed (int* buffer = sample)
+                {
+                    CheckError(lsl_push_sample_itp(handle, buffer, timestamp, pushThrough ? 1 : 0));
+                }
+            }
+        }
+#endif
+
         /// <inheritdoc cref="PushSample(sbyte[], double, bool)"/>
         public void PushSample(long[] sample, double timestamp, bool pushThrough)
         {
@@ -587,6 +876,23 @@ namespace SharpLSL
 
             CheckError(lsl_push_sample_ltp(handle, sample, timestamp, pushThrough ? 1 : 0));
         }
+
+#if !NET35
+        /// <inheritdoc cref="PushSample(sbyte[], double, bool)"/>
+        public void PushSample(ReadOnlySpan<long> sample, double timestamp, bool pushThrough)
+        {
+            ThrowIfInvalid();
+            CheckSampleBuffer(sample, ChannelCount);
+
+            unsafe
+            {
+                fixed (long* buffer = sample)
+                {
+                    CheckError(lsl_push_sample_ltp(handle, buffer, timestamp, pushThrough ? 1 : 0));
+                }
+            }
+        }
+#endif
 
         /// <inheritdoc cref="PushSample(sbyte[], double, bool)"/>
         public void PushSample(float[] sample, double timestamp, bool pushThrough)
@@ -597,6 +903,23 @@ namespace SharpLSL
             CheckError(lsl_push_sample_ftp(handle, sample, timestamp, pushThrough ? 1 : 0));
         }
 
+#if !NET35
+        /// <inheritdoc cref="PushSample(sbyte[], double, bool)"/>
+        public void PushSample(ReadOnlySpan<float> sample, double timestamp, bool pushThrough)
+        {
+            ThrowIfInvalid();
+            CheckSampleBuffer(sample, ChannelCount);
+
+            unsafe
+            {
+                fixed (float* buffer = sample)
+                {
+                    CheckError(lsl_push_sample_ftp(handle, buffer, timestamp, pushThrough ? 1 : 0));
+                }
+            }
+        }
+#endif
+
         /// <inheritdoc cref="PushSample(sbyte[], double, bool)"/>
         public void PushSample(double[] sample, double timestamp, bool pushThrough)
         {
@@ -605,6 +928,23 @@ namespace SharpLSL
 
             CheckError(lsl_push_sample_dtp(handle, sample, timestamp, pushThrough ? 1 : 0));
         }
+
+#if !NET35
+        /// <inheritdoc cref="PushSample(sbyte[], double, bool)"/>
+        public void PushSample(ReadOnlySpan<double> sample, double timestamp, bool pushThrough)
+        {
+            ThrowIfInvalid();
+            CheckSampleBuffer(sample, ChannelCount);
+
+            unsafe
+            {
+                fixed (double* buffer = sample)
+                {
+                    CheckError(lsl_push_sample_dtp(handle, buffer, timestamp, pushThrough ? 1 : 0));
+                }
+            }
+        }
+#endif
 
         /// <inheritdoc cref="PushSample(sbyte[], double, bool)"/>
         public void PushSample(string[] sample, double timestamp, bool pushThrough)
@@ -625,6 +965,23 @@ namespace SharpLSL
 
             CheckError(lsl_push_sample_vtp(handle, sample, timestamp, pushThrough ? 1 : 0));
         }
+
+#if !NET35
+        /// <inheritdoc cref="PushSample(sbyte[], double, bool)"/>
+        public void PushSample(ReadOnlySpan<byte> sample, double timestamp, bool pushThrough)
+        {
+            ThrowIfInvalid();
+            CheckSampleBuffer(sample, ChannelCount);
+
+            unsafe
+            {
+                fixed (byte* buffer = sample)
+                {
+                    CheckError(lsl_push_sample_vtp(handle, buffer, timestamp, pushThrough ? 1 : 0));
+                }
+            }
+        }
+#endif
 
         /// <param name="sample">
         /// The sample data to push.
@@ -800,6 +1157,23 @@ namespace SharpLSL
             CheckError(lsl_push_chunk_c(handle, chunk, (uint)chunk.Length));
         }
 
+#if !NET35
+        /// <inheritdoc cref="PushChunk(sbyte[])"/>
+        public void PushChunk(ReadOnlySpan<sbyte> chunk)
+        {
+            ThrowIfInvalid();
+            CheckChunkBuffer(chunk, ChannelCount);
+
+            unsafe
+            {
+                fixed (sbyte* buffer = chunk)
+                {
+                    CheckError(lsl_push_chunk_c(handle, buffer, (uint)chunk.Length));
+                }
+            }
+        }
+#endif
+
         /// <inheritdoc cref="PushChunk(sbyte[])"/>
         public void PushChunk(short[] chunk)
         {
@@ -808,6 +1182,23 @@ namespace SharpLSL
 
             CheckError(lsl_push_chunk_s(handle, chunk, (uint)chunk.Length));
         }
+
+#if !NET35
+        /// <inheritdoc cref="PushChunk(sbyte[])"/>
+        public void PushChunk(ReadOnlySpan<short> chunk)
+        {
+            ThrowIfInvalid();
+            CheckChunkBuffer(chunk, ChannelCount);
+
+            unsafe
+            {
+                fixed (short* buffer = chunk)
+                {
+                    CheckError(lsl_push_chunk_s(handle, buffer, (uint)chunk.Length));
+                }
+            }
+        }
+#endif
 
         /// <inheritdoc cref="PushChunk(sbyte[])"/>
         public void PushChunk(int[] chunk)
@@ -818,6 +1209,23 @@ namespace SharpLSL
             CheckError(lsl_push_chunk_i(handle, chunk, (uint)chunk.Length));
         }
 
+#if !NET35
+        /// <inheritdoc cref="PushChunk(sbyte[])"/>
+        public void PushChunk(ReadOnlySpan<int> chunk)
+        {
+            ThrowIfInvalid();
+            CheckChunkBuffer(chunk, ChannelCount);
+
+            unsafe
+            {
+                fixed (int* buffer = chunk)
+                {
+                    CheckError(lsl_push_chunk_i(handle, buffer, (uint)chunk.Length));
+                }
+            }
+        }
+#endif
+
         /// <inheritdoc cref="PushChunk(sbyte[])"/>
         public void PushChunk(long[] chunk)
         {
@@ -826,6 +1234,23 @@ namespace SharpLSL
 
             CheckError(lsl_push_chunk_l(handle, chunk, (uint)chunk.Length));
         }
+
+#if !NET35
+        /// <inheritdoc cref="PushChunk(sbyte[])"/>
+        public void PushChunk(ReadOnlySpan<long> chunk)
+        {
+            ThrowIfInvalid();
+            CheckChunkBuffer(chunk, ChannelCount);
+
+            unsafe
+            {
+                fixed (long* buffer = chunk)
+                {
+                    CheckError(lsl_push_chunk_l(handle, buffer, (uint)chunk.Length));
+                }
+            }
+        }
+#endif
 
         /// <inheritdoc cref="PushChunk(sbyte[])"/>
         public void PushChunk(float[] chunk)
@@ -836,6 +1261,23 @@ namespace SharpLSL
             CheckError(lsl_push_chunk_f(handle, chunk, (uint)chunk.Length));
         }
 
+#if !NET35
+        /// <inheritdoc cref="PushChunk(sbyte[])"/>
+        public void PushChunk(ReadOnlySpan<float> chunk)
+        {
+            ThrowIfInvalid();
+            CheckChunkBuffer(chunk, ChannelCount);
+
+            unsafe
+            {
+                fixed (float* buffer = chunk)
+                {
+                    CheckError(lsl_push_chunk_f(handle, buffer, (uint)chunk.Length));
+                }
+            }
+        }
+#endif
+
         /// <inheritdoc cref="PushChunk(sbyte[])"/>
         public void PushChunk(double[] chunk)
         {
@@ -844,6 +1286,23 @@ namespace SharpLSL
 
             CheckError(lsl_push_chunk_d(handle, chunk, (uint)chunk.Length));
         }
+
+#if !NET35
+        /// <inheritdoc cref="PushChunk(sbyte[])"/>
+        public void PushChunk(ReadOnlySpan<double> chunk)
+        {
+            ThrowIfInvalid();
+            CheckChunkBuffer(chunk, ChannelCount);
+
+            unsafe
+            {
+                fixed (double* buffer = chunk)
+                {
+                    CheckError(lsl_push_chunk_d(handle, buffer, (uint)chunk.Length));
+                }
+            }
+        }
+#endif
 
         /// <inheritdoc cref="PushChunk(sbyte[])"/>
         public void PushChunk(string[] chunk)
@@ -940,6 +1399,23 @@ namespace SharpLSL
             CheckError(lsl_push_chunk_ct(handle, chunk, (uint)chunk.Length, timestamp));
         }
 
+#if !NET35
+        /// <inheritdoc cref="PushChunk(sbyte[], double)"/>
+        public void PushChunk(ReadOnlySpan<sbyte> chunk, double timestamp)
+        {
+            ThrowIfInvalid();
+            CheckChunkBuffer(chunk, ChannelCount);
+
+            unsafe
+            {
+                fixed (sbyte* buffer = chunk)
+                {
+                    CheckError(lsl_push_chunk_ct(handle, buffer, (uint)chunk.Length, timestamp));
+                }
+            }
+        }
+#endif
+
         /// <inheritdoc cref="PushChunk(sbyte[], double)"/>
         public void PushChunk(short[] chunk, double timestamp)
         {
@@ -948,6 +1424,23 @@ namespace SharpLSL
 
             CheckError(lsl_push_chunk_st(handle, chunk, (uint)chunk.Length, timestamp));
         }
+
+#if !NET35
+        /// <inheritdoc cref="PushChunk(sbyte[], double)"/>
+        public void PushChunk(ReadOnlySpan<short> chunk, double timestamp)
+        {
+            ThrowIfInvalid();
+            CheckChunkBuffer(chunk, ChannelCount);
+
+            unsafe
+            {
+                fixed (short* buffer = chunk)
+                {
+                    CheckError(lsl_push_chunk_st(handle, buffer, (uint)chunk.Length, timestamp));
+                }
+            }
+        }
+#endif
 
         /// <inheritdoc cref="PushChunk(sbyte[], double)"/>
         public void PushChunk(int[] chunk, double timestamp)
@@ -958,6 +1451,23 @@ namespace SharpLSL
             CheckError(lsl_push_chunk_it(handle, chunk, (uint)chunk.Length, timestamp));
         }
 
+#if !NET35
+        /// <inheritdoc cref="PushChunk(sbyte[], double)"/>
+        public void PushChunk(ReadOnlySpan<int> chunk, double timestamp)
+        {
+            ThrowIfInvalid();
+            CheckChunkBuffer(chunk, ChannelCount);
+
+            unsafe
+            {
+                fixed (int* buffer = chunk)
+                {
+                    CheckError(lsl_push_chunk_it(handle, buffer, (uint)chunk.Length, timestamp));
+                }
+            }
+        }
+#endif
+
         /// <inheritdoc cref="PushChunk(sbyte[], double)"/>
         public void PushChunk(long[] chunk, double timestamp)
         {
@@ -966,6 +1476,23 @@ namespace SharpLSL
 
             CheckError(lsl_push_chunk_lt(handle, chunk, (uint)chunk.Length, timestamp));
         }
+
+#if !NET35
+        /// <inheritdoc cref="PushChunk(sbyte[], double)"/>
+        public void PushChunk(ReadOnlySpan<long> chunk, double timestamp)
+        {
+            ThrowIfInvalid();
+            CheckChunkBuffer(chunk, ChannelCount);
+
+            unsafe
+            {
+                fixed (long* buffer = chunk)
+                {
+                    CheckError(lsl_push_chunk_lt(handle, buffer, (uint)chunk.Length, timestamp));
+                }
+            }
+        }
+#endif
 
         /// <inheritdoc cref="PushChunk(sbyte[], double)"/>
         public void PushChunk(float[] chunk, double timestamp)
@@ -976,6 +1503,23 @@ namespace SharpLSL
             CheckError(lsl_push_chunk_ft(handle, chunk, (uint)chunk.Length, timestamp));
         }
 
+#if !NET35
+        /// <inheritdoc cref="PushChunk(sbyte[], double)"/>
+        public void PushChunk(ReadOnlySpan<float> chunk, double timestamp)
+        {
+            ThrowIfInvalid();
+            CheckChunkBuffer(chunk, ChannelCount);
+
+            unsafe
+            {
+                fixed (float* buffer = chunk)
+                {
+                    CheckError(lsl_push_chunk_ft(handle, buffer, (uint)chunk.Length, timestamp));
+                }
+            }
+        }
+#endif
+
         /// <inheritdoc cref="PushChunk(sbyte[], double)"/>
         public void PushChunk(double[] chunk, double timestamp)
         {
@@ -984,6 +1528,23 @@ namespace SharpLSL
 
             CheckError(lsl_push_chunk_dt(handle, chunk, (uint)chunk.Length, timestamp));
         }
+
+#if !NET35
+        /// <inheritdoc cref="PushChunk(sbyte[], double)"/>
+        public void PushChunk(ReadOnlySpan<double> chunk, double timestamp)
+        {
+            ThrowIfInvalid();
+            CheckChunkBuffer(chunk, ChannelCount);
+
+            unsafe
+            {
+                fixed (double* buffer = chunk)
+                {
+                    CheckError(lsl_push_chunk_dt(handle, buffer, (uint)chunk.Length, timestamp));
+                }
+            }
+        }
+#endif
 
         /// <inheritdoc cref="PushChunk(sbyte[], double)"/>
         public void PushChunk(string[] chunk, double timestamp)
@@ -1085,6 +1646,23 @@ namespace SharpLSL
             CheckError(lsl_push_chunk_ctp(handle, chunk, (uint)chunk.Length, timestamp, pushThrough ? 1 : 0));
         }
 
+#if !NET35
+        /// <inheritdoc cref="PushChunk(sbyte[], double, bool)"/>
+        public void PushChunk(ReadOnlySpan<sbyte> chunk, double timestamp, bool pushThrough)
+        {
+            ThrowIfInvalid();
+            CheckChunkBuffer(chunk, ChannelCount);
+
+            unsafe
+            {
+                fixed (sbyte* buffer = chunk)
+                {
+                    CheckError(lsl_push_chunk_ctp(handle, buffer, (uint)chunk.Length, timestamp, pushThrough ? 1 : 0));
+                }
+            }
+        }
+#endif
+
         /// <inheritdoc cref="PushChunk(sbyte[], double, bool)"/>
         public void PushChunk(short[] chunk, double timestamp, bool pushThrough)
         {
@@ -1093,6 +1671,23 @@ namespace SharpLSL
 
             CheckError(lsl_push_chunk_stp(handle, chunk, (uint)chunk.Length, timestamp, pushThrough ? 1 : 0));
         }
+
+#if !NET35
+        /// <inheritdoc cref="PushChunk(sbyte[], double, bool)"/>
+        public void PushChunk(ReadOnlySpan<short> chunk, double timestamp, bool pushThrough)
+        {
+            ThrowIfInvalid();
+            CheckChunkBuffer(chunk, ChannelCount);
+
+            unsafe
+            {
+                fixed (short* buffer = chunk)
+                {
+                    CheckError(lsl_push_chunk_stp(handle, buffer, (uint)chunk.Length, timestamp, pushThrough ? 1 : 0));
+                }
+            }
+        }
+#endif
 
         /// <inheritdoc cref="PushChunk(sbyte[], double, bool)"/>
         public void PushChunk(int[] chunk, double timestamp, bool pushThrough)
@@ -1103,6 +1698,23 @@ namespace SharpLSL
             CheckError(lsl_push_chunk_itp(handle, chunk, (uint)chunk.Length, timestamp, pushThrough ? 1 : 0));
         }
 
+#if !NET35
+        /// <inheritdoc cref="PushChunk(sbyte[], double, bool)"/>
+        public void PushChunk(ReadOnlySpan<int> chunk, double timestamp, bool pushThrough)
+        {
+            ThrowIfInvalid();
+            CheckChunkBuffer(chunk, ChannelCount);
+
+            unsafe
+            {
+                fixed (int* buffer = chunk)
+                {
+                    CheckError(lsl_push_chunk_itp(handle, buffer, (uint)chunk.Length, timestamp, pushThrough ? 1 : 0));
+                }
+            }
+        }
+#endif
+
         /// <inheritdoc cref="PushChunk(sbyte[], double, bool)"/>
         public void PushChunk(long[] chunk, double timestamp, bool pushThrough)
         {
@@ -1111,6 +1723,23 @@ namespace SharpLSL
 
             CheckError(lsl_push_chunk_ltp(handle, chunk, (uint)chunk.Length, timestamp, pushThrough ? 1 : 0));
         }
+
+#if !NET35
+        /// <inheritdoc cref="PushChunk(sbyte[], double, bool)"/>
+        public void PushChunk(ReadOnlySpan<long> chunk, double timestamp, bool pushThrough)
+        {
+            ThrowIfInvalid();
+            CheckChunkBuffer(chunk, ChannelCount);
+
+            unsafe
+            {
+                fixed (long* buffer = chunk)
+                {
+                    CheckError(lsl_push_chunk_ltp(handle, buffer, (uint)chunk.Length, timestamp, pushThrough ? 1 : 0));
+                }
+            }
+        }
+#endif
 
         /// <inheritdoc cref="PushChunk(sbyte[], double, bool)"/>
         public void PushChunk(float[] chunk, double timestamp, bool pushThrough)
@@ -1121,6 +1750,23 @@ namespace SharpLSL
             CheckError(lsl_push_chunk_ftp(handle, chunk, (uint)chunk.Length, timestamp, pushThrough ? 1 : 0));
         }
 
+#if !NET35
+        /// <inheritdoc cref="PushChunk(sbyte[], double, bool)"/>
+        public void PushChunk(ReadOnlySpan<float> chunk, double timestamp, bool pushThrough)
+        {
+            ThrowIfInvalid();
+            CheckChunkBuffer(chunk, ChannelCount);
+
+            unsafe
+            {
+                fixed (float* buffer = chunk)
+                {
+                    CheckError(lsl_push_chunk_ftp(handle, buffer, (uint)chunk.Length, timestamp, pushThrough ? 1 : 0));
+                }
+            }
+        }
+#endif
+
         /// <inheritdoc cref="PushChunk(sbyte[], double, bool)"/>
         public void PushChunk(double[] chunk, double timestamp, bool pushThrough)
         {
@@ -1129,6 +1775,23 @@ namespace SharpLSL
 
             CheckError(lsl_push_chunk_dtp(handle, chunk, (uint)chunk.Length, timestamp, pushThrough ? 1 : 0));
         }
+
+#if !NET35
+        /// <inheritdoc cref="PushChunk(sbyte[], double, bool)"/>
+        public void PushChunk(ReadOnlySpan<double> chunk, double timestamp, bool pushThrough)
+        {
+            ThrowIfInvalid();
+            CheckChunkBuffer(chunk, ChannelCount);
+
+            unsafe
+            {
+                fixed (double* buffer = chunk)
+                {
+                    CheckError(lsl_push_chunk_dtp(handle, buffer, (uint)chunk.Length, timestamp, pushThrough ? 1 : 0));
+                }
+            }
+        }
+#endif
 
         /// <inheritdoc cref="PushChunk(sbyte[], double, bool)"/>
         public void PushChunk(string[] chunk, double timestamp, bool pushThrough)
@@ -1233,6 +1896,26 @@ namespace SharpLSL
             CheckError(lsl_push_chunk_ctn(handle, chunk, (uint)chunk.Length, timestamps));
         }
 
+#if !NET35
+        /// <inheritdoc cref="PushChunk(sbyte[], double[])"/>
+        public void PushChunk(ReadOnlySpan<sbyte> chunk, ReadOnlySpan<double> timestamps)
+        {
+            ThrowIfInvalid();
+
+            var samples = CheckChunkBuffer(chunk, ChannelCount);
+            CheckTimestampBuffer(timestamps, samples);
+
+            unsafe
+            {
+                fixed (sbyte* chunkBuffer = chunk)
+                fixed (double* timestampsBuffer = timestamps)
+                {
+                    CheckError(lsl_push_chunk_ctn(handle, chunkBuffer, (uint)chunk.Length, timestampsBuffer));
+                }
+            }
+        }
+#endif
+
         /// <inheritdoc cref="PushChunk(sbyte[], double[])"/>
         public void PushChunk(short[] chunk, double[] timestamps)
         {
@@ -1243,6 +1926,26 @@ namespace SharpLSL
 
             CheckError(lsl_push_chunk_stn(handle, chunk, (uint)chunk.Length, timestamps));
         }
+
+#if !NET35
+        /// <inheritdoc cref="PushChunk(sbyte[], double[])"/>
+        public void PushChunk(ReadOnlySpan<short> chunk, ReadOnlySpan<double> timestamps)
+        {
+            ThrowIfInvalid();
+
+            var samples = CheckChunkBuffer(chunk, ChannelCount);
+            CheckTimestampBuffer(timestamps, samples);
+
+            unsafe
+            {
+                fixed (short* chunkBuffer = chunk)
+                fixed (double* timestampsBuffer = timestamps)
+                {
+                    CheckError(lsl_push_chunk_stn(handle, chunkBuffer, (uint)chunk.Length, timestampsBuffer));
+                }
+            }
+        }
+#endif
 
         /// <inheritdoc cref="PushChunk(sbyte[], double[])"/>
         public void PushChunk(int[] chunk, double[] timestamps)
@@ -1255,6 +1958,26 @@ namespace SharpLSL
             CheckError(lsl_push_chunk_itn(handle, chunk, (uint)chunk.Length, timestamps));
         }
 
+#if !NET35
+        /// <inheritdoc cref="PushChunk(sbyte[], double[])"/>
+        public void PushChunk(ReadOnlySpan<int> chunk, ReadOnlySpan<double> timestamps)
+        {
+            ThrowIfInvalid();
+
+            var samples = CheckChunkBuffer(chunk, ChannelCount);
+            CheckTimestampBuffer(timestamps, samples);
+
+            unsafe
+            {
+                fixed (int* chunkBuffer = chunk)
+                fixed (double* timestampsBuffer = timestamps)
+                {
+                    CheckError(lsl_push_chunk_itn(handle, chunkBuffer, (uint)chunk.Length, timestampsBuffer));
+                }
+            }
+        }
+#endif
+
         /// <inheritdoc cref="PushChunk(sbyte[], double[])"/>
         public void PushChunk(long[] chunk, double[] timestamps)
         {
@@ -1265,6 +1988,26 @@ namespace SharpLSL
 
             CheckError(lsl_push_chunk_ltn(handle, chunk, (uint)chunk.Length, timestamps));
         }
+
+#if !NET35
+        /// <inheritdoc cref="PushChunk(sbyte[], double[])"/>
+        public void PushChunk(ReadOnlySpan<long> chunk, ReadOnlySpan<double> timestamps)
+        {
+            ThrowIfInvalid();
+
+            var samples = CheckChunkBuffer(chunk, ChannelCount);
+            CheckTimestampBuffer(timestamps, samples);
+
+            unsafe
+            {
+                fixed (long* chunkBuffer = chunk)
+                fixed (double* timestampsBuffer = timestamps)
+                {
+                    CheckError(lsl_push_chunk_ltn(handle, chunkBuffer, (uint)chunk.Length, timestampsBuffer));
+                }
+            }
+        }
+#endif
 
         /// <inheritdoc cref="PushChunk(sbyte[], double[])"/>
         public void PushChunk(float[] chunk, double[] timestamps)
@@ -1277,6 +2020,26 @@ namespace SharpLSL
             CheckError(lsl_push_chunk_ftn(handle, chunk, (uint)chunk.Length, timestamps));
         }
 
+#if !NET35
+        /// <inheritdoc cref="PushChunk(sbyte[], double[])"/>
+        public void PushChunk(ReadOnlySpan<float> chunk, ReadOnlySpan<double> timestamps)
+        {
+            ThrowIfInvalid();
+
+            var samples = CheckChunkBuffer(chunk, ChannelCount);
+            CheckTimestampBuffer(timestamps, samples);
+
+            unsafe
+            {
+                fixed (float* chunkBuffer = chunk)
+                fixed (double* timestampsBuffer = timestamps)
+                {
+                    CheckError(lsl_push_chunk_ftn(handle, chunkBuffer, (uint)chunk.Length, timestampsBuffer));
+                }
+            }
+        }
+#endif
+
         /// <inheritdoc cref="PushChunk(sbyte[], double[])"/>
         public void PushChunk(double[] chunk, double[] timestamps)
         {
@@ -1287,6 +2050,26 @@ namespace SharpLSL
 
             CheckError(lsl_push_chunk_dtn(handle, chunk, (uint)chunk.Length, timestamps));
         }
+
+#if !NET35
+        /// <inheritdoc cref="PushChunk(sbyte[], double[])"/>
+        public void PushChunk(ReadOnlySpan<double> chunk, ReadOnlySpan<double> timestamps)
+        {
+            ThrowIfInvalid();
+
+            var samples = CheckChunkBuffer(chunk, ChannelCount);
+            CheckTimestampBuffer(timestamps, samples);
+
+            unsafe
+            {
+                fixed (double* chunkBuffer = chunk)
+                fixed (double* timestampsBuffer = timestamps)
+                {
+                    CheckError(lsl_push_chunk_dtn(handle, chunkBuffer, (uint)chunk.Length, timestampsBuffer));
+                }
+            }
+        }
+#endif
 
         /// <inheritdoc cref="PushChunk(sbyte[], double[])"/>
         public void PushChunk(string[] chunk, double[] timestamps)
@@ -1399,6 +2182,26 @@ namespace SharpLSL
             CheckError(lsl_push_chunk_ctnp(handle, chunk, (uint)chunk.Length, timestamps, pushThrough ? 1 : 0));
         }
 
+#if !NET35
+        /// <inheritdoc cref="PushChunk(sbyte[], double[], bool)"/>
+        public void PushChunk(ReadOnlySpan<sbyte> chunk, ReadOnlySpan<double> timestamps, bool pushThrough)
+        {
+            ThrowIfInvalid();
+
+            var samples = CheckChunkBuffer(chunk, ChannelCount);
+            CheckTimestampBuffer(timestamps, samples);
+
+            unsafe
+            {
+                fixed (sbyte* chunkBuffer = chunk)
+                fixed (double* timestampsBuffer = timestamps)
+                {
+                    CheckError(lsl_push_chunk_ctnp(handle, chunkBuffer, (uint)chunk.Length, timestampsBuffer, pushThrough ? 1 : 0));
+                }
+            }
+        }
+#endif
+
         /// <inheritdoc cref="PushChunk(sbyte[], double[], bool)"/>
         public void PushChunk(short[] chunk, double[] timestamps, bool pushThrough)
         {
@@ -1409,6 +2212,26 @@ namespace SharpLSL
 
             CheckError(lsl_push_chunk_stnp(handle, chunk, (uint)chunk.Length, timestamps, pushThrough ? 1 : 0));
         }
+
+#if !NET35
+        /// <inheritdoc cref="PushChunk(sbyte[], double[], bool)"/>
+        public void PushChunk(ReadOnlySpan<short> chunk, ReadOnlySpan<double> timestamps, bool pushThrough)
+        {
+            ThrowIfInvalid();
+
+            var samples = CheckChunkBuffer(chunk, ChannelCount);
+            CheckTimestampBuffer(timestamps, samples);
+
+            unsafe
+            {
+                fixed (short* chunkBuffer = chunk)
+                fixed (double* timestampsBuffer = timestamps)
+                {
+                    CheckError(lsl_push_chunk_stnp(handle, chunkBuffer, (uint)chunk.Length, timestampsBuffer, pushThrough ? 1 : 0));
+                }
+            }
+        }
+#endif
 
         /// <inheritdoc cref="PushChunk(sbyte[], double[], bool)"/>
         public void PushChunk(int[] chunk, double[] timestamps, bool pushThrough)
@@ -1421,6 +2244,26 @@ namespace SharpLSL
             CheckError(lsl_push_chunk_itnp(handle, chunk, (uint)chunk.Length, timestamps, pushThrough ? 1 : 0));
         }
 
+#if !NET35
+        /// <inheritdoc cref="PushChunk(sbyte[], double[], bool)"/>
+        public void PushChunk(ReadOnlySpan<int> chunk, ReadOnlySpan<double> timestamps, bool pushThrough)
+        {
+            ThrowIfInvalid();
+
+            var samples = CheckChunkBuffer(chunk, ChannelCount);
+            CheckTimestampBuffer(timestamps, samples);
+
+            unsafe
+            {
+                fixed (int* chunkBuffer = chunk)
+                fixed (double* timestampsBuffer = timestamps)
+                {
+                    CheckError(lsl_push_chunk_itnp(handle, chunkBuffer, (uint)chunk.Length, timestampsBuffer, pushThrough ? 1 : 0));
+                }
+            }
+        }
+#endif
+
         /// <inheritdoc cref="PushChunk(sbyte[], double[], bool)"/>
         public void PushChunk(long[] chunk, double[] timestamps, bool pushThrough)
         {
@@ -1431,6 +2274,26 @@ namespace SharpLSL
 
             CheckError(lsl_push_chunk_ltnp(handle, chunk, (uint)chunk.Length, timestamps, pushThrough ? 1 : 0));
         }
+
+#if !NET35
+        /// <inheritdoc cref="PushChunk(sbyte[], double[], bool)"/>
+        public void PushChunk(ReadOnlySpan<long> chunk, ReadOnlySpan<double> timestamps, bool pushThrough)
+        {
+            ThrowIfInvalid();
+
+            var samples = CheckChunkBuffer(chunk, ChannelCount);
+            CheckTimestampBuffer(timestamps, samples);
+
+            unsafe
+            {
+                fixed (long* chunkBuffer = chunk)
+                fixed (double* timestampsBuffer = timestamps)
+                {
+                    CheckError(lsl_push_chunk_ltnp(handle, chunkBuffer, (uint)chunk.Length, timestampsBuffer, pushThrough ? 1 : 0));
+                }
+            }
+        }
+#endif
 
         /// <inheritdoc cref="PushChunk(sbyte[], double[], bool)"/>
         public void PushChunk(float[] chunk, double[] timestamps, bool pushThrough)
@@ -1443,6 +2306,26 @@ namespace SharpLSL
             CheckError(lsl_push_chunk_ftnp(handle, chunk, (uint)chunk.Length, timestamps, pushThrough ? 1 : 0));
         }
 
+#if !NET35
+        /// <inheritdoc cref="PushChunk(sbyte[], double[], bool)"/>
+        public void PushChunk(ReadOnlySpan<float> chunk, ReadOnlySpan<double> timestamps, bool pushThrough)
+        {
+            ThrowIfInvalid();
+
+            var samples = CheckChunkBuffer(chunk, ChannelCount);
+            CheckTimestampBuffer(timestamps, samples);
+
+            unsafe
+            {
+                fixed (float* chunkBuffer = chunk)
+                fixed (double* timestampsBuffer = timestamps)
+                {
+                    CheckError(lsl_push_chunk_ftnp(handle, chunkBuffer, (uint)chunk.Length, timestampsBuffer, pushThrough ? 1 : 0));
+                }
+            }
+        }
+#endif
+
         /// <inheritdoc cref="PushChunk(sbyte[], double[], bool)"/>
         public void PushChunk(double[] chunk, double[] timestamps, bool pushThrough)
         {
@@ -1453,6 +2336,26 @@ namespace SharpLSL
 
             CheckError(lsl_push_chunk_dtnp(handle, chunk, (uint)chunk.Length, timestamps, pushThrough ? 1 : 0));
         }
+
+#if !NET35
+        /// <inheritdoc cref="PushChunk(sbyte[], double[], bool)"/>
+        public void PushChunk(ReadOnlySpan<double> chunk, ReadOnlySpan<double> timestamps, bool pushThrough)
+        {
+            ThrowIfInvalid();
+
+            var samples = CheckChunkBuffer(chunk, ChannelCount);
+            CheckTimestampBuffer(timestamps, samples);
+
+            unsafe
+            {
+                fixed (double* chunkBuffer = chunk)
+                fixed (double* timestampsBuffer = timestamps)
+                {
+                    CheckError(lsl_push_chunk_dtnp(handle, chunkBuffer, (uint)chunk.Length, timestampsBuffer, pushThrough ? 1 : 0));
+                }
+            }
+        }
+#endif
 
         /// <inheritdoc cref="PushChunk(sbyte[], double[], bool)"/>
         public void PushChunk(string[] chunk, double[] timestamps, bool pushThrough)

@@ -388,6 +388,26 @@ namespace SharpLSL
             return timestamp;
         }
 
+#if !NET35
+        /// <inheritdoc cref="PullSample(sbyte[], double)"/>
+        public double PullSample(Span<sbyte> sample, double timeout = Forever)
+        {
+            ThrowIfInvalid();
+            CheckSampleBuffer(sample, ChannelCount);
+
+            unsafe
+            {
+                fixed (sbyte* buffer = sample)
+                {
+                    var errorCode = (int)lsl_error_code_t.lsl_no_error;
+                    var timestamp = lsl_pull_sample_c(handle, buffer, sample.Length, timeout, &errorCode);
+                    CheckError(errorCode);
+                    return timestamp;
+                }
+            }
+        }
+#endif
+
         /// <inheritdoc cref="PullSample(sbyte[], double)"/>
         public double PullSample(short[] sample, double timeout = Forever)
         {
@@ -399,6 +419,26 @@ namespace SharpLSL
             CheckError(errorCode);
             return timestamp;
         }
+
+#if !NET35
+        /// <inheritdoc cref="PullSample(sbyte[], double)"/>
+        public double PullSample(Span<short> sample, double timeout = Forever)
+        {
+            ThrowIfInvalid();
+            CheckSampleBuffer(sample, ChannelCount);
+
+            unsafe
+            {
+                fixed (short* buffer = sample)
+                {
+                    var errorCode = (int)lsl_error_code_t.lsl_no_error;
+                    var timestamp = lsl_pull_sample_s(handle, buffer, sample.Length, timeout, &errorCode);
+                    CheckError(errorCode);
+                    return timestamp;
+                }
+            }
+        }
+#endif
 
         /// <inheritdoc cref="PullSample(sbyte[], double)"/>
         public double PullSample(int[] sample, double timeout = Forever)
@@ -412,6 +452,26 @@ namespace SharpLSL
             return timestamp;
         }
 
+#if !NET35
+        /// <inheritdoc cref="PullSample(sbyte[], double)"/>
+        public double PullSample(Span<int> sample, double timeout = Forever)
+        {
+            ThrowIfInvalid();
+            CheckSampleBuffer(sample, ChannelCount);
+
+            unsafe
+            {
+                fixed (int* buffer = sample)
+                {
+                    var errorCode = (int)lsl_error_code_t.lsl_no_error;
+                    var timestamp = lsl_pull_sample_i(handle, buffer, sample.Length, timeout, &errorCode);
+                    CheckError(errorCode);
+                    return timestamp;
+                }
+            }
+        }
+#endif
+
         /// <inheritdoc cref="PullSample(sbyte[], double)"/>
         public double PullSample(long[] sample, double timeout = Forever)
         {
@@ -423,6 +483,26 @@ namespace SharpLSL
             CheckError(errorCode);
             return timestamp;
         }
+
+#if !NET35
+        /// <inheritdoc cref="PullSample(sbyte[], double)"/>
+        public double PullSample(Span<long> sample, double timeout = Forever)
+        {
+            ThrowIfInvalid();
+            CheckSampleBuffer(sample, ChannelCount);
+
+            unsafe
+            {
+                fixed (long* buffer = sample)
+                {
+                    var errorCode = (int)lsl_error_code_t.lsl_no_error;
+                    var timestamp = lsl_pull_sample_l(handle, buffer, sample.Length, timeout, &errorCode);
+                    CheckError(errorCode);
+                    return timestamp;
+                }
+            }
+        }
+#endif
 
         /// <inheritdoc cref="PullSample(sbyte[], double)"/>
         public double PullSample(float[] sample, double timeout = Forever)
@@ -436,6 +516,26 @@ namespace SharpLSL
             return timestamp;
         }
 
+#if !NET35
+        /// <inheritdoc cref="PullSample(sbyte[], double)"/>
+        public double PullSample(Span<float> sample, double timeout = Forever)
+        {
+            ThrowIfInvalid();
+            CheckSampleBuffer(sample, ChannelCount);
+
+            unsafe
+            {
+                fixed (float* buffer = sample)
+                {
+                    var errorCode = (int)lsl_error_code_t.lsl_no_error;
+                    var timestamp = lsl_pull_sample_f(handle, buffer, sample.Length, timeout, &errorCode);
+                    CheckError(errorCode);
+                    return timestamp;
+                }
+            }
+        }
+#endif
+
         /// <inheritdoc cref="PullSample(sbyte[], double)"/>
         public double PullSample(double[] sample, double timeout = Forever)
         {
@@ -447,6 +547,26 @@ namespace SharpLSL
             CheckError(errorCode);
             return timestamp;
         }
+
+#if !NET35
+        /// <inheritdoc cref="PullSample(sbyte[], double)"/>
+        public double PullSample(Span<double> sample, double timeout = Forever)
+        {
+            ThrowIfInvalid();
+            CheckSampleBuffer(sample, ChannelCount);
+
+            unsafe
+            {
+                fixed (double* buffer = sample)
+                {
+                    var errorCode = (int)lsl_error_code_t.lsl_no_error;
+                    var timestamp = lsl_pull_sample_d(handle, buffer, sample.Length, timeout, &errorCode);
+                    CheckError(errorCode);
+                    return timestamp;
+                }
+            }
+        }
+#endif
 
         /// <inheritdoc cref="PullSample(sbyte[], double)"/>
         // TODO: Pull as byte sequence without calling PtrToString.
@@ -475,6 +595,35 @@ namespace SharpLSL
                     lsl_destroy_string(buffer[i]);
             }
         }
+
+#if !NET35
+        /// <inheritdoc cref="PullSample(sbyte[], double)"/>
+        public double PullSample(Span<string> sample, double timeout = Forever)
+        {
+            ThrowIfInvalid();
+            CheckSampleBuffer(sample, ChannelCount);
+
+            var errorCode = (int)lsl_error_code_t.lsl_no_error;
+            var buffer = new IntPtr[ChannelCount];
+
+            try
+            {
+                // lsl_pull_sample_str automatically appends a '\0' at the end.
+                var timestamp = lsl_pull_sample_str(handle, buffer, buffer.Length, timeout, ref errorCode);
+                CheckError(errorCode);
+
+                for (int i = 0; i < buffer.Length; ++i)
+                    sample[i] = PtrToString(buffer[i]);
+
+                return timestamp;
+            }
+            finally
+            {
+                for (int i = 0; i < buffer.Length; ++i)
+                    lsl_destroy_string(buffer[i]);
+            }
+        }
+#endif
 
         /// <summary>
         /// Pulls a sample from the inlet and reads it into a jagged array of byte
@@ -537,7 +686,6 @@ namespace SharpLSL
             return timestamp;
         }
 #else
-        // TODO: List version.
         public unsafe double PullSample(byte[][] sample, double timeout = Forever)
         {
             ThrowIfInvalid();
@@ -560,7 +708,7 @@ namespace SharpLSL
                 {
                     if (sample[i] == null || sample[i].Length != lengths[i])
                     {
-#if NET35
+#if NET35 || NET45
                         sample[i] = new byte[lengths[i]];
 #else
                         sample[i] = lengths[i] > 0 ? new byte[lengths[i]] : Array.Empty<byte>();
@@ -571,7 +719,7 @@ namespace SharpLSL
                     {
                         fixed (byte* dest = sample[i])
                         {
-#if NET35
+#if NET35 || NET45
                             byte* src = (byte*)buffer[i].ToPointer();
                             for (int c = 0; c < lengths[i]; ++c)
                                 dest[c] = src[c];
@@ -636,6 +784,25 @@ namespace SharpLSL
             CheckError(errorCode);
             return timestamp;
         }
+
+#if !NET35
+        /// <inheritdoc cref="PullSample(byte[], double)"/>
+        public double PullSample(Span<byte> sample, double timeout = Forever)
+        {
+            ThrowIfInvalid();
+
+            unsafe
+            {
+                fixed (byte* buffer = sample)
+                {
+                    var errorCode = (int)lsl_error_code_t.lsl_no_error;
+                    var timestamp = lsl_pull_sample_v(handle, buffer, sample.Length, timeout, &errorCode);
+                    CheckError(errorCode);
+                    return timestamp;
+                }
+            }
+        }
+#endif
 
         /// <inheritdoc cref="PullSample(byte[], double)"/>
         public double PullSample(IntPtr sample, /*int length,*/ double timeout = Forever)
@@ -702,6 +869,31 @@ namespace SharpLSL
             return result;
         }
 
+#if !NET35
+        /// <inheritdoc cref="PullChunk(sbyte[], double[], double)"/>
+        public uint PullChunk(Span<sbyte> chunk, Span<double> timestamps, double timeout = 0.0)
+        {
+            ThrowIfInvalid();
+
+            var samples = CheckChunkBuffer(chunk, ChannelCount);
+            CheckTimestampBufferAllowNull(timestamps, samples);
+
+            unsafe
+            {
+                fixed (sbyte* chunkBuffer = chunk)
+                fixed (double* timestampsBuffer = timestamps)
+                {
+                    var errorCode = (int)lsl_error_code_t.lsl_no_error;
+                    var result = lsl_pull_chunk_c(
+                        handle, chunkBuffer, timestampsBuffer, (uint)chunk.Length,
+                        (uint)timestamps.Length, timeout, &errorCode);
+                    CheckError(errorCode);
+                    return result;
+                }
+            }
+        }
+#endif
+
         /// <inheritdoc cref="PullChunk(sbyte[], double[], double)"/>
         public uint PullChunk(short[] chunk, double[] timestamps, double timeout = 0.0)
         {
@@ -717,6 +909,31 @@ namespace SharpLSL
             CheckError(errorCode);
             return result;
         }
+
+#if !NET35
+        /// <inheritdoc cref="PullChunk(sbyte[], double[], double)"/>
+        public uint PullChunk(Span<short> chunk, Span<double> timestamps, double timeout = 0.0)
+        {
+            ThrowIfInvalid();
+
+            var samples = CheckChunkBuffer(chunk, ChannelCount);
+            CheckTimestampBufferAllowNull(timestamps, samples);
+
+            unsafe
+            {
+                fixed (short* chunkBuffer = chunk)
+                fixed (double* timestampsBuffer = timestamps)
+                {
+                    var errorCode = (int)lsl_error_code_t.lsl_no_error;
+                    var result = lsl_pull_chunk_s(
+                        handle, chunkBuffer, timestampsBuffer, (uint)chunk.Length,
+                        (uint)timestamps.Length, timeout, &errorCode);
+                    CheckError(errorCode);
+                    return result;
+                }
+            }
+        }
+#endif
 
         /// <inheritdoc cref="PullChunk(sbyte[], double[], double)"/>
         public uint PullChunk(int[] chunk, double[] timestamps, double timeout = 0.0)
@@ -734,6 +951,31 @@ namespace SharpLSL
             return result;
         }
 
+#if !NET35
+        /// <inheritdoc cref="PullChunk(sbyte[], double[], double)"/>
+        public uint PullChunk(Span<int> chunk, Span<double> timestamps, double timeout = 0.0)
+        {
+            ThrowIfInvalid();
+
+            var samples = CheckChunkBuffer(chunk, ChannelCount);
+            CheckTimestampBufferAllowNull(timestamps, samples);
+
+            unsafe
+            {
+                fixed (int* chunkBuffer = chunk)
+                fixed (double* timestampsBuffer = timestamps)
+                {
+                    var errorCode = (int)lsl_error_code_t.lsl_no_error;
+                    var result = lsl_pull_chunk_i(
+                        handle, chunkBuffer, timestampsBuffer, (uint)chunk.Length,
+                        (uint)timestamps.Length, timeout, &errorCode);
+                    CheckError(errorCode);
+                    return result;
+                }
+            }
+        }
+#endif
+
         /// <inheritdoc cref="PullChunk(sbyte[], double[], double)"/>
         public uint PullChunk(long[] chunk, double[] timestamps, double timeout = 0.0)
         {
@@ -749,6 +991,31 @@ namespace SharpLSL
             CheckError(errorCode);
             return result;
         }
+
+#if !NET35
+        /// <inheritdoc cref="PullChunk(sbyte[], double[], double)"/>
+        public uint PullChunk(Span<long> chunk, Span<double> timestamps, double timeout = 0.0)
+        {
+            ThrowIfInvalid();
+
+            var samples = CheckChunkBuffer(chunk, ChannelCount);
+            CheckTimestampBufferAllowNull(timestamps, samples);
+
+            unsafe
+            {
+                fixed (long* chunkBuffer = chunk)
+                fixed (double* timestampsBuffer = timestamps)
+                {
+                    var errorCode = (int)lsl_error_code_t.lsl_no_error;
+                    var result = lsl_pull_chunk_l(
+                        handle, chunkBuffer, timestampsBuffer, (uint)chunk.Length,
+                        (uint)timestamps.Length, timeout, &errorCode);
+                    CheckError(errorCode);
+                    return result;
+                }
+            }
+        }
+#endif
 
         /// <inheritdoc cref="PullChunk(sbyte[], double[], double)"/>
         public uint PullChunk(float[] chunk, double[] timestamps, double timeout = 0.0)
@@ -766,6 +1033,31 @@ namespace SharpLSL
             return result;
         }
 
+#if !NET35
+        /// <inheritdoc cref="PullChunk(sbyte[], double[], double)"/>
+        public uint PullChunk(Span<float> chunk, Span<double> timestamps, double timeout = 0.0)
+        {
+            ThrowIfInvalid();
+
+            var samples = CheckChunkBuffer(chunk, ChannelCount);
+            CheckTimestampBufferAllowNull(timestamps, samples);
+
+            unsafe
+            {
+                fixed (float* chunkBuffer = chunk)
+                fixed (double* timestampsBuffer = timestamps)
+                {
+                    var errorCode = (int)lsl_error_code_t.lsl_no_error;
+                    var result = lsl_pull_chunk_f(
+                        handle, chunkBuffer, timestampsBuffer, (uint)chunk.Length,
+                        (uint)timestamps.Length, timeout, &errorCode);
+                    CheckError(errorCode);
+                    return result;
+                }
+            }
+        }
+#endif
+
         /// <inheritdoc cref="PullChunk(sbyte[], double[], double)"/>
         public uint PullChunk(double[] chunk, double[] timestamps, double timeout = 0.0)
         {
@@ -781,6 +1073,31 @@ namespace SharpLSL
             CheckError(errorCode);
             return result;
         }
+
+#if !NET35
+        /// <inheritdoc cref="PullChunk(sbyte[], double[], double)"/>
+        public uint PullChunk(Span<double> chunk, Span<double> timestamps, double timeout = 0.0)
+        {
+            ThrowIfInvalid();
+
+            var samples = CheckChunkBuffer(chunk, ChannelCount);
+            CheckTimestampBufferAllowNull(timestamps, samples);
+
+            unsafe
+            {
+                fixed (double* chunkBuffer = chunk)
+                fixed (double* timestampsBuffer = timestamps)
+                {
+                    var errorCode = (int)lsl_error_code_t.lsl_no_error;
+                    var result = lsl_pull_chunk_d(
+                        handle, chunkBuffer, timestampsBuffer, (uint)chunk.Length,
+                        (uint)timestamps.Length, timeout, &errorCode);
+                    CheckError(errorCode);
+                    return result;
+                }
+            }
+        }
+#endif
 
         /// <inheritdoc cref="PullChunk(sbyte[], double[], double)"/>
         public uint PullChunk(string[] chunk, double[] timestamps, double timeout = 0.0)
@@ -812,6 +1129,46 @@ namespace SharpLSL
                     lsl_destroy_string(buffer[i]);
             }
         }
+
+#if !NET35
+        /// <inheritdoc cref="PullChunk(sbyte[], double[], double)"/>
+        public uint PullChunk(Span<string> chunk, Span<double> timestamps, double timeout = 0.0)
+        {
+            ThrowIfInvalid();
+
+            var samples = CheckChunkBuffer(chunk, ChannelCount);
+            CheckTimestampBufferAllowNull(timestamps, samples);
+
+            var errorCode = (int)lsl_error_code_t.lsl_no_error;
+            var buffer = new IntPtr[chunk.Length];
+            uint result = 0;
+
+            try
+            {
+                unsafe
+                {
+                    fixed (double* timestampsBuffer = timestamps)
+                    {
+                        result = lsl_pull_chunk_str(
+                            handle, buffer, timestampsBuffer, (uint)chunk.Length,
+                            (uint)timestamps.Length, timeout, ref errorCode);
+                    }
+                }
+
+                CheckError(errorCode);
+
+                for (int i = 0; i < result; ++i)
+                    chunk[i] = PtrToString(buffer[i]);
+
+                return result;
+            }
+            finally
+            {
+                for (int i = 0; i < result; ++i)
+                    lsl_destroy_string(buffer[i]);
+            }
+        }
+#endif
 
         /// <summary>
         /// Pulls a chunk of data from the inlet and reads it into a jagged array of
@@ -856,7 +1213,7 @@ namespace SharpLSL
                 {
                     if (chunk[i] == null || chunk[i].Length != lengths[i])
                     {
-#if NET35
+#if NET35 || NET45
                         chunk[i] = new byte[lengths[i]];
 #else
                         chunk[i] = lengths[i] > 0 ? new byte[lengths[i]] : Array.Empty<byte>();
@@ -867,7 +1224,7 @@ namespace SharpLSL
                     {
                         fixed (byte* dest = chunk[i])
                         {
-#if NET35
+#if NET35 || NET45
                             byte* src = (byte*)buffer[i].ToPointer();
                             for (int c = 0; c < lengths[i]; ++c)
                                 dest[c] = src[c];

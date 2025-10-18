@@ -1,4 +1,5 @@
 using System;
+using System.Runtime.CompilerServices;
 using System.Runtime.InteropServices;
 
 namespace SharpLSL
@@ -83,6 +84,9 @@ namespace SharpLSL
         /// <exception cref="InvalidOperationException">
         /// Thrown when the handle is invalid (i.e., <see cref="IsInvalid"/> is true).
         /// </exception>
+#if !NET35
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+#endif
         protected void ThrowIfInvalid()
         {
             if (IsInvalid)

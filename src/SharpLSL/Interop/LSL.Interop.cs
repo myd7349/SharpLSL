@@ -1,4 +1,4 @@
-#if NET35
+#if NET35 || NET45
 #pragma warning disable CS1591
 using System;
 using System.Diagnostics;
