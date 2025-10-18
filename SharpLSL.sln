@@ -3,85 +3,85 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio Version 17
 VisualStudioVersion = 17.4.33213.308
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "SharpLSL", "Source\SharpLSL\SharpLSL.csproj", "{0229C461-321D-4662-BC00-C01C0B75C334}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "SharpLSL", "src\SharpLSL\SharpLSL.csproj", "{0229C461-321D-4662-BC00-C01C0B75C334}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "SharpLSL.Test", "Tests\SharpLSL.Test\SharpLSL.Test.csproj", "{3B7B2CE6-36CE-4CD5-BF7B-B9C5AACF47F5}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "SharpLSL.Test", "tests\SharpLSL.Test\SharpLSL.Test.csproj", "{3B7B2CE6-36CE-4CD5-BF7B-B9C5AACF47F5}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "SharpLSL.Native.win-x64", "Source\SharpLSL.Native\win-x64\SharpLSL.Native.win-x64.csproj", "{A7C89951-03EE-44FB-91A5-F3446521BE82}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "SharpLSL.Native.win-x64", "src\SharpLSL.Native\win-x64\SharpLSL.Native.win-x64.csproj", "{A7C89951-03EE-44FB-91A5-F3446521BE82}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "SharpLSL.Native.win-x86", "Source\SharpLSL.Native\win-x86\SharpLSL.Native.win-x86.csproj", "{048C8A10-DC44-465E-AE73-D30CC9F5370C}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "SharpLSL.Native.win-x86", "src\SharpLSL.Native\win-x86\SharpLSL.Native.win-x86.csproj", "{048C8A10-DC44-465E-AE73-D30CC9F5370C}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "SharpLSL.Native.win-arm64", "Source\SharpLSL.Native\win-arm64\SharpLSL.Native.win-arm64.csproj", "{5C7ABEFF-02CB-40D2-B5D7-706686F40143}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "SharpLSL.Native.win-arm64", "src\SharpLSL.Native\win-arm64\SharpLSL.Native.win-arm64.csproj", "{5C7ABEFF-02CB-40D2-B5D7-706686F40143}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "SharpLSL.Native.android-arm", "Source\SharpLSL.Native\android-arm\SharpLSL.Native.android-arm.csproj", "{278031F7-6306-4880-9505-F8CBF159452F}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "SharpLSL.Native.android-arm", "src\SharpLSL.Native\android-arm\SharpLSL.Native.android-arm.csproj", "{278031F7-6306-4880-9505-F8CBF159452F}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "SharpLSL.Native.android-arm64", "Source\SharpLSL.Native\android-arm64\SharpLSL.Native.android-arm64.csproj", "{4A4D4FCA-F462-40C8-9C19-6749B414CC16}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "SharpLSL.Native.android-arm64", "src\SharpLSL.Native\android-arm64\SharpLSL.Native.android-arm64.csproj", "{4A4D4FCA-F462-40C8-9C19-6749B414CC16}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "SharpLSL.Native.android-x64", "Source\SharpLSL.Native\android-x64\SharpLSL.Native.android-x64.csproj", "{F7A84703-14A0-4666-8BB8-CA542A901A76}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "SharpLSL.Native.android-x64", "src\SharpLSL.Native\android-x64\SharpLSL.Native.android-x64.csproj", "{F7A84703-14A0-4666-8BB8-CA542A901A76}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "SharpLSL.Native.android-x86", "Source\SharpLSL.Native\android-x86\SharpLSL.Native.android-x86.csproj", "{F5F3422C-7604-4382-90F7-ACC3BAB34ADC}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "SharpLSL.Native.android-x86", "src\SharpLSL.Native\android-x86\SharpLSL.Native.android-x86.csproj", "{F5F3422C-7604-4382-90F7-ACC3BAB34ADC}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "SharpLSL.Native.ios-arm64", "Source\SharpLSL.Native\ios-arm64\SharpLSL.Native.ios-arm64.csproj", "{B9A6E0FC-BAF9-439C-9D52-9EBB8B36DCDE}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "SharpLSL.Native.ios-arm64", "src\SharpLSL.Native\ios-arm64\SharpLSL.Native.ios-arm64.csproj", "{B9A6E0FC-BAF9-439C-9D52-9EBB8B36DCDE}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "SharpLSL.Native.linux-arm", "Source\SharpLSL.Native\linux-arm\SharpLSL.Native.linux-arm.csproj", "{EF529635-8008-4C81-9938-EA9E9CF7B32D}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "SharpLSL.Native.linux-arm", "src\SharpLSL.Native\linux-arm\SharpLSL.Native.linux-arm.csproj", "{EF529635-8008-4C81-9938-EA9E9CF7B32D}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "SharpLSL.Native.linux-arm64", "Source\SharpLSL.Native\linux-arm64\SharpLSL.Native.linux-arm64.csproj", "{693F5C12-1BAE-41C4-B552-71F9CE9DA695}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "SharpLSL.Native.linux-arm64", "src\SharpLSL.Native\linux-arm64\SharpLSL.Native.linux-arm64.csproj", "{693F5C12-1BAE-41C4-B552-71F9CE9DA695}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "SharpLSL.Native.linux-x64", "Source\SharpLSL.Native\linux-x64\SharpLSL.Native.linux-x64.csproj", "{CA1B37C2-1E8A-42FE-B087-D848FD70B6DA}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "SharpLSL.Native.linux-x64", "src\SharpLSL.Native\linux-x64\SharpLSL.Native.linux-x64.csproj", "{CA1B37C2-1E8A-42FE-B087-D848FD70B6DA}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "SharpLSL.Native.osx-arm64", "Source\SharpLSL.Native\osx-arm64\SharpLSL.Native.osx-arm64.csproj", "{FF4B3259-8A8F-484F-8154-07A732466569}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "SharpLSL.Native.osx-arm64", "src\SharpLSL.Native\osx-arm64\SharpLSL.Native.osx-arm64.csproj", "{FF4B3259-8A8F-484F-8154-07A732466569}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "SharpLSL.Native.osx-x64", "Source\SharpLSL.Native\osx-x64\SharpLSL.Native.osx-x64.csproj", "{030D6AB8-CD65-48A4-A6FB-DAD43118A4A8}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "SharpLSL.Native.osx-x64", "src\SharpLSL.Native\osx-x64\SharpLSL.Native.osx-x64.csproj", "{030D6AB8-CD65-48A4-A6FB-DAD43118A4A8}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "SharpLSL.Native.all", "Source\SharpLSL.Native\all\SharpLSL.Native.all.csproj", "{532D997C-B29A-484B-AADC-8F1AD4835199}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "SharpLSL.Native.all", "src\SharpLSL.Native\all\SharpLSL.Native.all.csproj", "{532D997C-B29A-484B-AADC-8F1AD4835199}"
 EndProject
-Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Examples", "Examples", "{6D86CC19-E8B3-4C47-89CE-452D1BC2F3BB}"
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "examples", "examples", "{6D86CC19-E8B3-4C47-89CE-452D1BC2F3BB}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "LSLVer", "Examples\LSLVer\LSLVer.csproj", "{D0579532-FD2C-41EB-9F2E-FFC602631313}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "LSLVer", "examples\LSLVer\LSLVer.csproj", "{D0579532-FD2C-41EB-9F2E-FFC602631313}"
 EndProject
-Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Source", "Source", "{391126D0-CFD5-4C02-9C8D-C3DECFDF1E5A}"
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "src", "src", "{391126D0-CFD5-4C02-9C8D-C3DECFDF1E5A}"
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Native Packages", "Native Packages", "{30345775-2B80-4BE0-8895-474046CE9C11}"
 EndProject
-Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Tests", "Tests", "{9656A760-7966-43E8-AE84-7F05BCA37B08}"
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "tests", "tests", "{9656A760-7966-43E8-AE84-7F05BCA37B08}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "GetAllStreams", "Examples\GetAllStreams\GetAllStreams.csproj", "{9DAA5EC9-2A6A-41AA-A186-DFE7DFD3CE64}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "GetAllStreams", "examples\GetAllStreams\GetAllStreams.csproj", "{9DAA5EC9-2A6A-41AA-A186-DFE7DFD3CE64}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "SendData", "Examples\SendData\SendData.csproj", "{0979581E-8E0D-4EE9-B9C1-A677A84E55A7}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "SendData", "examples\SendData\SendData.csproj", "{0979581E-8E0D-4EE9-B9C1-A677A84E55A7}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "GetFullInfo", "Examples\GetFullInfo\GetFullInfo.csproj", "{6049BD6F-6711-437D-A836-6B47C5C3A90D}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "GetFullInfo", "examples\GetFullInfo\GetFullInfo.csproj", "{6049BD6F-6711-437D-A836-6B47C5C3A90D}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "GetTimeCorrection", "Examples\GetTimeCorrection\GetTimeCorrection.csproj", "{7568AFA6-392B-4AF0-84A2-6387D6E65867}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "GetTimeCorrection", "examples\GetTimeCorrection\GetTimeCorrection.csproj", "{7568AFA6-392B-4AF0-84A2-6387D6E65867}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "HandleMetaData", "Examples\HandleMetaData\HandleMetaData.csproj", "{230C199D-7BD0-4DE1-9AAB-FE29C19C4386}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "HandleMetaData", "examples\HandleMetaData\HandleMetaData.csproj", "{230C199D-7BD0-4DE1-9AAB-FE29C19C4386}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ReceiveData", "Examples\ReceiveData\ReceiveData.csproj", "{2A5048C9-0AF6-4DAC-A864-F32B54B175AC}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ReceiveData", "examples\ReceiveData\ReceiveData.csproj", "{2A5048C9-0AF6-4DAC-A864-F32B54B175AC}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ReceiveDataInChunks", "Examples\ReceiveDataInChunks\ReceiveDataInChunks.csproj", "{18F01F25-FC14-4C32-8AFF-3A79FA8FFCBB}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ReceiveDataInChunks", "examples\ReceiveDataInChunks\ReceiveDataInChunks.csproj", "{18F01F25-FC14-4C32-8AFF-3A79FA8FFCBB}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ReceiveDataSample", "Examples\ReceiveDataSample\ReceiveDataSample.csproj", "{B07F04B5-735A-4B48-9A8D-AC6D65514294}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ReceiveDataSample", "examples\ReceiveDataSample\ReceiveDataSample.csproj", "{B07F04B5-735A-4B48-9A8D-AC6D65514294}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ReceiveStringMarkers", "Examples\ReceiveStringMarkers\ReceiveStringMarkers.csproj", "{799F1518-266C-4D49-A17D-D2B3649036E1}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ReceiveStringMarkers", "examples\ReceiveStringMarkers\ReceiveStringMarkers.csproj", "{799F1518-266C-4D49-A17D-D2B3649036E1}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "SendStringMarkers", "Examples\SendStringMarkers\SendStringMarkers.csproj", "{450AD4CE-DB2E-4B39-9DFA-517C2ED84644}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "SendStringMarkers", "examples\SendStringMarkers\SendStringMarkers.csproj", "{450AD4CE-DB2E-4B39-9DFA-517C2ED84644}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "TestSyncWithoutData", "Examples\TestSyncWithoutData\TestSyncWithoutData.csproj", "{D87C3704-DBEB-4DF8-9E2C-AF27DACCF3D2}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "TestSyncWithoutData", "examples\TestSyncWithoutData\TestSyncWithoutData.csproj", "{D87C3704-DBEB-4DF8-9E2C-AF27DACCF3D2}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "SendDataMinimal", "Examples\SendDataMinimal\SendDataMinimal.csproj", "{A7FD3AFA-6DA6-44CC-8C0D-87737D5D24DF}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "SendDataMinimal", "examples\SendDataMinimal\SendDataMinimal.csproj", "{A7FD3AFA-6DA6-44CC-8C0D-87737D5D24DF}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "SendDataSimple", "Examples\SendDataSimple\SendDataSimple.csproj", "{71291281-F00B-45C1-990F-6B4E911681C0}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "SendDataSimple", "examples\SendDataSimple\SendDataSimple.csproj", "{71291281-F00B-45C1-990F-6B4E911681C0}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "SendDataInChunks", "Examples\SendDataInChunks\SendDataInChunks.csproj", "{6D5E9FA6-2961-458F-ACAB-167D9C21F0CB}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "SendDataInChunks", "examples\SendDataInChunks\SendDataInChunks.csproj", "{6D5E9FA6-2961-458F-ACAB-167D9C21F0CB}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "SendMultipleStreams", "Examples\SendMultipleStreams\SendMultipleStreams.csproj", "{19AA1751-FDCC-43EF-B171-86D250F23F41}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "SendMultipleStreams", "examples\SendMultipleStreams\SendMultipleStreams.csproj", "{19AA1751-FDCC-43EF-B171-86D250F23F41}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "GetLocalClock", "Examples\GetLocalClock\GetLocalClock.csproj", "{92048813-11B8-4342-8E7F-751C0502EA74}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "GetLocalClock", "examples\GetLocalClock\GetLocalClock.csproj", "{92048813-11B8-4342-8E7F-751C0502EA74}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "SharpLSL.Native.osx", "Source\SharpLSL.Native\osx\SharpLSL.Native.osx.csproj", "{B4BC99C4-50D1-457E-8A30-F1B2BFDFDDD3}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "SharpLSL.Native.osx", "src\SharpLSL.Native\osx\SharpLSL.Native.osx.csproj", "{B4BC99C4-50D1-457E-8A30-F1B2BFDFDDD3}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SharpLSL.Native.iossimulator-arm64", "Source\SharpLSL.Native\iossimulator-arm64\SharpLSL.Native.iossimulator-arm64.csproj", "{CEA936DC-B17E-9BD5-C6C8-8EF0D5E5C9AB}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SharpLSL.Native.iossimulator-arm64", "src\SharpLSL.Native\iossimulator-arm64\SharpLSL.Native.iossimulator-arm64.csproj", "{CEA936DC-B17E-9BD5-C6C8-8EF0D5E5C9AB}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SharpLSL.Native.iossimulator-x64", "Source\SharpLSL.Native\iossimulator-x64\SharpLSL.Native.iossimulator-x64.csproj", "{3071FCD0-E792-A86A-C9CC-6E8B9E6840D3}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SharpLSL.Native.iossimulator-x64", "src\SharpLSL.Native\iossimulator-x64\SharpLSL.Native.iossimulator-x64.csproj", "{3071FCD0-E792-A86A-C9CC-6E8B9E6840D3}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution

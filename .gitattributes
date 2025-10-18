@@ -1,2 +1,2 @@
-Binding/SharpLSL.Header.cs    text eol=lf
-Source/SharpLSL/Interop/*.g.cs    text eol=lf
+binding/SharpLSL.Header.cs    text eol=lf
+src/SharpLSL/Interop/*.g.cs    text eol=lf

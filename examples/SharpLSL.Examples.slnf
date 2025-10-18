@@ -1,0 +1,25 @@
+{
+  "solution": {
+    "path": "..\\SharpLSL.slnx",
+    "projects": [
+      "examples\\GetAllStreams\\GetAllStreams.csproj",
+      "examples\\GetFullInfo\\GetFullInfo.csproj",
+      "examples\\GetLocalClock\\GetLocalClock.csproj",
+      "examples\\GetTimeCorrection\\GetTimeCorrection.csproj",
+      "examples\\HandleMetaData\\HandleMetaData.csproj",
+      "examples\\LSLVer\\LSLVer.csproj",
+      "examples\\ReceiveDataInChunks\\ReceiveDataInChunks.csproj",
+      "examples\\ReceiveDataSample\\ReceiveDataSample.csproj",
+      "examples\\ReceiveData\\ReceiveData.csproj",
+      "examples\\ReceiveStringMarkers\\ReceiveStringMarkers.csproj",
+      "examples\\SendDataInChunks\\SendDataInChunks.csproj",
+      "examples\\SendDataMinimal\\SendDataMinimal.csproj",
+      "examples\\SendDataSimple\\SendDataSimple.csproj",
+      "examples\\SendData\\SendData.csproj",
+      "examples\\SendMultipleStreams\\SendMultipleStreams.csproj",
+      "examples\\SendStringMarkers\\SendStringMarkers.csproj",
+      "examples\\TestSyncWithoutData\\TestSyncWithoutData.csproj",
+      "src\\SharpLSL\\SharpLSL.csproj"
+    ]
+  }
+}

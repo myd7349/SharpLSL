@@ -10,14 +10,15 @@ ClangSharpPInvokeGenerator `
     --methodClassName Common `
     --namespace SharpLSL.Interop `
     --additional -m64 `
-    --output ../Source/SharpLSL/Interop
+    --output ../src/SharpLSL/Interop
 
-Move-Item -Path ../Source/SharpLSL/Interop/Common.cs -Destination ../Source/SharpLSL/Interop/Common.g.cs -Force
-Move-Item -Path ../Source/SharpLSL/Interop/lsl_channel_format_t.cs -Destination ../Source/SharpLSL/Interop/lsl_channel_format_t.g.cs -Force
-Move-Item -Path ../Source/SharpLSL/Interop/lsl_error_code_t.cs -Destination ../Source/SharpLSL/Interop/lsl_error_code_t.g.cs -Force
-Move-Item -Path ../Source/SharpLSL/Interop/lsl_processing_options_t.cs -Destination ../Source/SharpLSL/Interop/lsl_processing_options_t.g.cs -Force
-Move-Item -Path ../Source/SharpLSL/Interop/lsl_transport_options_t.cs -Destination ../Source/SharpLSL/Interop/lsl_transport_options_t.g.cs -Force
-Move-Item -Path ../Source/SharpLSL/Interop/NativeTypeNameAttribute.cs -Destination ../Source/SharpLSL/Interop/NativeTypeNameAttribute.g.cs -Force
+Move-Item -Path ../src/SharpLSL/Interop/Common.cs -Destination ../src/SharpLSL/Interop/Common.g.cs -Force
+Move-Item -Path ../src/SharpLSL/Interop/lsl_channel_format_t.cs -Destination ../src/SharpLSL/Interop/lsl_channel_format_t.g.cs -Force
+Move-Item -Path ../src/SharpLSL/Interop/lsl_error_code_t.cs -Destination ../src/SharpLSL/Interop/lsl_error_code_t.g.cs -Force
+Move-Item -Path ../src/SharpLSL/Interop/lsl_processing_options_t.cs -Destination ../src/SharpLSL/Interop/lsl_processing_options_t.g.cs -Force
+Move-Item -Path ../src/SharpLSL/Interop/lsl_transport_options_t.cs -Destination ../src/SharpLSL/Interop/lsl_transport_options_t.g.cs -Force
+Move-Item -Path ../src/SharpLSL/Interop/NativeAnnotationAttribute.cs -Destination ../src/SharpLSL/Interop/NativeAnnotationAttribute.g.cs -Force
+Move-Item -Path ../src/SharpLSL/Interop/NativeTypeNameAttribute.cs -Destination ../src/SharpLSL/Interop/NativeTypeNameAttribute.g.cs -Force
 
 # common.h: regenerate functions & macros
 ClangSharpPInvokeGenerator `
@@ -31,7 +32,7 @@ ClangSharpPInvokeGenerator `
     --methodClassName LSL `
     --namespace SharpLSL.Interop `
     --additional -m64 `
-    --output ../Source/SharpLSL/Interop/Common.g.cs `
+    --output ../src/SharpLSL/Interop/Common.g.cs `
     --remap `
     sbyte*=IntPtr `
     --exclude `
@@ -52,7 +53,7 @@ ClangSharpPInvokeGenerator `
     --methodClassName LSL `
     --namespace SharpLSL.Interop `
     --additional -m64 `
-    --output ../Source/SharpLSL/Interop/Inlet.g.cs `
+    --output ../src/SharpLSL/Interop/Inlet.g.cs `
     --remap `
     lsl_inlet=IntPtr `
     lsl_streaminfo=IntPtr
@@ -69,7 +70,7 @@ ClangSharpPInvokeGenerator `
     --methodClassName LSL `
     --namespace SharpLSL.Interop `
     --additional -m64 `
-    --output ../Source/SharpLSL/Interop/Outlet.g.cs `
+    --output ../src/SharpLSL/Interop/Outlet.g.cs `
     --remap `
     lsl_outlet=IntPtr `
     lsl_streaminfo=IntPtr
@@ -86,7 +87,7 @@ ClangSharpPInvokeGenerator `
     --methodClassName LSL `
     --namespace SharpLSL.Interop `
     --additional -m64 `
-    --output ../Source/SharpLSL/Interop/Resolver.g.cs `
+    --output ../src/SharpLSL/Interop/Resolver.g.cs `
     --remap `
     lsl_continuous_resolver=IntPtr `
     lsl_streaminfo=IntPtr
@@ -103,7 +104,7 @@ ClangSharpPInvokeGenerator `
     --methodClassName LSL `
     --namespace SharpLSL.Interop `
     --additional -m64 `
-    --output ../Source/SharpLSL/Interop/StreamInfo.g.cs `
+    --output ../src/SharpLSL/Interop/StreamInfo.g.cs `
     --remap `
     lsl_streaminfo=IntPtr `
     lsl_xml_ptr=IntPtr sbyte*=IntPtr
@@ -120,7 +121,7 @@ ClangSharpPInvokeGenerator `
     --methodClassName LSL `
     --namespace SharpLSL.Interop `
     --additional -m64 `
-    --output ../Source/SharpLSL/Interop/XML.g.cs `
+    --output ../src/SharpLSL/Interop/XML.g.cs `
     --remap `
     lsl_xml_ptr=IntPtr
 

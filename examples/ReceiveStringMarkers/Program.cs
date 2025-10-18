@@ -1,4 +1,4 @@
-﻿// Port of: https://github.com/sccn/liblsl/blob/master/examples/ReceiveStringMarkers.cpp
+// Port of: https://github.com/sccn/liblsl/blob/master/examples/ReceiveStringMarkers.cpp
 // This example program demonstrates how a marker string stream on the network (here, of any name)
 // can be resolved, and how the marker strings (assumed to be delivered at irregular rate) can be
 // pulled from their source.

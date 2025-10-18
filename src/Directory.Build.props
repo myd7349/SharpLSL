@@ -1,12 +1,8 @@
 <Project>
+  <Import Project="$([MSBuild]::GetPathOfFileAbove('Directory.Build.props', '$(MSBuildThisFileDirectory)../'))" />
 
   <PropertyGroup Label="Build">
     <TargetFrameworks>net35;netcoreapp3.1;netstandard2.0;net6.0;net7.0;net8.0;net9.0</TargetFrameworks>
-    <AnalysisLevel>latest</AnalysisLevel>
-    <AppendTargetFrameworkToOutputPath>true</AppendTargetFrameworkToOutputPath>
-    <EnableNETAnalyzers>true</EnableNETAnalyzers>
-    <EnforceCodeStyleInBuild>true</EnforceCodeStyleInBuild>
-    <GeneratePackageOnBuild>false</GeneratePackageOnBuild>
     <TreatWarningsAsErrors>true</TreatWarningsAsErrors>
   </PropertyGroup>
 
@@ -24,9 +20,6 @@
   </PropertyGroup>
 
   <PropertyGroup Label="Package">
-    <Authors>myd7349</Authors>
-    <Company>myd7349</Company>
-    <Copyright>Copyright © myd7349. All rights Reserved</Copyright>
     <!--
     <PackageRequireLicenseAcceptance>true</PackageRequireLicenseAcceptance>
     -->
@@ -34,11 +27,12 @@
     <!--
     <PackageIcon>Icon.png</PackageIcon>
     -->
+    <PackageReleaseNotes>https://github.com/myd7349/SharpLSL/releases</PackageReleaseNotes>
     <PackageReadmeFile>README.md</PackageReadmeFile>
     <PackageTags>labstreaminglayer;lsl;liblsl</PackageTags>
-    <RepositoryUrl>https://github.com/myd7349/SharpLSL.git</RepositoryUrl>
+    <PublishRepositoryUrl>true</PublishRepositoryUrl>
     <RepositoryType>git</RepositoryType>
-    <PackageReleaseNotes>https://github.com/myd7349/SharpLSL/releases</PackageReleaseNotes>
+    <RepositoryUrl>https://github.com/myd7349/SharpLSL.git</RepositoryUrl>
   </PropertyGroup>
 
   <ItemGroup Label="Package References">

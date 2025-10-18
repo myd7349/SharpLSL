@@ -1,4 +1,4 @@
-﻿// Port of: https://github.com/sccn/liblsl/blob/master/examples/TestSyncWithoutData.cpp
+// Port of: https://github.com/sccn/liblsl/blob/master/examples/TestSyncWithoutData.cpp
 
 namespace SharpLSL.Examples
 {

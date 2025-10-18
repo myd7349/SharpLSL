@@ -1,4 +1,4 @@
-﻿// Port of: https://github.com/sccn/liblsl/blob/master/examples/SendDataSimple.cpp
+// Port of: https://github.com/sccn/liblsl/blob/master/examples/SendDataSimple.cpp
 // This is an example of how a simple data stream can be offered on the network.
 // Here, the stream is named SimpleStream, has content-type EEG, and 8 channels.
 // The transmitted samples contain random numbers (and the sampling rate is irregular).

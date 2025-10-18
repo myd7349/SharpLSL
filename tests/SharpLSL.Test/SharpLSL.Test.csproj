@@ -1,14 +1,15 @@
 <Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup Label="Build">
-    <TargetFramework>net6.0</TargetFramework>
+    <TargetFramework>net8.0</TargetFramework>
+    <IsPackable>false</IsPackable>
   </PropertyGroup>
 
   <ItemGroup Label="Project References">
     <!--
-    <ProjectReference Include="..\..\Source\SharpLSL.Native\all\SharpLSL.Native.all.csproj" />
+    <ProjectReference Include="..\..\src\SharpLSL.Native\all\SharpLSL.Native.all.csproj" />
     -->
-    <ProjectReference Include="..\..\Source\SharpLSL\SharpLSL.csproj" />
+    <ProjectReference Include="..\..\src\SharpLSL\SharpLSL.csproj" />
   </ItemGroup>
 
   <ItemGroup Label="Package References">

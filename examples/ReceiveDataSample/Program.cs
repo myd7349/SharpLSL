@@ -1,4 +1,4 @@
-﻿// Port of: https://github.com/sccn/liblsl/blob/master/examples/ReceiveDataSimple.cpp
+// Port of: https://github.com/sccn/liblsl/blob/master/examples/ReceiveDataSimple.cpp
 // This is a minimal example that demonstrates how a multi-channel stream (here 128ch) of a
 // particular name (here: SimpleStream) can be resolved into an inlet, and how the raw sample
 // data & timestamps are pulled from the inlet.

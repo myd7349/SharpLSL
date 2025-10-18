@@ -30,6 +30,7 @@ jobs:
         uses: actions/checkout@v5
         with:
           fetch-depth: 0
+
       - name: Install .NET SDK
         uses: actions/setup-dotnet@v4
         with:
@@ -38,18 +39,25 @@ jobs:
             7.x
             8.x
             9.x
+
       - name: List installed .NET SDKs
         run: dotnet --list-sdks
+
       - name: Build SharpLSL
         run: dotnet build ./SharpLSL.slnx -c Release
+
       - name: Run example
-        run: dotnet run --project ./Examples/GetLocalClock/GetLocalClock.csproj -c Release
+        run: dotnet run --project ./examples/GetLocalClock/GetLocalClock.csproj -c Release
+
       - name: Run LSLVer
-        run: dotnet run --project ./Examples/LSLVer/LSLVer.csproj -c Release
+        run: dotnet run --project ./examples/LSLVer/LSLVer.csproj -c Release
+
       - name: Run unit tests
         run: dotnet test ./SharpLSL.slnx -c Release
+
       - name: Pack SharpLSL
-        run: dotnet pack ./Source/SharpLSL.slnf -c Release
+        run: dotnet pack ./src/SharpLSL.slnf -c Release
+
       - name: Upload artifacts
         if: ${{ runner.os == 'Windows' }}
         uses: actions/upload-artifact@v4
@@ -67,13 +75,16 @@ jobs:
         uses: actions/setup-dotnet@v4
         with:
           dotnet-version: ${{ env.DOTNET_VERSION }}
+
       - name: Download artifacts
         uses: actions/download-artifact@v5
         with:
           name: nuget-packages
+
       - name: Push NuGet packages
         run: |
           dotnet nuget push **/*.nupkg --skip-duplicate --api-key ${{ secrets.NUGET_API_KEY }} --source https://api.nuget.org/v3/index.json
+
       - name: Release
         uses: softprops/action-gh-release@v2
         env:

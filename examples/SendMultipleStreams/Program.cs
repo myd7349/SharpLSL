@@ -1,4 +1,4 @@
-﻿// Port of: https://github.com/sccn/liblsl/blob/master/examples/SendMultipleStreams.cpp
+// Port of: https://github.com/sccn/liblsl/blob/master/examples/SendMultipleStreams.cpp
 using System.Diagnostics;
 
 namespace SharpLSL.Examples
@@ -27,7 +27,7 @@ namespace SharpLSL.Examples
                     ChannelFormat.Double,
                     ChannelFormat.String,
                 };
-                
+
                 foreach (var format in formats)
                 {
                     using var streamInfo = new StreamInfo(
@@ -47,7 +47,7 @@ namespace SharpLSL.Examples
 
                 var stopwatch = Stopwatch.StartNew();
                 long expectedElapsedTime = 1000; // In ms.
-                
+
                 for (int c = 0; c < srate * 600;)
                 {
                     // Increment the sample counter.

@@ -1,0 +1,16 @@
+<Project>
+  <PropertyGroup>
+    <AnalysisLevel>latest</AnalysisLevel>
+    <AppendTargetFrameworkToOutputPath>true</AppendTargetFrameworkToOutputPath>
+    <EnableNETAnalyzers>true</EnableNETAnalyzers>
+    <EnforceCodeStyleInBuild>true</EnforceCodeStyleInBuild>
+    <GeneratePackageOnBuild>false</GeneratePackageOnBuild>
+  </PropertyGroup>
+
+  <PropertyGroup>
+    <Authors>myd7349</Authors>
+    <Company>myd7349</Company>
+    <Copyright>Copyright © myd7349. All rights Reserved</Copyright>
+    <Product>SharpLSL</Product>
+  </PropertyGroup>
+</Project>

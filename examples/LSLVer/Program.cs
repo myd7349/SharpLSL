@@ -1,4 +1,4 @@
-﻿// Port of https://github.com/sccn/liblsl/blob/master/testing/lslver.c
+// Port of https://github.com/sccn/liblsl/blob/master/testing/lslver.c
 namespace SharpLSL.Examples
 {
     internal class LSLVer
