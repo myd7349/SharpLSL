@@ -2,6 +2,10 @@ name: SharpLSL
 
 on:
   push:
+    branches:
+      - main
+      - dev
+      - wip
   pull_request:
     types: [ opened, ready_for_review, reopened, synchronize ]
   workflow_dispatch:
