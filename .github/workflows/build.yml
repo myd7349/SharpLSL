@@ -14,8 +14,6 @@ env:
   DOTNET_SKIP_FIRST_TIME_EXPERIENCE: true
   # Disable sending .NET CLI telemetry to Microsoft.
   DOTNET_CLI_TELEMETRY_OPTOUT: true
-  # Set the build number in MinVer.
-  MINVERBUILDMETADATA: build.${{ github.run_number }}
 
 jobs:
   build:
@@ -32,7 +30,7 @@ jobs:
           fetch-depth: 0
 
       - name: Install .NET SDK
-        uses: actions/setup-dotnet@v4
+        uses: actions/setup-dotnet@v5
         with:
           dotnet-version: |
             6.x
@@ -46,7 +44,7 @@ jobs:
       - name: Build SharpLSL
         run: dotnet build ./SharpLSL.slnx -c Release
 
-      - name: Run example
+      - name: Run GetLocalClock
         run: dotnet run --project ./examples/GetLocalClock/GetLocalClock.csproj -c Release
 
       - name: Run LSLVer
@@ -69,10 +67,10 @@ jobs:
     name: Publish
     runs-on: ubuntu-latest
     needs: build
-    if: startsWith(github.ref, 'refs/tags/')
+    if: github.event_name == 'release'
     steps:
       - name: Install .NET SDK
-        uses: actions/setup-dotnet@v4
+        uses: actions/setup-dotnet@v5
         with:
           dotnet-version: ${{ env.DOTNET_VERSION }}
 
