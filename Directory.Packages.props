@@ -20,7 +20,7 @@
     <PackageVersion Include="SharpLSL.Native.win-x64" Version="$(SharpLSLNativePackageVersion)" />
     <PackageVersion Include="SharpLSL.Native.win-x86" Version="$(SharpLSLNativePackageVersion)" />
     <PackageVersion Include="System.Memory" Version="4.5.0" />
-    <PackageVersion Include="xunit" Version="2.9.2" />
+    <PackageVersion Include="xunit" Version="2.9.3" />
     <PackageVersion Include="xunit.runner.visualstudio" Version="2.8.2" />
   </ItemGroup>
 
