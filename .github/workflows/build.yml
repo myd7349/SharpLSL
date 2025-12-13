@@ -5,9 +5,10 @@ on:
     branches:
       - main
       - dev
-      - wip
   pull_request:
     types: [ opened, ready_for_review, reopened, synchronize ]
+  release:
+    types: [ published ]
   workflow_dispatch:
 
 env:
@@ -31,7 +32,7 @@ jobs:
         os: [ ubuntu-latest, windows-latest, macOS-latest ]
     steps:
       - name: Checkout
-        uses: actions/checkout@v5
+        uses: actions/checkout@v6
         with:
           fetch-depth: 0
 
