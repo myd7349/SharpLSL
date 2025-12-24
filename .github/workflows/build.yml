@@ -57,6 +57,13 @@ jobs:
       - name: Run LSLVer
         run: dotnet run --project ./examples/LSLVer/LSLVer.csproj -c Release
 
+      - name: Run ReceiveDataCI & SendDataCI
+        run: |
+          dotnet run --project ./examples/ReceiveDataCI/ReceiveDataCI.csproj -c Release &
+          dotnet run --project ./examples/SendDataCI/SendDataCI.csproj -c Release &
+          wait
+        shell: bash
+
       - name: Run unit tests
         run: dotnet test ./SharpLSL.slnx -c Release
 

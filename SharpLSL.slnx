@@ -7,10 +7,12 @@
     <Project Path="examples/HandleMetaData/HandleMetaData.csproj" />
     <Project Path="examples/LSLVer/LSLVer.csproj" />
     <Project Path="examples/ReceiveData/ReceiveData.csproj" />
+    <Project Path="examples/ReceiveDataCI/ReceiveDataCI.csproj" />
     <Project Path="examples/ReceiveDataInChunks/ReceiveDataInChunks.csproj" />
     <Project Path="examples/ReceiveDataSample/ReceiveDataSample.csproj" />
     <Project Path="examples/ReceiveStringMarkers/ReceiveStringMarkers.csproj" />
     <Project Path="examples/SendData/SendData.csproj" />
+    <Project Path="examples/SendDataCI/SendDataCI.csproj" />
     <Project Path="examples/SendDataInChunks/SendDataInChunks.csproj" />
     <Project Path="examples/SendDataMinimal/SendDataMinimal.csproj" />
     <Project Path="examples/SendDataSimple/SendDataSimple.csproj" />
