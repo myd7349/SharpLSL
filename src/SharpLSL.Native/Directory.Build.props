@@ -5,7 +5,7 @@
   <PropertyGroup>
     <LSLTagVersion>1.16.2</LSLTagVersion>
     <Version>$(LSLTagVersion).7</Version>
-    <LSLBuildCITagVersion>2025.12.16</LSLBuildCITagVersion>
+    <LSLBuildCITagVersion>2025.12.17</LSLBuildCITagVersion>
   </PropertyGroup>
 
   <PropertyGroup Label="Build">
