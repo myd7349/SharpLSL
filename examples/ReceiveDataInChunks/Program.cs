@@ -1,4 +1,4 @@
-﻿// Port of: https://github.com/sccn/liblsl/blob/master/examples/ReceiveDataInChunks.cpp
+// Port of: https://github.com/sccn/liblsl/blob/main/examples/ReceiveDataInChunks.cpp
 using System.Diagnostics;
 
 namespace SharpLSL.Examples
@@ -75,7 +75,7 @@ namespace SharpLSL.Examples
                         }
                         else
                         {
-                            var timestamp = PullChunk(streamInlet, chunk, streamInlet.ChannelCount);
+                            var timestamp = PullChunk(streamInlet, chunk);
                             if (timestamp != 0.0)
                                 numSamples += (uint)chunk.Count;
                         }
@@ -109,12 +109,11 @@ namespace SharpLSL.Examples
             }
         }
 
-        // TODO:
-        static double PullChunk(StreamInlet streamInlet, List<short[]> chunk, int channelCount)
+        static double PullChunk(StreamInlet streamInlet, List<short[]> chunk)
         {
             double timestamp = 0.0;
             double thisTimestamp;
-            var sample = new short[channelCount];
+            var sample = new short[streamInlet.ChannelCount];
 
             chunk.Clear();
 
@@ -122,7 +121,7 @@ namespace SharpLSL.Examples
             {
                 chunk.Add(sample);
                 timestamp = thisTimestamp;
-                sample = new short[channelCount];
+                sample = new short[streamInlet.ChannelCount];
             }
 
             return timestamp;

@@ -1,4 +1,4 @@
-// Port of: https://github.com/sccn/liblsl/blob/master/examples/ReceiveDataSimple.cpp
+// Port of: https://github.com/sccn/liblsl/blob/main/examples/ReceiveDataSimple.cpp
 // This is a minimal example that demonstrates how a multi-channel stream (here 128ch) of a
 // particular name (here: SimpleStream) can be resolved into an inlet, and how the raw sample
 // data & timestamps are pulled from the inlet.
@@ -9,7 +9,7 @@ namespace SharpLSL.Examples
     {
         static void Main(string[] args)
         {
-            var name = args.Length >= 1 ? args[0] : "SimpleStream";
+            var name = args.Length > 0 ? args[0] : "SimpleStream";
 
             var streamInfos = LSL.Resolve("name", name);
 

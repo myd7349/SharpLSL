@@ -3,43 +3,29 @@
 
   <PropertyGroup Label="Build">
     <TargetFrameworks>net35;net45;netcoreapp3.1;netstandard2.0;net6.0;net7.0;net8.0;net9.0</TargetFrameworks>
-    <TreatWarningsAsErrors>true</TreatWarningsAsErrors>
   </PropertyGroup>
 
   <PropertyGroup Condition="'$(GITHUB_ACTIONS)' == 'true'">
     <ContinuousIntegrationBuild>true</ContinuousIntegrationBuild>
   </PropertyGroup>
 
-  <PropertyGroup Label="Source Link">
-    <!-- Optional: Declare that the Repository URL can be published to NuSpec -->
-    <PublishRepositoryUrl>true</PublishRepositoryUrl>
-    <!-- Optional: Embed source files that are not tracked by the source control manager to the PDB -->
-    <EmbedUntrackedSources>true</EmbedUntrackedSources>
-    <!-- Optional: Include PDB in the built .nupkg -->
-    <AllowedOutputExtensionsInPackageBuildOutputFolder>$(AllowedOutputExtensionsInPackageBuildOutputFolder);.pdb</AllowedOutputExtensionsInPackageBuildOutputFolder>
-  </PropertyGroup>
-
   <PropertyGroup Label="Package">
-    <!--
-    <PackageRequireLicenseAcceptance>true</PackageRequireLicenseAcceptance>
-    -->
-    <PackageProjectUrl>https://github.com/myd7349/SharpLSL</PackageProjectUrl>
     <!--
     <PackageIcon>Icon.png</PackageIcon>
     -->
-    <PackageReleaseNotes>https://github.com/myd7349/SharpLSL/releases</PackageReleaseNotes>
+    <!--
+    <PackageLicenseExpression>MIT</PackageLicenseExpression>
+    -->
+    <PackageLicenseFile>LICENSE</PackageLicenseFile>
+    <PackageProjectUrl>https://github.com/myd7349/SharpLSL</PackageProjectUrl>
     <PackageReadmeFile>README.md</PackageReadmeFile>
+    <PackageReleaseNotes>https://github.com/myd7349/SharpLSL/releases</PackageReleaseNotes>
+    <!--
+    <PackageRequireLicenseAcceptance>true</PackageRequireLicenseAcceptance>
+    -->
     <PackageTags>labstreaminglayer;lsl;liblsl</PackageTags>
     <PublishRepositoryUrl>true</PublishRepositoryUrl>
-    <RepositoryType>git</RepositoryType>
     <RepositoryUrl>https://github.com/myd7349/SharpLSL.git</RepositoryUrl>
+    <RepositoryType>git</RepositoryType>
   </PropertyGroup>
-
-  <ItemGroup Label="Package References">
-    <PackageReference Include="Microsoft.SourceLink.GitHub">
-      <PrivateAssets>all</PrivateAssets>
-      <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
-    </PackageReference>
-  </ItemGroup>
-
 </Project>

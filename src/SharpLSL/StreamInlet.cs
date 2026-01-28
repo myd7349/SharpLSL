@@ -327,19 +327,6 @@ namespace SharpLSL
             CheckError(lsl_set_postprocessing(handle, (uint)postProcessingOptions));
         }
 
-#if false
-        public double PullSample(byte[] sample, double timeout = Forever)
-        {
-            ThrowIfInvalid();
-            CheckSampleBuffer(sample, ChannelCount);
-
-            var errorCode = (int)lsl_error_code_t.lsl_no_error;
-            var timestamp = lsl_pull_sample_c(handle, sample, sample.Length, timeout, ref errorCode);
-            CheckError(errorCode);
-            return timestamp;
-        }
-#endif
-
         /// <summary>
         /// Pulls a sample from the inlet and reads it into an array of values. Handles
         /// type checking and conversion.
@@ -648,44 +635,6 @@ namespace SharpLSL
         /// match the channel count (<see cref="ChannelCount"/>) of the stream inlet.
         /// </exception>
         /// <inheritdoc cref="PullSample(sbyte[], double)"/>
-#if false
-        public unsafe double PullSample(byte[][] sample, int[] lengths = null, double timeout = Forever)
-        {
-            ThrowIfInvalid();
-            CheckSampleBuffer(sample, ChannelCount);
-
-            if (lengths != null)
-                CheckLengthBuffer(lengths, ChannelCount);
-
-            var ulengths = stackalloc uint[ChannelCount];
-            for (int i = 0; i < ChannelCount; ++i)
-            {
-                if (sample[i] == null)
-                    throw new ArgumentNullException(nameof(sample));
-
-                if (sample[i].Length == 0)
-                    throw new ArgumentException(nameof(sample));
-
-                if (lengths == null)
-                {
-                    ulengths[i] = (uint)sample[i].Length;
-                }
-                else
-                {
-                    if (lengths[i] <= 0 || lengths[i] > sample[i].Length)
-                        throw new ArgumentException(nameof(lengths));
-
-                    ulengths[i] = (uint)lengths[i];
-                }
-            }
-
-            var errorCode = (int)lsl_error_code_t.lsl_no_error;
-            var timestamp = lsl_pull_sample_buf(handle, sample, ulengths, sample.Length, timeout, ref errorCode);
-            CheckError(errorCode);
-
-            return timestamp;
-        }
-#else
         public unsafe double PullSample(byte[][] sample, double timeout = Forever)
         {
             ThrowIfInvalid();
@@ -742,7 +691,6 @@ namespace SharpLSL
                     lsl_destroy_string(buffer[i]);
             }
         }
-#endif
 
         /// <summary>
         /// Pulls a sample from the inlet and reads it into a custom buffer. Overall
@@ -1262,9 +1210,34 @@ namespace SharpLSL
             CheckTimestampBufferAllowNull(timestamps, chunk.GetLength(0));
 
             var errorCode = (int)lsl_error_code_t.lsl_no_error;
-            var result = lsl_pull_chunk_c(
-                handle, chunk, timestamps, (uint)chunk.Length,
-                (uint)(timestamps?.Length ?? 0), timeout, ref errorCode);
+            uint result;
+
+            if (timestamps != null)
+            {
+                unsafe
+                {
+                    fixed (sbyte* chunkBuffer = &chunk[0, 0])
+                    fixed (double* timestampsBuffer = timestamps)
+                    {
+                        result = lsl_pull_chunk_c(
+                            handle, chunkBuffer, timestampsBuffer, (uint)chunk.Length,
+                            (uint)timestamps.Length, timeout, &errorCode);
+                    }
+                }
+            }
+            else
+            {
+                unsafe
+                {
+                    fixed (sbyte* chunkBuffer = &chunk[0, 0])
+                    {
+                        result = lsl_pull_chunk_c(
+                            handle, chunkBuffer, null, (uint)chunk.Length,
+                            0, timeout, &errorCode);
+                    }
+                }
+            }
+
             CheckError(errorCode);
             return result;
         }
@@ -1278,9 +1251,34 @@ namespace SharpLSL
             CheckTimestampBufferAllowNull(timestamps, chunk.GetLength(0));
 
             var errorCode = (int)lsl_error_code_t.lsl_no_error;
-            var result = lsl_pull_chunk_s(
-                handle, chunk, timestamps, (uint)chunk.Length,
-                (uint)(timestamps?.Length ?? 0), timeout, ref errorCode);
+            uint result;
+
+            if (timestamps != null)
+            {
+                unsafe
+                {
+                    fixed (short* chunkBuffer = &chunk[0, 0])
+                    fixed (double* timestampsBuffer = timestamps)
+                    {
+                        result = lsl_pull_chunk_s(
+                            handle, chunkBuffer, timestampsBuffer, (uint)chunk.Length,
+                            (uint)timestamps.Length, timeout, &errorCode);
+                    }
+                }
+            }
+            else
+            {
+                unsafe
+                {
+                    fixed (short* chunkBuffer = &chunk[0, 0])
+                    {
+                        result = lsl_pull_chunk_s(
+                            handle, chunkBuffer, null, (uint)chunk.Length,
+                            0, timeout, &errorCode);
+                    }
+                }
+            }
+
             CheckError(errorCode);
             return result;
         }
@@ -1294,9 +1292,34 @@ namespace SharpLSL
             CheckTimestampBufferAllowNull(timestamps, chunk.GetLength(0));
 
             var errorCode = (int)lsl_error_code_t.lsl_no_error;
-            var result = lsl_pull_chunk_i(
-                handle, chunk, timestamps, (uint)chunk.Length,
-                (uint)(timestamps?.Length ?? 0), timeout, ref errorCode);
+            uint result;
+
+            if (timestamps != null)
+            {
+                unsafe
+                {
+                    fixed (int* chunkBuffer = &chunk[0, 0])
+                    fixed (double* timestampsBuffer = timestamps)
+                    {
+                        result = lsl_pull_chunk_i(
+                            handle, chunkBuffer, timestampsBuffer, (uint)chunk.Length,
+                            (uint)timestamps.Length, timeout, &errorCode);
+                    }
+                }
+            }
+            else
+            {
+                unsafe
+                {
+                    fixed (int* chunkBuffer = &chunk[0, 0])
+                    {
+                        result = lsl_pull_chunk_i(
+                            handle, chunkBuffer, null, (uint)chunk.Length,
+                            0, timeout, &errorCode);
+                    }
+                }
+            }
+
             CheckError(errorCode);
             return result;
         }
@@ -1310,9 +1333,34 @@ namespace SharpLSL
             CheckTimestampBufferAllowNull(timestamps, chunk.GetLength(0));
 
             var errorCode = (int)lsl_error_code_t.lsl_no_error;
-            var result = lsl_pull_chunk_l(
-                handle, chunk, timestamps, (uint)chunk.Length,
-                (uint)(timestamps?.Length ?? 0), timeout, ref errorCode);
+            uint result;
+
+            if (timestamps != null)
+            {
+                unsafe
+                {
+                    fixed (long* chunkBuffer = &chunk[0, 0])
+                    fixed (double* timestampsBuffer = timestamps)
+                    {
+                        result = lsl_pull_chunk_l(
+                            handle, chunkBuffer, timestampsBuffer, (uint)chunk.Length,
+                            (uint)timestamps.Length, timeout, &errorCode);
+                    }
+                }
+            }
+            else
+            {
+                unsafe
+                {
+                    fixed (long* chunkBuffer = &chunk[0, 0])
+                    {
+                        result = lsl_pull_chunk_l(
+                            handle, chunkBuffer, null, (uint)chunk.Length,
+                            0, timeout, &errorCode);
+                    }
+                }
+            }
+
             CheckError(errorCode);
             return result;
         }
@@ -1326,9 +1374,34 @@ namespace SharpLSL
             CheckTimestampBufferAllowNull(timestamps, chunk.GetLength(0));
 
             var errorCode = (int)lsl_error_code_t.lsl_no_error;
-            var result = lsl_pull_chunk_f(
-                handle, chunk, timestamps, (uint)chunk.Length,
-                (uint)(timestamps?.Length ?? 0), timeout, ref errorCode);
+            uint result;
+
+            if (timestamps != null)
+            {
+                unsafe
+                {
+                    fixed (float* chunkBuffer = &chunk[0, 0])
+                    fixed (double* timestampsBuffer = timestamps)
+                    {
+                        result = lsl_pull_chunk_f(
+                            handle, chunkBuffer, timestampsBuffer, (uint)chunk.Length,
+                            (uint)timestamps.Length, timeout, &errorCode);
+                    }
+                }
+            }
+            else
+            {
+                unsafe
+                {
+                    fixed (float* chunkBuffer = &chunk[0, 0])
+                    {
+                        result = lsl_pull_chunk_f(
+                            handle, chunkBuffer, null, (uint)chunk.Length,
+                            0, timeout, &errorCode);
+                    }
+                }
+            }
+
             CheckError(errorCode);
             return result;
         }
@@ -1342,9 +1415,34 @@ namespace SharpLSL
             CheckTimestampBufferAllowNull(timestamps, chunk.GetLength(0));
 
             var errorCode = (int)lsl_error_code_t.lsl_no_error;
-            var result = lsl_pull_chunk_d(
-                handle, chunk, timestamps, (uint)chunk.Length,
-                (uint)(timestamps?.Length ?? 0), timeout, ref errorCode);
+            uint result;
+
+            if (timestamps != null)
+            {
+                unsafe
+                {
+                    fixed (double* chunkBuffer = &chunk[0, 0])
+                    fixed (double* timestampsBuffer = timestamps)
+                    {
+                        result = lsl_pull_chunk_d(
+                            handle, chunkBuffer, timestampsBuffer, (uint)chunk.Length,
+                            (uint)timestamps.Length, timeout, &errorCode);
+                    }
+                }
+            }
+            else
+            {
+                unsafe
+                {
+                    fixed (double* chunkBuffer = &chunk[0, 0])
+                    {
+                        result = lsl_pull_chunk_d(
+                            handle, chunkBuffer, null, (uint)chunk.Length,
+                            0, timeout, &errorCode);
+                    }
+                }
+            }
+
             CheckError(errorCode);
             return result;
         }
@@ -1358,19 +1456,22 @@ namespace SharpLSL
             CheckTimestampBufferAllowNull(timestamps, chunk.GetLength(0));
 
             var errorCode = (int)lsl_error_code_t.lsl_no_error;
-            var buffer = new IntPtr[chunk.GetLength(0), chunk.GetLength(1)];
+            var buffer = new IntPtr[chunk.GetLength(0) * chunk.GetLength(1)];
+            uint result = 0;
             uint samples = 0;
 
             try
             {
-                var result = lsl_pull_chunk_str(handle, buffer, timestamps, (uint)chunk.Length, (uint)(timestamps?.Length ?? 0), timeout, ref errorCode);
+                result = lsl_pull_chunk_str(
+                    handle, buffer, timestamps, (uint)chunk.Length,
+                    (uint)(timestamps?.Length ?? 0), timeout, ref errorCode);
                 CheckError(errorCode);
 
                 samples = result / (uint)ChannelCount;
                 for (int s = 0; s < samples; ++s)
                 {
-                    for (int i = 0; i < chunk.GetLength(1); ++i)
-                        chunk[s, i] = PtrToString(buffer[s, i]);
+                    for (int c = 0; c < ChannelCount; ++c)
+                        chunk[s, c] = PtrToString(buffer[s * ChannelCount + c]);
                 }
 
                 return result;
@@ -1379,8 +1480,8 @@ namespace SharpLSL
             {
                 for (int s = 0; s < samples; ++s)
                 {
-                    for (int i = 0; i < buffer.GetLength(1); ++i)
-                        lsl_destroy_string(buffer[s, i]);
+                    for (int c = 0; c < ChannelCount; ++c)
+                        lsl_destroy_string(buffer[s * ChannelCount + c]);
                 }
             }
         }

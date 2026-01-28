@@ -1,4 +1,5 @@
 using System;
+using System.Runtime.InteropServices;
 
 using SharpLSL.Interop;
 
@@ -293,17 +294,54 @@ namespace SharpLSL
             ThrowIfInvalid();
             CheckSampleBuffer(sample, ChannelCount);
 
-            CheckError(lsl_push_sample_str(handle, sample)); // TODO: Test
+            var stringPointers = new IntPtr[sample.Length];
+            for (int i = 0; i < sample.Length; ++i)
+                stringPointers[i] = StringToPtr(sample[i]);
+
+            // TODO: Is this necessary?
+            var samplePointer = Marshal.AllocHGlobal(IntPtr.Size * sample.Length);
+            Marshal.Copy(stringPointers, 0, samplePointer, sample.Length);
+
+            try
+            {
+                CheckError(lsl_push_sample_str(handle, samplePointer)); // TODO: Test
+            }
+            finally
+            {
+                for (int i = 0; i < sample.Length; ++i)
+                    Marshal.FreeHGlobal(stringPointers[i]);
+
+                Marshal.FreeHGlobal(samplePointer);
+            }
         }
 
+#if !NET35
         /// <inheritdoc cref="PushSample(sbyte[])"/>
-        public void PushSample(byte[][] sample)
+        public void PushSample(ReadOnlySpan<string> sample)
         {
             ThrowIfInvalid();
             CheckSampleBuffer(sample, ChannelCount);
 
+            var stringPointers = new IntPtr[sample.Length];
+            for (int i = 0; i < sample.Length; ++i)
+                stringPointers[i] = StringToPtr(sample[i]);
 
+            var samplePointer = Marshal.AllocHGlobal(IntPtr.Size * sample.Length);
+            Marshal.Copy(stringPointers, 0, samplePointer, sample.Length);
+
+            try
+            {
+                CheckError(lsl_push_sample_str(handle, samplePointer)); // TODO: Test
+            }
+            finally
+            {
+                for (int i = 0; i < sample.Length; ++i)
+                    Marshal.FreeHGlobal(stringPointers[i]);
+
+                Marshal.FreeHGlobal(samplePointer);
+            }
         }
+#endif
 
         /// <inheritdoc cref="PushSample(sbyte[])"/>
         public void PushSample(byte[] sample)
@@ -404,7 +442,28 @@ namespace SharpLSL
                 }
             }
 
-            CheckError(lsl_push_sample_buf(handle, sample, ulengths));
+            var bytesPointers = new IntPtr[ChannelCount];
+            for (int i = 0; i < ChannelCount; ++i)
+            {
+                var bytesLength = (int)ulengths[i];
+                bytesPointers[i] = Marshal.AllocHGlobal(bytesLength);
+                Marshal.Copy(sample[i], 0, bytesPointers[i], bytesLength);
+            }
+
+            var samplePointer = Marshal.AllocHGlobal(IntPtr.Size * ChannelCount);
+            Marshal.Copy(bytesPointers, 0, samplePointer, sample.Length);
+
+            try
+            {
+                CheckError(lsl_push_sample_buf(handle, samplePointer, ulengths));
+            }
+            finally
+            {
+                for (int i = 0; i < sample.Length; ++i)
+                    Marshal.FreeHGlobal(bytesPointers[i]);
+
+                Marshal.FreeHGlobal(samplePointer);
+            }
         }
 
         /// <summary>
@@ -448,7 +507,17 @@ namespace SharpLSL
                 ulengths[i] = (uint)lengths[i];
             }
 
-            CheckError(lsl_push_sample_buf(handle, sample, ulengths));
+            var samplePointer = Marshal.AllocHGlobal(IntPtr.Size * sample.Length);
+            Marshal.Copy(sample, 0, samplePointer, sample.Length);
+
+            try
+            {
+                CheckError(lsl_push_sample_buf(handle, samplePointer, ulengths));
+            }
+            finally
+            {
+                Marshal.FreeHGlobal(samplePointer);
+            }
         }
 
         /// <param name="sample">
@@ -620,8 +689,55 @@ namespace SharpLSL
             ThrowIfInvalid();
             CheckSampleBuffer(sample, ChannelCount);
 
-            CheckError(lsl_push_sample_strt(handle, sample, timestamp)); // TODO: Test
+            var stringPointers = new IntPtr[sample.Length];
+            for (int i = 0; i < sample.Length; ++i)
+                stringPointers[i] = StringToPtr(sample[i]);
+
+            // TODO: Is this necessary?
+            var samplePointer = Marshal.AllocHGlobal(IntPtr.Size * sample.Length);
+            Marshal.Copy(stringPointers, 0, samplePointer, sample.Length);
+
+            try
+            {
+                CheckError(lsl_push_sample_strt(handle, samplePointer, timestamp)); // TODO: Test
+            }
+            finally
+            {
+                for (int i = 0; i < sample.Length; ++i)
+                    Marshal.FreeHGlobal(stringPointers[i]);
+
+                Marshal.FreeHGlobal(samplePointer);
+            }
         }
+
+#if !NET35
+        /// <inheritdoc cref="PushSample(sbyte[], double)"/>
+        public void PushSample(ReadOnlySpan<string> sample, double timestamp)
+        {
+            ThrowIfInvalid();
+            CheckSampleBuffer(sample, ChannelCount);
+
+            var stringPointers = new IntPtr[sample.Length];
+            for (int i = 0; i < sample.Length; ++i)
+                stringPointers[i] = StringToPtr(sample[i]);
+
+            // TODO: Is this necessary?
+            var samplePointer = Marshal.AllocHGlobal(IntPtr.Size * sample.Length);
+            Marshal.Copy(stringPointers, 0, samplePointer, sample.Length);
+
+            try
+            {
+                CheckError(lsl_push_sample_strt(handle, samplePointer, timestamp)); // TODO: Test
+            }
+            finally
+            {
+                for (int i = 0; i < sample.Length; ++i)
+                    Marshal.FreeHGlobal(stringPointers[i]);
+
+                Marshal.FreeHGlobal(samplePointer);
+            }
+        }
+#endif
 
         /// <inheritdoc cref="PushSample(sbyte[], double)"/>
         public void PushSample(byte[] sample, double timestamp)
@@ -726,7 +842,28 @@ namespace SharpLSL
                 }
             }
 
-            CheckError(lsl_push_sample_buft(handle, sample, ulengths, timestamp));
+            var bytesPointers = new IntPtr[ChannelCount];
+            for (int i = 0; i < ChannelCount; ++i)
+            {
+                var bytesLength = (int)ulengths[i];
+                bytesPointers[i] = Marshal.AllocHGlobal(bytesLength);
+                Marshal.Copy(sample[i], 0, bytesPointers[i], bytesLength);
+            }
+
+            var samplePointer = Marshal.AllocHGlobal(IntPtr.Size * ChannelCount);
+            Marshal.Copy(bytesPointers, 0, samplePointer, sample.Length);
+
+            try
+            {
+                CheckError(lsl_push_sample_buft(handle, samplePointer, ulengths, timestamp));
+            }
+            finally
+            {
+                for (int i = 0; i < sample.Length; ++i)
+                    Marshal.FreeHGlobal(bytesPointers[i]);
+
+                Marshal.FreeHGlobal(samplePointer);
+            }
         }
 
         /// <summary>
@@ -774,7 +911,17 @@ namespace SharpLSL
                 ulengths[i] = (uint)lengths[i];
             }
 
-            CheckError(lsl_push_sample_buft(handle, sample, ulengths, timestamp));
+            var samplePointer = Marshal.AllocHGlobal(IntPtr.Size * sample.Length);
+            Marshal.Copy(sample, 0, samplePointer, sample.Length);
+
+            try
+            {
+                CheckError(lsl_push_sample_buft(handle, samplePointer, ulengths, timestamp));
+            }
+            finally
+            {
+                Marshal.FreeHGlobal(samplePointer);
+            }
         }
 
         /// <param name="sample">
@@ -952,8 +1099,55 @@ namespace SharpLSL
             ThrowIfInvalid();
             CheckSampleBuffer(sample, ChannelCount);
 
-            CheckError(lsl_push_sample_strtp(handle, sample, timestamp, pushThrough ? 1 : 0));
+            var stringPointers = new IntPtr[sample.Length];
+            for (int i = 0; i < sample.Length; ++i)
+                stringPointers[i] = StringToPtr(sample[i]);
+
+            // TODO: Is this necessary?
+            var samplePointer = Marshal.AllocHGlobal(IntPtr.Size * sample.Length);
+            Marshal.Copy(stringPointers, 0, samplePointer, sample.Length);
+
+            try
+            {
+                CheckError(lsl_push_sample_strtp(handle, samplePointer, timestamp, pushThrough ? 1 : 0)); // TODO: Test
+            }
+            finally
+            {
+                for (int i = 0; i < sample.Length; ++i)
+                    Marshal.FreeHGlobal(stringPointers[i]);
+
+                Marshal.FreeHGlobal(samplePointer);
+            }
         }
+
+#if !NET35
+        /// <inheritdoc cref="PushSample(sbyte[], double, bool)"/>
+        public void PushSample(ReadOnlySpan<string> sample, double timestamp, bool pushThrough)
+        {
+            ThrowIfInvalid();
+            CheckSampleBuffer(sample, ChannelCount);
+
+            var stringPointers = new IntPtr[sample.Length];
+            for (int i = 0; i < sample.Length; ++i)
+                stringPointers[i] = StringToPtr(sample[i]);
+
+            // TODO: Is this necessary?
+            var samplePointer = Marshal.AllocHGlobal(IntPtr.Size * sample.Length);
+            Marshal.Copy(stringPointers, 0, samplePointer, sample.Length);
+
+            try
+            {
+                CheckError(lsl_push_sample_strtp(handle, samplePointer, timestamp, pushThrough ? 1 : 0)); // TODO: Test
+            }
+            finally
+            {
+                for (int i = 0; i < sample.Length; ++i)
+                    Marshal.FreeHGlobal(stringPointers[i]);
+
+                Marshal.FreeHGlobal(samplePointer);
+            }
+        }
+#endif
 
         /// <inheritdoc cref="PushSample(sbyte[], double, bool)"/>
         public void PushSample(byte[] sample, double timestamp, bool pushThrough)
@@ -1074,7 +1268,28 @@ namespace SharpLSL
                 }
             }
 
-            CheckError(lsl_push_sample_buftp(handle, sample, ulengths, timestamp, pushThrough ? 1 : 0));
+            var bytesPointers = new IntPtr[ChannelCount];
+            for (int i = 0; i < ChannelCount; ++i)
+            {
+                var bytesLength = (int)ulengths[i];
+                bytesPointers[i] = Marshal.AllocHGlobal(bytesLength);
+                Marshal.Copy(sample[i], 0, bytesPointers[i], bytesLength);
+            }
+
+            var samplePointer = Marshal.AllocHGlobal(IntPtr.Size * ChannelCount);
+            Marshal.Copy(bytesPointers, 0, samplePointer, sample.Length);
+
+            try
+            {
+                CheckError(lsl_push_sample_buftp(handle, samplePointer, ulengths, timestamp, pushThrough ? 1 : 0));
+            }
+            finally
+            {
+                for (int i = 0; i < sample.Length; ++i)
+                    Marshal.FreeHGlobal(bytesPointers[i]);
+
+                Marshal.FreeHGlobal(samplePointer);
+            }
         }
 
         /// <summary>
@@ -1128,7 +1343,17 @@ namespace SharpLSL
                 ulengths[i] = (uint)lengths[i];
             }
 
-            CheckError(lsl_push_sample_buftp(handle, sample, ulengths, timestamp, pushThrough ? 1 : 0));
+            var samplePointer = Marshal.AllocHGlobal(IntPtr.Size * sample.Length);
+            Marshal.Copy(sample, 0, samplePointer, sample.Length);
+
+            try
+            {
+                CheckError(lsl_push_sample_buftp(handle, samplePointer, ulengths, timestamp, pushThrough ? 1 : 0));
+            }
+            finally
+            {
+                Marshal.FreeHGlobal(samplePointer);
+            }
         }
 
         /// <summary>
@@ -1310,8 +1535,55 @@ namespace SharpLSL
             ThrowIfInvalid();
             CheckChunkBuffer(chunk, ChannelCount);
 
-            CheckError(lsl_push_chunk_str(handle, chunk, (uint)chunk.Length));
+            var stringPointers = new IntPtr[chunk.Length];
+            for (int i = 0; i < chunk.Length; ++i)
+                stringPointers[i] = StringToPtr(chunk[i]);
+
+            // TODO: Is this necessary?
+            var chunkPointer = Marshal.AllocHGlobal(IntPtr.Size * chunk.Length);
+            Marshal.Copy(stringPointers, 0, chunkPointer, chunk.Length);
+
+            try
+            {
+                CheckError(lsl_push_chunk_str(handle, chunkPointer, (uint)chunk.Length));
+            }
+            finally
+            {
+                for (int i = 0; i < chunk.Length; ++i)
+                    Marshal.FreeHGlobal(stringPointers[i]);
+
+                Marshal.FreeHGlobal(chunkPointer);
+            }
         }
+
+#if !NET35
+        /// <inheritdoc cref="PushChunk(sbyte[])"/>
+        public void PushChunk(ReadOnlySpan<string> chunk)
+        {
+            ThrowIfInvalid();
+            CheckChunkBuffer(chunk, ChannelCount);
+
+            var stringPointers = new IntPtr[chunk.Length];
+            for (int i = 0; i < chunk.Length; ++i)
+                stringPointers[i] = StringToPtr(chunk[i]);
+
+            // TODO: Is this necessary?
+            var chunkPointer = Marshal.AllocHGlobal(IntPtr.Size * chunk.Length);
+            Marshal.Copy(stringPointers, 0, chunkPointer, chunk.Length);
+
+            try
+            {
+                CheckError(lsl_push_chunk_str(handle, chunkPointer, (uint)chunk.Length));
+            }
+            finally
+            {
+                for (int i = 0; i < chunk.Length; ++i)
+                    Marshal.FreeHGlobal(stringPointers[i]);
+
+                Marshal.FreeHGlobal(chunkPointer);
+            }
+        }
+#endif
 
         /// <exception cref="ArgumentException">
         /// Thrown if the number of columns in <paramref name="chunk"/> does not match
@@ -1323,7 +1595,13 @@ namespace SharpLSL
             ThrowIfInvalid();
             CheckChunkBuffer(chunk, ChannelCount);
 
-            CheckError(lsl_push_chunk_c(handle, chunk, (uint)chunk.Length));
+            unsafe
+            {
+                fixed (sbyte* buffer = chunk)
+                {
+                    CheckError(lsl_push_chunk_c(handle, buffer, (uint)chunk.Length));
+                }
+            }
         }
 
         /// <inheritdoc cref="PushChunk(sbyte[])"/>
@@ -1332,7 +1610,13 @@ namespace SharpLSL
             ThrowIfInvalid();
             CheckChunkBuffer(chunk, ChannelCount);
 
-            CheckError(lsl_push_chunk_s(handle, chunk, (uint)chunk.Length));
+            unsafe
+            {
+                fixed (short* buffer = chunk)
+                {
+                    CheckError(lsl_push_chunk_s(handle, buffer, (uint)chunk.Length));
+                }
+            }
         }
 
         /// <inheritdoc cref="PushChunk(sbyte[])"/>
@@ -1341,7 +1625,13 @@ namespace SharpLSL
             ThrowIfInvalid();
             CheckChunkBuffer(chunk, ChannelCount);
 
-            CheckError(lsl_push_chunk_i(handle, chunk, (uint)chunk.Length));
+            unsafe
+            {
+                fixed (int* buffer = chunk)
+                {
+                    CheckError(lsl_push_chunk_i(handle, buffer, (uint)chunk.Length));
+                }
+            }
         }
 
         /// <inheritdoc cref="PushChunk(sbyte[])"/>
@@ -1350,7 +1640,13 @@ namespace SharpLSL
             ThrowIfInvalid();
             CheckChunkBuffer(chunk, ChannelCount);
 
-            CheckError(lsl_push_chunk_l(handle, chunk, (uint)chunk.Length));
+            unsafe
+            {
+                fixed (long* buffer = chunk)
+                {
+                    CheckError(lsl_push_chunk_l(handle, buffer, (uint)chunk.Length));
+                }
+            }
         }
 
         /// <inheritdoc cref="PushChunk(sbyte[])"/>
@@ -1359,7 +1655,13 @@ namespace SharpLSL
             ThrowIfInvalid();
             CheckChunkBuffer(chunk, ChannelCount);
 
-            CheckError(lsl_push_chunk_f(handle, chunk, (uint)chunk.Length));
+            unsafe
+            {
+                fixed (float* buffer = chunk)
+                {
+                    CheckError(lsl_push_chunk_f(handle, buffer, (uint)chunk.Length));
+                }
+            }
         }
 
         /// <inheritdoc cref="PushChunk(sbyte[])"/>
@@ -1368,7 +1670,13 @@ namespace SharpLSL
             ThrowIfInvalid();
             CheckChunkBuffer(chunk, ChannelCount);
 
-            CheckError(lsl_push_chunk_d(handle, chunk, (uint)chunk.Length));
+            unsafe
+            {
+                fixed (double* buffer = chunk)
+                {
+                    CheckError(lsl_push_chunk_d(handle, buffer, (uint)chunk.Length));
+                }
+            }
         }
 
         /// <inheritdoc cref="PushChunk(sbyte[])"/>
@@ -1377,7 +1685,32 @@ namespace SharpLSL
             ThrowIfInvalid();
             CheckChunkBuffer(chunk, ChannelCount);
 
-            CheckError(lsl_push_chunk_str(handle, chunk, (uint)chunk.Length));
+            var stringPointers = new IntPtr[chunk.Length];
+
+            int rows = chunk.GetLength(0);
+            int cols = chunk.GetLength(1);
+
+            for (int r = 0; r < rows; ++r)
+            {
+                for (int c = 0; c < cols; ++c)
+                    stringPointers[r * cols + c] = StringToPtr(chunk[r, c]);
+            }
+
+            // TODO: Is this necessary?
+            var chunkPointer = Marshal.AllocHGlobal(IntPtr.Size * chunk.Length);
+            Marshal.Copy(stringPointers, 0, chunkPointer, chunk.Length);
+
+            try
+            {
+                CheckError(lsl_push_chunk_str(handle, chunkPointer, (uint)chunk.Length));
+            }
+            finally
+            {
+                for (int i = 0; i < stringPointers.Length; ++i)
+                    Marshal.FreeHGlobal(stringPointers[i]);
+
+                Marshal.FreeHGlobal(chunkPointer);
+            }
         }
 
         /// <param name="chunk">
@@ -1552,8 +1885,55 @@ namespace SharpLSL
             ThrowIfInvalid();
             CheckChunkBuffer(chunk, ChannelCount);
 
-            CheckError(lsl_push_chunk_strt(handle, chunk, (uint)chunk.Length, timestamp));
+            var stringPointers = new IntPtr[chunk.Length];
+            for (int i = 0; i < chunk.Length; ++i)
+                stringPointers[i] = StringToPtr(chunk[i]);
+
+            // TODO: Is this necessary?
+            var chunkPointer = Marshal.AllocHGlobal(IntPtr.Size * chunk.Length);
+            Marshal.Copy(stringPointers, 0, chunkPointer, chunk.Length);
+
+            try
+            {
+                CheckError(lsl_push_chunk_strt(handle, chunkPointer, (uint)chunk.Length, timestamp));
+            }
+            finally
+            {
+                for (int i = 0; i < chunk.Length; ++i)
+                    Marshal.FreeHGlobal(stringPointers[i]);
+
+                Marshal.FreeHGlobal(chunkPointer);
+            }
         }
+
+#if !NET35
+        /// <inheritdoc cref="PushChunk(sbyte[], double)"/>
+        public void PushChunk(ReadOnlySpan<string> chunk, double timestamp)
+        {
+            ThrowIfInvalid();
+            CheckChunkBuffer(chunk, ChannelCount);
+
+            var stringPointers = new IntPtr[chunk.Length];
+            for (int i = 0; i < chunk.Length; ++i)
+                stringPointers[i] = StringToPtr(chunk[i]);
+
+            // TODO: Is this necessary?
+            var chunkPointer = Marshal.AllocHGlobal(IntPtr.Size * chunk.Length);
+            Marshal.Copy(stringPointers, 0, chunkPointer, chunk.Length);
+
+            try
+            {
+                CheckError(lsl_push_chunk_strt(handle, chunkPointer, (uint)chunk.Length, timestamp));
+            }
+            finally
+            {
+                for (int i = 0; i < chunk.Length; ++i)
+                    Marshal.FreeHGlobal(stringPointers[i]);
+
+                Marshal.FreeHGlobal(chunkPointer);
+            }
+        }
+#endif
 
         /// <exception cref="ArgumentException">
         /// Thrown if the number of columns in <paramref name="chunk"/> does not match
@@ -1565,7 +1945,13 @@ namespace SharpLSL
             ThrowIfInvalid();
             CheckChunkBuffer(chunk, ChannelCount);
 
-            CheckError(lsl_push_chunk_ct(handle, chunk, (uint)chunk.Length, timestamp));
+            unsafe
+            {
+                fixed (sbyte* buffer = chunk)
+                {
+                    CheckError(lsl_push_chunk_ct(handle, buffer, (uint)chunk.Length, timestamp));
+                }
+            }
         }
 
         /// <inheritdoc cref="PushChunk(sbyte[,], double)"/>
@@ -1574,7 +1960,13 @@ namespace SharpLSL
             ThrowIfInvalid();
             CheckChunkBuffer(chunk, ChannelCount);
 
-            CheckError(lsl_push_chunk_st(handle, chunk, (uint)chunk.Length, timestamp));
+            unsafe
+            {
+                fixed (short* buffer = chunk)
+                {
+                    CheckError(lsl_push_chunk_st(handle, buffer, (uint)chunk.Length, timestamp));
+                }
+            }
         }
 
         /// <inheritdoc cref="PushChunk(sbyte[,], double)"/>
@@ -1583,7 +1975,13 @@ namespace SharpLSL
             ThrowIfInvalid();
             CheckChunkBuffer(chunk, ChannelCount);
 
-            CheckError(lsl_push_chunk_it(handle, chunk, (uint)chunk.Length, timestamp));
+            unsafe
+            {
+                fixed (int* buffer = chunk)
+                {
+                    CheckError(lsl_push_chunk_it(handle, buffer, (uint)chunk.Length, timestamp));
+                }
+            }
         }
 
         /// <inheritdoc cref="PushChunk(sbyte[,], double)"/>
@@ -1592,7 +1990,13 @@ namespace SharpLSL
             ThrowIfInvalid();
             CheckChunkBuffer(chunk, ChannelCount);
 
-            CheckError(lsl_push_chunk_lt(handle, chunk, (uint)chunk.Length, timestamp));
+            unsafe
+            {
+                fixed (long* buffer = chunk)
+                {
+                    CheckError(lsl_push_chunk_lt(handle, buffer, (uint)chunk.Length, timestamp));
+                }
+            }
         }
 
         /// <inheritdoc cref="PushChunk(sbyte[,], double)"/>
@@ -1601,7 +2005,13 @@ namespace SharpLSL
             ThrowIfInvalid();
             CheckChunkBuffer(chunk, ChannelCount);
 
-            CheckError(lsl_push_chunk_ft(handle, chunk, (uint)chunk.Length, timestamp));
+            unsafe
+            {
+                fixed (float* buffer = chunk)
+                {
+                    CheckError(lsl_push_chunk_ft(handle, buffer, (uint)chunk.Length, timestamp));
+                }
+            }
         }
 
         /// <inheritdoc cref="PushChunk(sbyte[,], double)"/>
@@ -1610,7 +2020,13 @@ namespace SharpLSL
             ThrowIfInvalid();
             CheckChunkBuffer(chunk, ChannelCount);
 
-            CheckError(lsl_push_chunk_dt(handle, chunk, (uint)chunk.Length, timestamp));
+            unsafe
+            {
+                fixed (double* buffer = chunk)
+                {
+                    CheckError(lsl_push_chunk_dt(handle, buffer, (uint)chunk.Length, timestamp));
+                }
+            }
         }
 
         /// <inheritdoc cref="PushChunk(sbyte[,], double)"/>
@@ -1619,7 +2035,32 @@ namespace SharpLSL
             ThrowIfInvalid();
             CheckChunkBuffer(chunk, ChannelCount);
 
-            CheckError(lsl_push_chunk_strt(handle, chunk, (uint)chunk.Length, timestamp));
+            var stringPointers = new IntPtr[chunk.Length];
+
+            int rows = chunk.GetLength(0);
+            int cols = chunk.GetLength(1);
+
+            for (int r = 0; r < rows; ++r)
+            {
+                for (int c = 0; c < cols; ++c)
+                    stringPointers[r * cols + c] = StringToPtr(chunk[r, c]);
+            }
+
+            // TODO: Is this necessary?
+            var chunkPointer = Marshal.AllocHGlobal(IntPtr.Size * chunk.Length);
+            Marshal.Copy(stringPointers, 0, chunkPointer, chunk.Length);
+
+            try
+            {
+                CheckError(lsl_push_chunk_strt(handle, chunkPointer, (uint)chunk.Length, timestamp));
+            }
+            finally
+            {
+                for (int i = 0; i < stringPointers.Length; ++i)
+                    Marshal.FreeHGlobal(stringPointers[i]);
+
+                Marshal.FreeHGlobal(chunkPointer);
+            }
         }
 
         /// <param name="chunk">
@@ -1799,8 +2240,55 @@ namespace SharpLSL
             ThrowIfInvalid();
             CheckChunkBuffer(chunk, ChannelCount);
 
-            CheckError(lsl_push_chunk_strtp(handle, chunk, (uint)chunk.Length, timestamp, pushThrough ? 1 : 0));
+            var stringPointers = new IntPtr[chunk.Length];
+            for (int i = 0; i < chunk.Length; ++i)
+                stringPointers[i] = StringToPtr(chunk[i]);
+
+            // TODO: Is this necessary?
+            var chunkPointer = Marshal.AllocHGlobal(IntPtr.Size * chunk.Length);
+            Marshal.Copy(stringPointers, 0, chunkPointer, chunk.Length);
+
+            try
+            {
+                CheckError(lsl_push_chunk_strtp(handle, chunkPointer, (uint)chunk.Length, timestamp, pushThrough ? 1 : 0));
+            }
+            finally
+            {
+                for (int i = 0; i < chunk.Length; ++i)
+                    Marshal.FreeHGlobal(stringPointers[i]);
+
+                Marshal.FreeHGlobal(chunkPointer);
+            }
         }
+
+#if !NET35
+        /// <inheritdoc cref="PushChunk(sbyte[], double, bool)"/>
+        public void PushChunk(ReadOnlySpan<string> chunk, double timestamp, bool pushThrough)
+        {
+            ThrowIfInvalid();
+            CheckChunkBuffer(chunk, ChannelCount);
+
+            var stringPointers = new IntPtr[chunk.Length];
+            for (int i = 0; i < chunk.Length; ++i)
+                stringPointers[i] = StringToPtr(chunk[i]);
+
+            // TODO: Is this necessary?
+            var chunkPointer = Marshal.AllocHGlobal(IntPtr.Size * chunk.Length);
+            Marshal.Copy(stringPointers, 0, chunkPointer, chunk.Length);
+
+            try
+            {
+                CheckError(lsl_push_chunk_strtp(handle, chunkPointer, (uint)chunk.Length, timestamp, pushThrough ? 1 : 0));
+            }
+            finally
+            {
+                for (int i = 0; i < chunk.Length; ++i)
+                    Marshal.FreeHGlobal(stringPointers[i]);
+
+                Marshal.FreeHGlobal(chunkPointer);
+            }
+        }
+#endif
 
         /// <exception cref="ArgumentException">
         /// Thrown if the number of columns in <paramref name="chunk"/> does not match
@@ -1812,7 +2300,13 @@ namespace SharpLSL
             ThrowIfInvalid();
             CheckChunkBuffer(chunk, ChannelCount);
 
-            CheckError(lsl_push_chunk_ctp(handle, chunk, (uint)chunk.Length, timestamp, pushThrough ? 1 : 0));
+            unsafe
+            {
+                fixed (sbyte* buffer = chunk)
+                {
+                    CheckError(lsl_push_chunk_ctp(handle, buffer, (uint)chunk.Length, timestamp, pushThrough ? 1 : 0));
+                }
+            }
         }
 
         /// <inheritdoc cref="PushChunk(sbyte[,], double, bool)"/>
@@ -1821,7 +2315,13 @@ namespace SharpLSL
             ThrowIfInvalid();
             CheckChunkBuffer(chunk, ChannelCount);
 
-            CheckError(lsl_push_chunk_stp(handle, chunk, (uint)chunk.Length, timestamp, pushThrough ? 1 : 0));
+            unsafe
+            {
+                fixed (short* buffer = chunk)
+                {
+                    CheckError(lsl_push_chunk_stp(handle, buffer, (uint)chunk.Length, timestamp, pushThrough ? 1 : 0));
+                }
+            }
         }
 
         /// <inheritdoc cref="PushChunk(sbyte[,], double, bool)"/>
@@ -1830,7 +2330,13 @@ namespace SharpLSL
             ThrowIfInvalid();
             CheckChunkBuffer(chunk, ChannelCount);
 
-            CheckError(lsl_push_chunk_itp(handle, chunk, (uint)chunk.Length, timestamp, pushThrough ? 1 : 0));
+            unsafe
+            {
+                fixed (int* buffer = chunk)
+                {
+                    CheckError(lsl_push_chunk_itp(handle, buffer, (uint)chunk.Length, timestamp, pushThrough ? 1 : 0));
+                }
+            }
         }
 
         /// <inheritdoc cref="PushChunk(sbyte[,], double, bool)"/>
@@ -1839,7 +2345,13 @@ namespace SharpLSL
             ThrowIfInvalid();
             CheckChunkBuffer(chunk, ChannelCount);
 
-            CheckError(lsl_push_chunk_ltp(handle, chunk, (uint)chunk.Length, timestamp, pushThrough ? 1 : 0));
+            unsafe
+            {
+                fixed (long* buffer = chunk)
+                {
+                    CheckError(lsl_push_chunk_ltp(handle, buffer, (uint)chunk.Length, timestamp, pushThrough ? 1 : 0));
+                }
+            }
         }
 
         /// <inheritdoc cref="PushChunk(sbyte[,], double, bool)"/>
@@ -1848,7 +2360,13 @@ namespace SharpLSL
             ThrowIfInvalid();
             CheckChunkBuffer(chunk, ChannelCount);
 
-            CheckError(lsl_push_chunk_ftp(handle, chunk, (uint)chunk.Length, timestamp, pushThrough ? 1 : 0));
+            unsafe
+            {
+                fixed (float* buffer = chunk)
+                {
+                    CheckError(lsl_push_chunk_ftp(handle, buffer, (uint)chunk.Length, timestamp, pushThrough ? 1 : 0));
+                }
+            }
         }
 
         /// <inheritdoc cref="PushChunk(sbyte[,], double, bool)"/>
@@ -1857,7 +2375,13 @@ namespace SharpLSL
             ThrowIfInvalid();
             CheckChunkBuffer(chunk, ChannelCount);
 
-            CheckError(lsl_push_chunk_dtp(handle, chunk, (uint)chunk.Length, timestamp, pushThrough ? 1 : 0));
+            unsafe
+            {
+                fixed (double* buffer = chunk)
+                {
+                    CheckError(lsl_push_chunk_dtp(handle, buffer, (uint)chunk.Length, timestamp, pushThrough ? 1 : 0));
+                }
+            }
         }
 
         /// <inheritdoc cref="PushChunk(sbyte[,], double, bool)"/>
@@ -1866,7 +2390,32 @@ namespace SharpLSL
             ThrowIfInvalid();
             CheckChunkBuffer(chunk, ChannelCount);
 
-            CheckError(lsl_push_chunk_strtp(handle, chunk, (uint)chunk.Length, timestamp, pushThrough ? 1 : 0));
+            var stringPointers = new IntPtr[chunk.Length];
+
+            int rows = chunk.GetLength(0);
+            int cols = chunk.GetLength(1);
+
+            for (int r = 0; r < rows; ++r)
+            {
+                for (int c = 0; c < cols; ++c)
+                    stringPointers[r * cols + c] = StringToPtr(chunk[r, c]);
+            }
+
+            // TODO: Is this necessary?
+            var chunkPointer = Marshal.AllocHGlobal(IntPtr.Size * chunk.Length);
+            Marshal.Copy(stringPointers, 0, chunkPointer, chunk.Length);
+
+            try
+            {
+                CheckError(lsl_push_chunk_strtp(handle, chunkPointer, (uint)chunk.Length, timestamp, pushThrough ? 1 : 0));
+            }
+            finally
+            {
+                for (int i = 0; i < stringPointers.Length; ++i)
+                    Marshal.FreeHGlobal(stringPointers[i]);
+
+                Marshal.FreeHGlobal(chunkPointer);
+            }
         }
 
         /// <param name="chunk">
@@ -2079,8 +2628,69 @@ namespace SharpLSL
             var samples = CheckChunkBuffer(chunk, ChannelCount);
             CheckTimestampBuffer(timestamps, samples);
 
-            CheckError(lsl_push_chunk_strtn(handle, chunk, (uint)chunk.Length, timestamps));
+            var stringPointers = new IntPtr[chunk.Length];
+            for (int i = 0; i < chunk.Length; ++i)
+                stringPointers[i] = StringToPtr(chunk[i]);
+
+            // TODO: Is this necessary?
+            var chunkPointer = Marshal.AllocHGlobal(IntPtr.Size * chunk.Length);
+            Marshal.Copy(stringPointers, 0, chunkPointer, chunk.Length);
+
+            try
+            {
+                unsafe
+                {
+                    fixed (double* timestampsBuffer = timestamps)
+                    {
+                        CheckError(lsl_push_chunk_strtn(handle, chunkPointer, (uint)chunk.Length, timestampsBuffer));
+                    }
+                }
+            }
+            finally
+            {
+                for (int i = 0; i < chunk.Length; ++i)
+                    Marshal.FreeHGlobal(stringPointers[i]);
+
+                Marshal.FreeHGlobal(chunkPointer);
+            }
         }
+
+#if !NET35
+        /// <inheritdoc cref="PushChunk(sbyte[], double[])"/>
+        public void PushChunk(ReadOnlySpan<string> chunk, ReadOnlySpan<double> timestamps)
+        {
+            ThrowIfInvalid();
+
+            var samples = CheckChunkBuffer(chunk, ChannelCount);
+            CheckTimestampBuffer(timestamps, samples);
+
+            var stringPointers = new IntPtr[chunk.Length];
+            for (int i = 0; i < chunk.Length; ++i)
+                stringPointers[i] = StringToPtr(chunk[i]);
+
+            // TODO: Is this necessary?
+            var chunkPointer = Marshal.AllocHGlobal(IntPtr.Size * chunk.Length);
+            Marshal.Copy(stringPointers, 0, chunkPointer, chunk.Length);
+
+            try
+            {
+                unsafe
+                {
+                    fixed (double* timestampsBuffer = timestamps)
+                    {
+                        CheckError(lsl_push_chunk_strtn(handle, chunkPointer, (uint)chunk.Length, timestampsBuffer));
+                    }
+                }
+            }
+            finally
+            {
+                for (int i = 0; i < chunk.Length; ++i)
+                    Marshal.FreeHGlobal(stringPointers[i]);
+
+                Marshal.FreeHGlobal(chunkPointer);
+            }
+        }
+#endif
 
         /// <inheritdoc cref="PushChunk(sbyte[], double[])"/>
         public void PushChunk(sbyte[,] chunk, double[] timestamps)
@@ -2090,7 +2700,14 @@ namespace SharpLSL
             CheckChunkBuffer(chunk, ChannelCount);
             CheckTimestampBuffer(timestamps, chunk.GetLength(0));
 
-            CheckError(lsl_push_chunk_ctn(handle, chunk, (uint)chunk.Length, timestamps));
+            unsafe
+            {
+                fixed (sbyte* chunkBuffer = chunk)
+                fixed (double* timestampsBuffer = timestamps)
+                {
+                    CheckError(lsl_push_chunk_ctn(handle, chunkBuffer, (uint)chunk.Length, timestampsBuffer));
+                }
+            }
         }
 
         /// <inheritdoc cref="PushChunk(sbyte[,], double[])"/>
@@ -2101,7 +2718,14 @@ namespace SharpLSL
             CheckChunkBuffer(chunk, ChannelCount);
             CheckTimestampBuffer(timestamps, chunk.GetLength(0));
 
-            CheckError(lsl_push_chunk_stn(handle, chunk, (uint)chunk.Length, timestamps));
+            unsafe
+            {
+                fixed (short* chunkBuffer = chunk)
+                fixed (double* timestampsBuffer = timestamps)
+                {
+                    CheckError(lsl_push_chunk_stn(handle, chunkBuffer, (uint)chunk.Length, timestampsBuffer));
+                }
+            }
         }
 
         /// <inheritdoc cref="PushChunk(sbyte[,], double[])"/>
@@ -2112,7 +2736,14 @@ namespace SharpLSL
             CheckChunkBuffer(chunk, ChannelCount);
             CheckTimestampBuffer(timestamps, chunk.GetLength(0));
 
-            CheckError(lsl_push_chunk_itn(handle, chunk, (uint)chunk.Length, timestamps));
+            unsafe
+            {
+                fixed (int* chunkBuffer = chunk)
+                fixed (double* timestampsBuffer = timestamps)
+                {
+                    CheckError(lsl_push_chunk_itn(handle, chunkBuffer, (uint)chunk.Length, timestampsBuffer));
+                }
+            }
         }
 
         /// <inheritdoc cref="PushChunk(sbyte[,], double[])"/>
@@ -2123,7 +2754,14 @@ namespace SharpLSL
             CheckChunkBuffer(chunk, ChannelCount);
             CheckTimestampBuffer(timestamps, chunk.GetLength(0));
 
-            CheckError(lsl_push_chunk_ltn(handle, chunk, (uint)chunk.Length, timestamps));
+            unsafe
+            {
+                fixed (long* chunkBuffer = chunk)
+                fixed (double* timestampsBuffer = timestamps)
+                {
+                    CheckError(lsl_push_chunk_ltn(handle, chunkBuffer, (uint)chunk.Length, timestampsBuffer));
+                }
+            }
         }
 
         /// <inheritdoc cref="PushChunk(sbyte[,], double[])"/>
@@ -2134,7 +2772,14 @@ namespace SharpLSL
             CheckChunkBuffer(chunk, ChannelCount);
             CheckTimestampBuffer(timestamps, chunk.GetLength(0));
 
-            CheckError(lsl_push_chunk_ftn(handle, chunk, (uint)chunk.Length, timestamps));
+            unsafe
+            {
+                fixed (float* chunkBuffer = chunk)
+                fixed (double* timestampsBuffer = timestamps)
+                {
+                    CheckError(lsl_push_chunk_ftn(handle, chunkBuffer, (uint)chunk.Length, timestampsBuffer));
+                }
+            }
         }
 
         /// <inheritdoc cref="PushChunk(sbyte[,], double[])"/>
@@ -2145,7 +2790,14 @@ namespace SharpLSL
             CheckChunkBuffer(chunk, ChannelCount);
             CheckTimestampBuffer(timestamps, chunk.GetLength(0));
 
-            CheckError(lsl_push_chunk_dtn(handle, chunk, (uint)chunk.Length, timestamps));
+            unsafe
+            {
+                fixed (double* chunkBuffer = chunk)
+                fixed (double* timestampsBuffer = timestamps)
+                {
+                    CheckError(lsl_push_chunk_dtn(handle, chunkBuffer, (uint)chunk.Length, timestampsBuffer));
+                }
+            }
         }
 
         /// <inheritdoc cref="PushChunk(sbyte[,], double[])"/>
@@ -2156,7 +2808,38 @@ namespace SharpLSL
             CheckChunkBuffer(chunk, ChannelCount);
             CheckTimestampBuffer(timestamps, chunk.GetLength(0));
 
-            CheckError(lsl_push_chunk_strtn(handle, chunk, (uint)chunk.Length, timestamps));
+            var stringPointers = new IntPtr[chunk.Length];
+
+            int rows = chunk.GetLength(0);
+            int cols = chunk.GetLength(1);
+
+            for (int r = 0; r < rows; ++r)
+            {
+                for (int c = 0; c < cols; ++c)
+                    stringPointers[r * cols + c] = StringToPtr(chunk[r, c]);
+            }
+
+            // TODO: Is this necessary?
+            var chunkPointer = Marshal.AllocHGlobal(IntPtr.Size * chunk.Length);
+            Marshal.Copy(stringPointers, 0, chunkPointer, chunk.Length);
+
+            try
+            {
+                unsafe
+                {
+                    fixed (double* timestampsBuffer = timestamps)
+                    {
+                        CheckError(lsl_push_chunk_strtn(handle, chunkPointer, (uint)chunk.Length, timestampsBuffer));
+                    }
+                }
+            }
+            finally
+            {
+                for (int i = 0; i < stringPointers.Length; ++i)
+                    Marshal.FreeHGlobal(stringPointers[i]);
+
+                Marshal.FreeHGlobal(chunkPointer);
+            }
         }
 
         /// <param name="chunk">
@@ -2365,8 +3048,69 @@ namespace SharpLSL
             var samples = CheckChunkBuffer(chunk, ChannelCount);
             CheckTimestampBuffer(timestamps, samples);
 
-            CheckError(lsl_push_chunk_strtnp(handle, chunk, (uint)chunk.Length, timestamps, pushThrough ? 1 : 0));
+            var stringPointers = new IntPtr[chunk.Length];
+            for (int i = 0; i < chunk.Length; ++i)
+                stringPointers[i] = StringToPtr(chunk[i]);
+
+            // TODO: Is this necessary?
+            var chunkPointer = Marshal.AllocHGlobal(IntPtr.Size * chunk.Length);
+            Marshal.Copy(stringPointers, 0, chunkPointer, chunk.Length);
+
+            try
+            {
+                unsafe
+                {
+                    fixed (double* timestampsBuffer = timestamps)
+                    {
+                        CheckError(lsl_push_chunk_strtnp(handle, chunkPointer, (uint)chunk.Length, timestampsBuffer, pushThrough ? 1 : 0));
+                    }
+                }
+            }
+            finally
+            {
+                for (int i = 0; i < chunk.Length; ++i)
+                    Marshal.FreeHGlobal(stringPointers[i]);
+
+                Marshal.FreeHGlobal(chunkPointer);
+            }
         }
+
+#if !NET35
+        /// <inheritdoc cref="PushChunk(sbyte[], double[], bool)"/>
+        public void PushChunk(ReadOnlySpan<string> chunk, ReadOnlySpan<double> timestamps, bool pushThrough)
+        {
+            ThrowIfInvalid();
+
+            var samples = CheckChunkBuffer(chunk, ChannelCount);
+            CheckTimestampBuffer(timestamps, samples);
+
+            var stringPointers = new IntPtr[chunk.Length];
+            for (int i = 0; i < chunk.Length; ++i)
+                stringPointers[i] = StringToPtr(chunk[i]);
+
+            // TODO: Is this necessary?
+            var chunkPointer = Marshal.AllocHGlobal(IntPtr.Size * chunk.Length);
+            Marshal.Copy(stringPointers, 0, chunkPointer, chunk.Length);
+
+            try
+            {
+                unsafe
+                {
+                    fixed (double* timestampsBuffer = timestamps)
+                    {
+                        CheckError(lsl_push_chunk_strtnp(handle, chunkPointer, (uint)chunk.Length, timestampsBuffer, pushThrough ? 1 : 0));
+                    }
+                }
+            }
+            finally
+            {
+                for (int i = 0; i < chunk.Length; ++i)
+                    Marshal.FreeHGlobal(stringPointers[i]);
+
+                Marshal.FreeHGlobal(chunkPointer);
+            }
+        }
+#endif
 
         /// <exception cref="ArgumentException">
         /// Thrown if the number of columns in <paramref name="chunk"/> does not match
@@ -2381,7 +3125,14 @@ namespace SharpLSL
             CheckChunkBuffer(chunk, ChannelCount);
             CheckTimestampBuffer(timestamps, chunk.GetLength(0));
 
-            CheckError(lsl_push_chunk_ctnp(handle, chunk, (uint)chunk.Length, timestamps, pushThrough ? 1 : 0));
+            unsafe
+            {
+                fixed (sbyte* chunkBuffer = chunk)
+                fixed (double* timestampsBuffer = timestamps)
+                {
+                    CheckError(lsl_push_chunk_ctnp(handle, chunkBuffer, (uint)chunk.Length, timestampsBuffer, pushThrough ? 1 : 0));
+                }
+            }
         }
 
         /// <inheritdoc cref="PushChunk(sbyte[,], double[], bool)"/>
@@ -2392,7 +3143,14 @@ namespace SharpLSL
             CheckChunkBuffer(chunk, ChannelCount);
             CheckTimestampBuffer(timestamps, chunk.GetLength(0));
 
-            CheckError(lsl_push_chunk_stnp(handle, chunk, (uint)chunk.Length, timestamps, pushThrough ? 1 : 0));
+            unsafe
+            {
+                fixed (short* chunkBuffer = chunk)
+                fixed (double* timestampsBuffer = timestamps)
+                {
+                    CheckError(lsl_push_chunk_stnp(handle, chunkBuffer, (uint)chunk.Length, timestampsBuffer, pushThrough ? 1 : 0));
+                }
+            }
         }
 
         /// <inheritdoc cref="PushChunk(sbyte[,], double[], bool)"/>
@@ -2403,7 +3161,14 @@ namespace SharpLSL
             CheckChunkBuffer(chunk, ChannelCount);
             CheckTimestampBuffer(timestamps, chunk.GetLength(0));
 
-            CheckError(lsl_push_chunk_itnp(handle, chunk, (uint)chunk.Length, timestamps, pushThrough ? 1 : 0));
+            unsafe
+            {
+                fixed (int* chunkBuffer = chunk)
+                fixed (double* timestampsBuffer = timestamps)
+                {
+                    CheckError(lsl_push_chunk_itnp(handle, chunkBuffer, (uint)chunk.Length, timestampsBuffer, pushThrough ? 1 : 0));
+                }
+            }
         }
 
         /// <inheritdoc cref="PushChunk(sbyte[,], double[], bool)"/>
@@ -2414,7 +3179,14 @@ namespace SharpLSL
             CheckChunkBuffer(chunk, ChannelCount);
             CheckTimestampBuffer(timestamps, chunk.GetLength(0));
 
-            CheckError(lsl_push_chunk_ltnp(handle, chunk, (uint)chunk.Length, timestamps, pushThrough ? 1 : 0));
+            unsafe
+            {
+                fixed (long* chunkBuffer = chunk)
+                fixed (double* timestampsBuffer = timestamps)
+                {
+                    CheckError(lsl_push_chunk_ltnp(handle, chunkBuffer, (uint)chunk.Length, timestampsBuffer, pushThrough ? 1 : 0));
+                }
+            }
         }
 
         /// <inheritdoc cref="PushChunk(sbyte[,], double[], bool)"/>
@@ -2425,7 +3197,14 @@ namespace SharpLSL
             CheckChunkBuffer(chunk, ChannelCount);
             CheckTimestampBuffer(timestamps, chunk.GetLength(0));
 
-            CheckError(lsl_push_chunk_ftnp(handle, chunk, (uint)chunk.Length, timestamps, pushThrough ? 1 : 0));
+            unsafe
+            {
+                fixed (float* chunkBuffer = chunk)
+                fixed (double* timestampsBuffer = timestamps)
+                {
+                    CheckError(lsl_push_chunk_ftnp(handle, chunkBuffer, (uint)chunk.Length, timestampsBuffer, pushThrough ? 1 : 0));
+                }
+            }
         }
 
         /// <inheritdoc cref="PushChunk(sbyte[,], double[], bool)"/>
@@ -2436,7 +3215,14 @@ namespace SharpLSL
             CheckChunkBuffer(chunk, ChannelCount);
             CheckTimestampBuffer(timestamps, chunk.GetLength(0));
 
-            CheckError(lsl_push_chunk_dtnp(handle, chunk, (uint)chunk.Length, timestamps, pushThrough ? 1 : 0));
+            unsafe
+            {
+                fixed (double* chunkBuffer = chunk)
+                fixed (double* timestampsBuffer = timestamps)
+                {
+                    CheckError(lsl_push_chunk_dtnp(handle, chunkBuffer, (uint)chunk.Length, timestampsBuffer, pushThrough ? 1 : 0));
+                }
+            }
         }
 
         /// <inheritdoc cref="PushChunk(sbyte[,], double[], bool)"/>
@@ -2447,7 +3233,38 @@ namespace SharpLSL
             CheckChunkBuffer(chunk, ChannelCount);
             CheckTimestampBuffer(timestamps, chunk.GetLength(0));
 
-            CheckError(lsl_push_chunk_strtnp(handle, chunk, (uint)chunk.Length, timestamps, pushThrough ? 1 : 0));
+            var stringPointers = new IntPtr[chunk.Length];
+
+            int rows = chunk.GetLength(0);
+            int cols = chunk.GetLength(1);
+
+            for (int r = 0; r < rows; ++r)
+            {
+                for (int c = 0; c < cols; ++c)
+                    stringPointers[r * cols + c] = StringToPtr(chunk[r, c]);
+            }
+
+            // TODO: Is this necessary?
+            var chunkPointer = Marshal.AllocHGlobal(IntPtr.Size * chunk.Length);
+            Marshal.Copy(stringPointers, 0, chunkPointer, chunk.Length);
+
+            try
+            {
+                unsafe
+                {
+                    fixed (double* timestampsBuffer = timestamps)
+                    {
+                        CheckError(lsl_push_chunk_strtnp(handle, chunkPointer, (uint)chunk.Length, timestampsBuffer, pushThrough ? 1 : 0));
+                    }
+                }
+            }
+            finally
+            {
+                for (int i = 0; i < stringPointers.Length; ++i)
+                    Marshal.FreeHGlobal(stringPointers[i]);
+
+                Marshal.FreeHGlobal(chunkPointer);
+            }
         }
 
         /// <summary>
@@ -2509,3 +3326,5 @@ namespace SharpLSL
 // References:
 // [How To P/Invoke char* [] in C#](https://stackoverflow.com/questions/25137788/how-to-p-invoke-char-in-c-sharp)
 // [PInvoke an Array of a Byte Arrays](https://stackoverflow.com/questions/778475/pinvoke-an-array-of-a-byte-arrays)
+// [Fixed statement with jagged array](https://stackoverflow.com/questions/4033054/fixed-statement-with-jagged-array)
+// [Understanding GCHandle.Alloc pinning in C#](https://stackoverflow.com/questions/45620700/understanding-gchandle-alloc-pinning-in-c-sharp)

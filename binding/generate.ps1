@@ -107,7 +107,8 @@ ClangSharpPInvokeGenerator `
     --output ../src/SharpLSL/Interop/StreamInfo.g.cs `
     --remap `
     lsl_streaminfo=IntPtr `
-    lsl_xml_ptr=IntPtr sbyte*=IntPtr
+    lsl_xml_ptr=IntPtr `
+    sbyte*=IntPtr
 
 # xml.h
 ClangSharpPInvokeGenerator `

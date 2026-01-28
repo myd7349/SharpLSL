@@ -1,4 +1,4 @@
-// Port of: https://github.com/sccn/liblsl/blob/master/examples/HandleMetaData.cpp
+// Port of: https://github.com/sccn/liblsl/blob/main/examples/HandleMetaData.cpp
 namespace SharpLSL.Examples
 {
     internal class HandleMetaData
@@ -18,16 +18,16 @@ namespace SharpLSL.Examples
                 foreach (var channel in channelNames)
                 {
                     channelInfos.AppendChild("channel")
-                        .AppendChild("label", channel)
-                        .AppendChild("unit", "microvolts")
-                        .AppendChild("type", "EEG");
+                        .AppendChildValue("label", channel)
+                        .AppendChildValue("unit", "microvolts")
+                        .AppendChildValue("type", "EEG");
                 }
 
-                streamInfo.Description.AppendChild("manufacturer", "SCCN");
+                streamInfo.Description.AppendChildValue("manufacturer", "SCCN");
                 streamInfo.Description.AppendChild("cap")
-                    .AppendChild("name", "EasyCap")
-                    .AppendChild("size", "54")
-                    .AppendChild("labelscheme", "10-20");
+                    .AppendChildValue("name", "EasyCap")
+                    .AppendChildValue("size", "54")
+                    .AppendChildValue("labelscheme", "10-20");
 
                 // Create outlet for the stream.
                 using (var streamOutlet = new StreamOutlet(streamInfo))

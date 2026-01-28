@@ -1,5 +1,4 @@
 <Project>
-
   <PropertyGroup>
     <PackageId>SharpLSL.Native.$(RID)</PackageId>
     <Description>liblsl native library for $(RID).</Description>
@@ -86,5 +85,4 @@
 
   <Target Name="IncludeAdditionalTfmSpecificPackageFiles"
           DependsOnTargets="$(_IncludeAdditionalTfmSpecificPackageFilesDependsOn)" />
-
 </Project>

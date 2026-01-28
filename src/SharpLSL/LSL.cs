@@ -2,6 +2,7 @@ using System;
 using System.Diagnostics;
 using System.Runtime.CompilerServices;
 using System.Runtime.InteropServices;
+using System.Text;
 
 using SharpLSL.Interop;
 
@@ -73,6 +74,14 @@ namespace SharpLSL
         /// <seealso cref="GetProtocolVersion"/>
         public const int CompileHeaderVersion = LIBLSL_COMPILE_HEADER_VERSION;
 
+#if NET6_0_OR_GREATER
+        /// <summary>
+        /// Specifies whether strings are encoded and decoded using UTF-8 (<c>true</c>)
+        /// or ANSI (<c>false</c>) encoding.
+        /// </summary>
+        public static bool UseUTF8 = false;
+#endif
+
         /// <summary>
         /// Retrieves the explanation for the most recent error in the LSL library.
         /// </summary>
@@ -138,17 +147,24 @@ namespace SharpLSL
         /// double adjustedTimestamp = LSL.GetLocalClock() - sampleAge;
         /// </code>
         /// </remarks>
+        /// <seealso cref="StreamOutlet.PushSample(sbyte[], double)"/>
         /// <seealso cref="StreamOutlet.PushSample(short[], double)"/>
         /// <seealso cref="StreamOutlet.PushSample(int[], double)"/>
         /// <seealso cref="StreamOutlet.PushSample(long[], double)"/>
         /// <seealso cref="StreamOutlet.PushSample(float[], double)"/>
         /// <seealso cref="StreamOutlet.PushSample(double[], double)"/>
+        /// <seealso cref="StreamOutlet.PushSample(string[], double)"/>
+        /// <seealso cref="StreamOutlet.PushSample(byte[], double)"/>
+        /// <seealso cref="StreamOutlet.PushSample(IntPtr, double)"/>
+        /// <seealso cref="StreamOutlet.PushSample(sbyte[], double, bool)"/>
         /// <seealso cref="StreamOutlet.PushSample(short[], double, bool)"/>
         /// <seealso cref="StreamOutlet.PushSample(int[], double, bool)"/>
         /// <seealso cref="StreamOutlet.PushSample(long[], double, bool)"/>
         /// <seealso cref="StreamOutlet.PushSample(float[], double, bool)"/>
         /// <seealso cref="StreamOutlet.PushSample(double[], double, bool)"/>
-        // TODO: Update seealso
+        /// <seealso cref="StreamOutlet.PushSample(string[], double, bool)"/>
+        /// <seealso cref="StreamOutlet.PushSample(byte[], double, bool)"/>
+        /// <seealso cref="StreamOutlet.PushSample(IntPtr, double, bool)"/>
         public static double GetLocalClock() => lsl_local_clock();
 
         /// <summary>
@@ -287,21 +303,40 @@ namespace SharpLSL
         /// <seealso cref="ContinuousResolver(string, string, double)"/>
         public static StreamInfo[] Resolve(string property, string value, int minCount = 1, int maxCount = 1024, double timeout = Forever)
         {
-            if (string.IsNullOrEmpty(property))
-                throw new ArgumentException(nameof(property));
-
-            if (value == null)
-                throw new ArgumentNullException(nameof(value));
-
             if (minCount <= 0)
                 throw new ArgumentException(nameof(minCount));
 
             if (maxCount < minCount)
                 throw new ArgumentException(nameof(maxCount));
 
+            var propertyBytes = StringToBytes(property);
+            if (propertyBytes == null)
+                throw new ArgumentException(nameof(property));
+
+            var valueBytes = StringToBytes(value);
+            if (valueBytes == null)
+                throw new ArgumentException(nameof(value));
+
             var streamInfoPointers = new IntPtr[maxCount];
 
-            var result = lsl_resolve_byprop(streamInfoPointers, (uint)streamInfoPointers.Length, property, value, minCount, timeout);
+            int result;
+
+            unsafe
+            {
+                fixed (IntPtr* streamInfoPointersBuffer = streamInfoPointers)
+                fixed (byte* propertyBuffer = propertyBytes)
+                fixed (byte* valueBuffer = valueBytes)
+                {
+                    result = lsl_resolve_byprop(
+                        streamInfoPointersBuffer,
+                        (uint)streamInfoPointers.Length,
+                        (sbyte*)propertyBuffer,
+                        (sbyte*)valueBuffer,
+                        minCount,
+                        timeout);
+                }
+            }
+
             CheckError(result);
 
             var streamInfos = new StreamInfo[result];
@@ -364,18 +399,34 @@ namespace SharpLSL
         /// <seealso cref="ContinuousResolver(string, double)"/>
         public static StreamInfo[] Resolve(string predicate, int minCount = 1, int maxCount = 1024, double timeout = Forever)
         {
-            if (string.IsNullOrEmpty(predicate))
-                throw new ArgumentException(nameof(predicate));
-
             if (minCount <= 0)
                 throw new ArgumentException(nameof(minCount));
 
             if (maxCount < minCount)
                 throw new ArgumentException(nameof(maxCount));
 
+            var predicateBytes = StringToBytes(predicate);
+            if (predicateBytes == null)
+                throw new ArgumentNullException(nameof(predicate));
+
             var streamInfoPointers = new IntPtr[maxCount];
 
-            var result = lsl_resolve_bypred(streamInfoPointers, (uint)streamInfoPointers.Length, predicate, minCount, timeout);
+            int result;
+
+            unsafe
+            {
+                fixed (IntPtr* streamInfoPointersBuffer = streamInfoPointers)
+                fixed (byte* predicateBuffer = predicateBytes)
+                {
+                    result = lsl_resolve_bypred(
+                        streamInfoPointersBuffer,
+                        (uint)streamInfoPointers.Length,
+                        (sbyte*)predicateBuffer,
+                        minCount,
+                        timeout);
+                }
+            }
+
             CheckError(result);
 
             var streamInfos = new StreamInfo[result];
@@ -385,7 +436,6 @@ namespace SharpLSL
             return streamInfos;
         }
 
-        // TODO: Encoding
 #if !NET35
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
 #endif
@@ -394,19 +444,69 @@ namespace SharpLSL
             if (ptr == IntPtr.Zero)
                 return null;
 
+#if NET6_0_OR_GREATER
+            return UseUTF8 ?
+                Marshal.PtrToStringUTF8(ptr) :
+                Marshal.PtrToStringAnsi(ptr);
+#else
             return Marshal.PtrToStringAnsi(ptr);
+#endif
         }
 
-        // TODO: Encoding
 #if !NET35
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
 #endif
         internal static string PtrToXmlString(IntPtr ptr)
         {
-            if (ptr == IntPtr.Zero)
+            return PtrToString(ptr);
+        }
+
+        internal static byte[] StringToBytes(string str)
+        {
+            if (str == null)
                 return null;
 
-            return Marshal.PtrToStringAnsi(ptr);
+            var chars = str.ToCharArray();
+
+#if NET6_0_OR_GREATER
+            var encoding = UseUTF8 ? Encoding.UTF8 : Encoding.Default;
+#else
+            var encoding = Encoding.Default;
+#endif
+
+            var length = encoding.GetByteCount(chars);
+            var bytes = new byte[length + 1];
+            encoding.GetBytes(chars, 0, chars.Length, bytes, 0);
+            Debug.Assert(bytes[bytes.Length - 1] == 0);
+
+            return bytes;
+        }
+
+        internal static IntPtr StringToPtr(string str)
+        {
+            if (str == null)
+                return IntPtr.Zero;
+
+#if NET6_0_OR_GREATER
+            var encoding = UseUTF8 ? Encoding.UTF8 : Encoding.Default;
+#else
+            var encoding = Encoding.Default;
+#endif
+
+            var length = encoding.GetByteCount(str);
+            var pointer = Marshal.AllocHGlobal(length + 1);
+
+            unsafe
+            {
+                byte* buffer = (byte*)pointer;
+                fixed (char* chars = str)
+                {
+                    encoding.GetBytes(chars, str.Length, buffer, length + 1);
+                }
+                buffer[length] = 0; // null-terminator
+            }
+
+            return pointer;
         }
 
 #if !NET35
@@ -539,7 +639,7 @@ namespace SharpLSL
             if (timestamps != null)
             {
                 if (timestamps.Length != samples)
-                    throw new ArgumentException($"Timestamps buffer size ({timestamps.Length}) does not match the number of samples ({samples}).", nameof(timestamps));
+                    throw new ArgumentException($"The timestamp buffer size ({timestamps.Length}) does not match the number of samples ({samples}).", nameof(timestamps));
             }
         }
 
@@ -552,7 +652,7 @@ namespace SharpLSL
             if (timestamps.Length > 0)
             {
                 if (timestamps.Length != samples)
-                    throw new ArgumentException($"Timestamps buffer size ({timestamps.Length}) does not match the number of samples ({samples}).", nameof(timestamps));
+                    throw new ArgumentException($"The timestamp buffer size ({timestamps.Length}) does not match the number of samples ({samples}).", nameof(timestamps));
             }
         }
 #endif
@@ -568,7 +668,7 @@ namespace SharpLSL
                 throw new ArgumentNullException(nameof(timestamps));
 
             if (timestamps.Length != samples)
-                throw new ArgumentException($"Timestamps buffer size ({timestamps.Length}) does not match the number of samples ({samples}).", nameof(timestamps));
+                throw new ArgumentException($"The timestamp buffer size ({timestamps.Length}) does not match the number of samples ({samples}).", nameof(timestamps));
         }
 
 #if !NET35
@@ -578,7 +678,7 @@ namespace SharpLSL
             Debug.Assert(samples > 0);
 
             if (timestamps.Length != samples)
-                throw new ArgumentException($"Timestamps buffer size ({timestamps.Length}) does not match the number of samples ({samples}).", nameof(timestamps));
+                throw new ArgumentException($"The timestamp buffer size ({timestamps.Length}) does not match the number of samples ({samples}).", nameof(timestamps));
         }
 #endif
     }

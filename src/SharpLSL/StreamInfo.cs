@@ -83,12 +83,12 @@ namespace SharpLSL
             double nominalSrate = IrregularRate,
             ChannelFormat channelFormat = ChannelFormat.Float,
             string sourceId = "")
-            : this(lsl_create_streaminfo(
+            : this(CreateStreamInfo(
                 name,
                 type,
                 channelCount,
                 nominalSrate,
-                channelFormat,
+                (Interop.lsl_channel_format_t)channelFormat,
                 sourceId), true)
         {
         }
@@ -232,6 +232,7 @@ namespace SharpLSL
         /// <exception cref="InvalidOperationException">
         /// Thrown if this stream info object is invalid.
         /// </exception>
+        /// <seealso cref="SampleBytes"/>
         public int ChannelBytes
         {
             get
@@ -247,7 +248,9 @@ namespace SharpLSL
         /// <exception cref="InvalidOperationException">
         /// Thrown if this stream info object is invalid.
         /// </exception>
-        // TODO: seealso
+        /// <seealso cref="ChannelBytes"/>
+        /// <seealso cref="ChannelCount"/>
+        /// <seealso cref="ChannelFormat"/>
         public int SampleBytes
         {
             get
@@ -402,7 +405,6 @@ namespace SharpLSL
             get
             {
                 ThrowIfInvalid();
-                // TODO: memory free?
                 return new XMLElement(lsl_get_desc(handle));
             }
         }
@@ -453,10 +455,17 @@ namespace SharpLSL
         {
             ThrowIfInvalid();
 
-            if (string.IsNullOrEmpty(query))
+            var queryBytes = StringToBytes(query);
+            if (queryBytes == null)
                 throw new ArgumentException(nameof(query));
 
-            return Convert.ToBoolean(lsl_stream_info_matches_query(handle, query));
+            unsafe
+            {
+                fixed (byte* buffer = queryBytes)
+                {
+                    return Convert.ToBoolean(lsl_stream_info_matches_query(handle, (IntPtr)buffer));
+                }
+            }
         }
 
         /// <summary>
@@ -533,10 +542,17 @@ namespace SharpLSL
         /// <seealso cref="ToXML"/>
         public static StreamInfo FromXML(string xml)
         {
-            if (string.IsNullOrEmpty(xml))
+            var xmlBytes = StringToBytes(xml);
+            if (xmlBytes == null)
                 throw new ArgumentException(nameof(xml));
 
-            return new StreamInfo(lsl_streaminfo_from_xml(xml), true);
+            unsafe
+            {
+                fixed (byte* buffer = xmlBytes)
+                {
+                    return new StreamInfo(lsl_streaminfo_from_xml((IntPtr)buffer), true);
+                }
+            }
         }
 
         /// <summary>
@@ -545,6 +561,43 @@ namespace SharpLSL
         protected override void DestroyLSLObject()
         {
             lsl_destroy_streaminfo(handle);
+        }
+
+        private static IntPtr CreateStreamInfo(
+            string name,
+            string type,
+            int channelCount,
+            double nominalSrate,
+            Interop.lsl_channel_format_t channelFormat,
+            string sourceId)
+        {
+            var nameBytes = StringToBytes(name);
+            if (nameBytes == null)
+                throw new ArgumentException(nameof(name));
+
+            var typeBytes = StringToBytes(type);
+            if (typeBytes == null)
+                throw new ArgumentException(nameof(type));
+
+            var sourceIdBytes = StringToBytes(sourceId ?? "");
+            if (sourceIdBytes == null)
+                throw new ArgumentException(nameof(sourceId));
+
+            unsafe
+            {
+                fixed (byte* nameBuffer = nameBytes)
+                fixed (byte* typeBuffer = typeBytes)
+                fixed (byte* sourceIdBuffer = sourceIdBytes)
+                {
+                    return lsl_create_streaminfo(
+                        (IntPtr)nameBuffer,
+                        (IntPtr)typeBuffer,
+                        channelCount,
+                        nominalSrate,
+                        channelFormat,
+                        (IntPtr)sourceIdBuffer);
+                }
+            }
         }
     }
 }

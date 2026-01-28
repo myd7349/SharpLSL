@@ -1,4 +1,5 @@
 using System;
+using System.Runtime.CompilerServices;
 
 using static SharpLSL.Interop.LSL;
 using static SharpLSL.LSL;
@@ -63,7 +64,7 @@ namespace SharpLSL
         /// <inheritdoc cref="ContinuousResolver(double)"/>
         /// <seealso cref="Resolve(string, string, int, int, double)"/>
         public ContinuousResolver(string property, string value, double forgetAfter = 5.0)
-            : base(lsl_create_continuous_resolver_byprop(property, value, forgetAfter))
+            : base(CreateContinuousResolver(property, value, forgetAfter))
         {
         }
 
@@ -87,7 +88,7 @@ namespace SharpLSL
         /// <inheritdoc cref="ContinuousResolver(double)"/>
         /// <seealso cref="Resolve(string, int, int, double)"/>
         public ContinuousResolver(string predicate, double forgetAfter = 5.0)
-            : base(lsl_create_continuous_resolver_bypred(predicate, forgetAfter))
+            : base(CreateContinuousResolver(predicate, forgetAfter))
         {
         }
 
@@ -176,6 +177,52 @@ namespace SharpLSL
         protected override void DestroyLSLObject()
         {
             lsl_destroy_continuous_resolver(handle);
+        }
+
+#if !NET35
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+#endif
+        private static IntPtr CreateContinuousResolver(string property, string value, double forgetAfter)
+        {
+            var propertyBytes = StringToBytes(property);
+            if (propertyBytes == null)
+                throw new ArgumentException(nameof(property));
+
+            var valueBytes = StringToBytes(value);
+            if (valueBytes == null)
+                throw new ArgumentException(nameof(value));
+
+            unsafe
+            {
+                fixed (byte* propertyBuffer = propertyBytes)
+                fixed (byte* valueBuffer = valueBytes)
+                {
+                    return lsl_create_continuous_resolver_byprop(
+                        (sbyte*)propertyBuffer,
+                        (sbyte*)valueBuffer,
+                        forgetAfter);
+                }
+            }
+        }
+
+#if !NET35
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+#endif
+        private static IntPtr CreateContinuousResolver(string predicate, double forgetAfter)
+        {
+            var predicateBytes = StringToBytes(predicate);
+            if (predicateBytes == null)
+                throw new ArgumentException(nameof(predicate));
+
+            unsafe
+            {
+                fixed (byte* predicateBuffer = predicateBytes)
+                {
+                    return lsl_create_continuous_resolver_bypred(
+                        (sbyte*)predicateBuffer,
+                        forgetAfter);
+                }
+            }
         }
     }
 }

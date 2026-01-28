@@ -1,4 +1,4 @@
-// Port of: https://github.com/sccn/liblsl/blob/master/examples/SendStringMarkers.cpp
+// Port of: https://github.com/sccn/liblsl/blob/main/examples/SendStringMarkers.cpp
 // This example program offers a 1-channel stream which contains strings.
 // The stream has the "Marker" content type and irregular sampling rate.
 // The name of the stream can be chosen as a startup parameter.

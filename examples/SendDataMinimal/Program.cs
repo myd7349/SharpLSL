@@ -1,4 +1,4 @@
-﻿// Port of: https://github.com/sccn/liblsl/blob/master/examples/SendDataMinimal.cpp
+// Port of: https://github.com/sccn/liblsl/blob/main/examples/SendDataMinimal.cpp
 // This is a minimal example of how a multi-channel data stream can be sent to LSL.
 // Here, the stream is named SimpleStream, has content-type EEG, 8 channels, and 200Hz.
 // The transmitted samples contain random numbers.

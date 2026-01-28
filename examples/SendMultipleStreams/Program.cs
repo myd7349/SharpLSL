@@ -1,4 +1,4 @@
-// Port of: https://github.com/sccn/liblsl/blob/master/examples/SendMultipleStreams.cpp
+// Port of: https://github.com/sccn/liblsl/blob/main/examples/SendMultipleStreams.cpp
 using System.Diagnostics;
 
 namespace SharpLSL.Examples
@@ -63,7 +63,6 @@ namespace SharpLSL.Examples
 
                     var timestamp = LSL.GetLocalClock();
 
-                    // TODO: push_chunk_multiplexed
                     foreach (var streamOutlet in streamOutlets)
                         streamOutlet.PushChunk(chunk, timestamp);
                 }

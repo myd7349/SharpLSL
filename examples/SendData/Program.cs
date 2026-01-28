@@ -1,4 +1,4 @@
-// Port of: https://github.com/sccn/liblsl/blob/master/examples/SendData.cpp
+// Port of: https://github.com/sccn/liblsl/blob/main/examples/SendData.cpp
 // This example program offers an 8-channel stream, float-formatted, that resembles EEG data.
 // The example demonstrates also how per-channel meta-data can be specified using the .desc() field
 // of the stream information object.
@@ -98,19 +98,19 @@ namespace SharpLSL.Examples
                     ChannelFormat.Float,
                     name + type);
 
-                streamInfo.Description.AppendChild("manufacturer", "LSL");
+                streamInfo.Description.AppendChildValue("manufacturer", "LSL");
 
                 var channelInfos = streamInfo.Description.AppendChild("channels");
                 for (int c = 0; c < channels; ++c)
                 {
                     channelInfos.AppendChild("channel")
-                        .AppendChild("label", c < 8 ? Channels[c] : $"CH{c + 1}")
-                        .AppendChild("unit", "microvolts")
-                        .AppendChild("type", type);
+                        .AppendChildValue("label", c < 8 ? Channels[c] : $"CH{c + 1}")
+                        .AppendChildValue("unit", "microvolts")
+                        .AppendChildValue("type", type);
                 }
 
                 // Make a new outlet
-                var streamOutlet = new StreamOutlet(streamInfo, 0, maxBuffered);
+                using var streamOutlet = new StreamOutlet(streamInfo, 0, maxBuffered);
 
                 var sample = new float[channels];
 

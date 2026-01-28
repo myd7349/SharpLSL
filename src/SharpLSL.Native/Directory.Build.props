@@ -1,5 +1,4 @@
 <Project>
-
   <Import Project="$([MSBuild]::GetPathOfFileAbove('Directory.Build.props', '$(MSBuildThisFileDirectory)../'))" />
 
   <PropertyGroup>
@@ -17,9 +16,9 @@
   </PropertyGroup>
 
   <PropertyGroup Label="Package">
+    <PackageVersion>$(Version)</PackageVersion>
     <ExcludeSymbolsFromPackage>false</ExcludeSymbolsFromPackage>
     <IncludeBuildOutput>false</IncludeBuildOutput>
-    <PackageLicenseFile>LICENSE</PackageLicenseFile>
     <SuppressDependenciesWhenPacking>true</SuppressDependenciesWhenPacking>
   </PropertyGroup>
 
@@ -27,5 +26,4 @@
     <None Include="../LICENSE" Pack="true" PackagePath="/" />
     <None Include="../README.md" Pack="true" PackagePath="/" />
   </ItemGroup>
-
 </Project>
