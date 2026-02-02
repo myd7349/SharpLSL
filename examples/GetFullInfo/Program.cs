@@ -17,10 +17,7 @@ namespace SharpLSL.Examples
                 Console.WriteLine("Please enter a field name and the desired value (e.g. \"type EEG\" (without the quotes)):");
 
                 var input = Console.ReadLine();
-                if (input == null)
-                    return;
-
-                var inputParts = input.Split();
+                var inputParts = input?.Split();
                 if (inputParts?.Length != 2)
                     return;
 

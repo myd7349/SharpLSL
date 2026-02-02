@@ -1,4 +1,6 @@
 using System;
+using System.Collections;
+using System.Collections.Generic;
 using System.Diagnostics;
 
 using static SharpLSL.Interop.LSL;
@@ -16,8 +18,8 @@ namespace SharpLSL
     /// modeled after a subset of pugixml's node type and is compatible with it.
     /// See <see href="https://pugixml.org/docs/manual.html#access"/> for more details.
     /// </remarks>
-    // TODO: IEnumerable, ToString, C# XML libraries
-    public class XMLElement
+    // TODO: ToString
+    public class XMLElement : IEnumerable<XMLElement>
     {
         /// <summary>
         /// Constructs a new instance of the <see cref="XMLElement"/> class that
@@ -26,7 +28,7 @@ namespace SharpLSL
         /// <param name="handle">
         /// Specifies the handle to be wrapped.
         /// </param>
-        internal XMLElement(IntPtr handle)
+        public XMLElement(IntPtr handle)
         {
             _handle = handle;
         }
@@ -45,7 +47,7 @@ namespace SharpLSL
 
         /// <summary>
         /// Gets a value indicating whether this element is a text body (instead of
-        /// an XML element). True for both plain character data and CData.
+        /// an XML element). <c>true</c> for both plain character data and CData.
         /// </summary>
         public bool IsText
         {
@@ -69,10 +71,7 @@ namespace SharpLSL
         {
             get
             {
-                unsafe
-                {
-                    return PtrToXmlString((IntPtr)lsl_name(_handle));
-                }
+                return PtrToXmlString(lsl_name(_handle));
             }
 
             set
@@ -86,7 +85,7 @@ namespace SharpLSL
                 {
                     fixed (byte* buffer = bytes)
                     {
-                        result = Convert.ToBoolean(lsl_set_name(_handle, (sbyte*)buffer));
+                        result = Convert.ToBoolean(lsl_set_name(_handle, (IntPtr)buffer));
                     }
                 }
 
@@ -109,10 +108,7 @@ namespace SharpLSL
         {
             get
             {
-                unsafe
-                {
-                    return PtrToXmlString((IntPtr)lsl_value(_handle));
-                }
+                return PtrToXmlString(lsl_value(_handle));
             }
 
             set
@@ -126,7 +122,7 @@ namespace SharpLSL
                 {
                     fixed (byte* buffer = bytes)
                     {
-                        result = Convert.ToBoolean(lsl_set_value(_handle, (sbyte*)buffer));
+                        result = Convert.ToBoolean(lsl_set_value(_handle, (IntPtr)buffer));
                     }
                 }
 
@@ -193,6 +189,9 @@ namespace SharpLSL
         /// </summary>
         /// <param name="name">The name of the child.</param>
         /// <returns>
+        /// <exception cref="ArgumentException">
+        /// Thrown if the <paramref name="name"/> is invalid.
+        /// </exception>
         /// A child of the element with the specified name, or <see cref="Empty"/>
         /// if no such child exists.
         /// </returns>
@@ -200,13 +199,13 @@ namespace SharpLSL
         {
             var bytes = StringToBytes(name);
             if (bytes == null)
-                return Empty;
+                throw new ArgumentException(nameof(name));
 
             unsafe
             {
                 fixed (byte* buffer = bytes)
                 {
-                    var node = lsl_child(_handle, (sbyte*)buffer);
+                    var node = lsl_child(_handle, (IntPtr)buffer);
                     if (node != IntPtr.Zero)
                         return new XMLElement(node);
                 }
@@ -225,12 +224,9 @@ namespace SharpLSL
         /// <seealso cref="ChildValue(string)"/>
         public string ChildValue()
         {
-            unsafe
-            {
-                var str = (IntPtr)lsl_child_value(_handle);
-                if (str != IntPtr.Zero)
-                    return PtrToXmlString(str);
-            }
+            var str = lsl_child_value(_handle);
+            if (str != IntPtr.Zero)
+                return PtrToXmlString(str);
 
             return string.Empty;
         }
@@ -243,21 +239,24 @@ namespace SharpLSL
         /// <returns>
         /// The value of the first child that is text, or empty string if no such child exists.
         /// </returns>
+        /// <exception cref="ArgumentException">
+        /// Thrown if the <paramref name="name"/> is invalid.
+        /// </exception>
         /// <seealso cref="ChildValue()"/>
         /// <seealso cref="SetChildValue(string, string)"/>
         public string ChildValue(string name)
         {
             var bytes = StringToBytes(name);
             if (bytes == null)
-                return string.Empty;
+                throw new ArgumentException(nameof(name));
 
             unsafe
             {
                 fixed (byte* buffer = bytes)
                 {
-                    var str = lsl_child_value_n(_handle, (sbyte*)buffer);
-                    if (str != null)
-                        return PtrToXmlString((IntPtr)str);
+                    var str = lsl_child_value_n(_handle, (IntPtr)buffer);
+                    if (str != IntPtr.Zero)
+                        return PtrToXmlString(str);
                 }
             }
 
@@ -270,7 +269,7 @@ namespace SharpLSL
         /// <param name="name">The name of the child.</param>
         /// <param name="value">The value of the child.</param>
         /// <exception cref="ArgumentException">
-        /// Thrown if the name or value is invalid.
+        /// Thrown if the <paramref name="name"/> or <paramref name="value"/> is invalid.
         /// </exception>
         /// <exception cref="LSLException">
         /// Thrown if setting the child value fails.
@@ -292,7 +291,7 @@ namespace SharpLSL
                 fixed (byte* nameBuffer = nameBytes)
                 fixed (byte* valueBuffer = valueBytes)
                 {
-                    result = Convert.ToBoolean(lsl_set_child_value(_handle, (sbyte*)nameBuffer, (sbyte*)valueBuffer));
+                    result = Convert.ToBoolean(lsl_set_child_value(_handle, (IntPtr)nameBuffer, (IntPtr)valueBuffer));
                 }
             }
 
@@ -327,19 +326,22 @@ namespace SharpLSL
         /// The next sibling of the element with the specified name, or <see cref="Empty"/>
         /// if no such sibling exists.
         /// </returns>
+        /// <exception cref="ArgumentException">
+        /// Thrown if the <paramref name="name"/> is invalid.
+        /// </exception>
         /// <seealso cref="NextSibling()"/>
         /// <seealso cref="PreviousSibling(string)"/>
         public XMLElement NextSibling(string name)
         {
             var bytes = StringToBytes(name);
             if (bytes == null)
-                return Empty;
+                throw new ArgumentException(nameof(name));
 
             unsafe
             {
                 fixed (byte* buffer = bytes)
                 {
-                    var node = lsl_next_sibling_n(_handle, (sbyte*)buffer);
+                    var node = lsl_next_sibling_n(_handle, (IntPtr)buffer);
                     if (node != IntPtr.Zero)
                         return new XMLElement(node);
                 }
@@ -352,8 +354,8 @@ namespace SharpLSL
         /// Gets the previous sibling of the element in the parent's child list.
         /// </summary>
         /// <returns>
-        /// The previous sibling of the element in the parent's child list, or
-        /// <see cref="Empty"/> if the element is the first node in the list.
+        /// The previous sibling of the element in the parent's child list, or <see cref="Empty"/>
+        /// if no such sibling exists.
         /// </returns>
         /// <seealso cref="PreviousSibling(string)"/>
         /// <seealso cref="NextSibling()"/>
@@ -375,19 +377,22 @@ namespace SharpLSL
         /// The previous sibling of the element with the specified name, or <see cref="Empty"/>
         /// if no such sibling exists.
         /// </returns>
+        /// <exception cref="ArgumentException">
+        /// Thrown if the <paramref name="name"/> is invalid.
+        /// </exception>
         /// <seealso cref="PreviousSibling()"/>
         /// <seealso cref="NextSibling(string)"/>
         public XMLElement PreviousSibling(string name)
         {
             var bytes = StringToBytes(name);
             if (bytes == null)
-                return Empty;
+                throw new ArgumentException(nameof(name));
 
             unsafe
             {
                 fixed (byte* buffer = bytes)
                 {
-                    var node = lsl_previous_sibling_n(_handle, (sbyte*)buffer);
+                    var node = lsl_previous_sibling_n(_handle, (IntPtr)buffer);
                     if (node != IntPtr.Zero)
                         return new XMLElement(node);
                 }
@@ -403,15 +408,24 @@ namespace SharpLSL
         /// <returns>
         /// An <see cref="XMLElement"/> representing the newly created child element.
         /// </returns>
+        /// <exception cref="ArgumentException">
+        /// Thrown if the <paramref name="name"/> is invalid.
+        /// </exception>
         /// <seealso cref="AppendChildValue(string, string)"/>
         /// <seealso cref="AppendChild(XMLElement)"/>
         /// <seealso cref="PrependChild(string)"/>
-        public unsafe XMLElement AppendChild(string name)
+        public XMLElement AppendChild(string name)
         {
             var bytes = StringToBytes(name);
-            fixed (byte* buffer = bytes)
+            if (bytes == null)
+                throw new ArgumentException(nameof(name));
+
+            unsafe
             {
-                return new XMLElement(lsl_append_child(_handle, (sbyte*)buffer));
+                fixed (byte* buffer = bytes)
+                {
+                    return new XMLElement(lsl_append_child(_handle, (IntPtr)buffer));
+                }
             }
         }
 
@@ -422,18 +436,26 @@ namespace SharpLSL
         /// <param name="name">The name of the child.</param>
         /// <param name="value">The value of the child.</param>
         /// <returns>The current element.</returns>
+        /// <exception cref="ArgumentException">
+        /// Thrown if the <paramref name="name"/> or <paramref name="value"/> is invalid.
+        /// </exception>
         /// <seealso cref="AppendChild(string)"/>
-        /// <seealso cref="PrependChildValue(string, string)"/>
         /// <seealso cref="AppendChild(XMLElement)"/>
+        /// <seealso cref="PrependChildValue(string, string)"/>
         public unsafe XMLElement AppendChildValue(string name, string value)
         {
             var nameBytes = StringToBytes(name);
+            if (nameBytes == null)
+                throw new ArgumentException(nameof(name));
+
             var valueBytes = StringToBytes(value);
+            if (valueBytes == null)
+                throw new ArgumentException(nameof(value));
 
             fixed (byte* nameBuffer = nameBytes)
             fixed (byte* valueBuffer = valueBytes)
             {
-                var node = lsl_append_child_value(_handle, (sbyte*)nameBuffer, (sbyte*)valueBuffer);
+                var node = lsl_append_child_value(_handle, (IntPtr)nameBuffer, (IntPtr)valueBuffer);
                 Debug.Assert(node == _handle);
                 return this;
             }
@@ -447,7 +469,7 @@ namespace SharpLSL
         /// An <see cref="XMLElement"/> representing the newly created child element.
         /// </returns>
         /// <exception cref="ArgumentNullException">
-        /// Thrown if the element to be copied is null.
+        /// Thrown if the <paramref name="element"/> to be copied is null.
         /// </exception>
         /// <seealso cref="AppendChild(string)"/>
         /// <seealso cref="AppendChildValue(string, string)"/>
@@ -471,17 +493,23 @@ namespace SharpLSL
         /// <returns>
         /// An <see cref="XMLElement"/> representing the newly created child element.
         /// </returns>
-        /// <seealso cref="PrependChildValue(string, string)"/>
+        /// <exception cref="ArgumentException">
+        /// Thrown if the <paramref name="name"/> is invalid.
+        /// </exception>
         /// <seealso cref="PrependChild(XMLElement)"/>
+        /// <seealso cref="PrependChildValue(string, string)"/>
         /// <seealso cref="AppendChild(string)"/>
         public XMLElement PrependChild(string name)
         {
             var bytes = StringToBytes(name);
+            if (bytes == null)
+                throw new ArgumentException(nameof(name));
+
             unsafe
             {
                 fixed (byte* buffer = bytes)
                 {
-                    return new XMLElement(lsl_prepend_child(_handle, (sbyte*)buffer));
+                    return new XMLElement(lsl_prepend_child(_handle, (IntPtr)buffer));
                 }
             }
         }
@@ -493,18 +521,26 @@ namespace SharpLSL
         /// <param name="name">The name of the child element.</param>
         /// <param name="value">The text value of the child element.</param>
         /// <returns>The current element.</returns>
+        /// <exception cref="ArgumentException">
+        /// Thrown if the <paramref name="name"/> or <paramref name="value"/> is invalid.
+        /// </exception>
         /// <seealso cref="PrependChild(string)"/>
         /// <seealso cref="PrependChild(XMLElement)"/>
         /// <seealso cref="AppendChildValue(string, string)"/>
         public unsafe XMLElement PrependChildValue(string name, string value)
         {
             var nameBytes = StringToBytes(name);
+            if (nameBytes == null)
+                throw new ArgumentException(nameof(name));
+
             var valueBytes = StringToBytes(value);
+            if (valueBytes == null)
+                throw new ArgumentException(nameof(value));
 
             fixed (byte* nameBuffer = nameBytes)
             fixed (byte* valueBuffer = valueBytes)
             {
-                var node = lsl_prepend_child_value(_handle, (sbyte*)nameBuffer, (sbyte*)valueBuffer);
+                var node = lsl_prepend_child_value(_handle, (IntPtr)nameBuffer, (IntPtr)valueBuffer);
                 Debug.Assert(node == _handle);
                 return this;
             }
@@ -517,6 +553,9 @@ namespace SharpLSL
         /// <returns>
         /// An <see cref="XMLElement"/> representing the newly created child element.
         /// </returns>
+        /// <exception cref="ArgumentNullException">
+        /// Thrown if the <paramref name="element"/> to be copied is null.
+        /// </exception>
         /// <seealso cref="PrependChild(string)"/>
         /// <seealso cref="PrependChildValue(string, string)"/>
         /// <seealso cref="AppendChild(XMLElement)"/>
@@ -536,15 +575,21 @@ namespace SharpLSL
         /// Removes a child of the element with the specified name.
         /// </summary>
         /// <param name="name">The name of the child.</param>
+        /// <exception cref="ArgumentException">
+        /// Thrown if the <paramref name="name"/> is invalid.
+        /// </exception>
         /// <seealso cref="RemoveChild(XMLElement)"/>
         public void RemoveChild(string name)
         {
             var bytes = StringToBytes(name);
+            if (bytes == null)
+                throw new ArgumentException(nameof(name));
+
             unsafe
             {
                 fixed (byte* buffer = bytes)
                 {
-                    lsl_remove_child_n(_handle, (sbyte*)buffer);
+                    lsl_remove_child_n(_handle, (IntPtr)buffer);
                 }
             }
         }
@@ -554,7 +599,7 @@ namespace SharpLSL
         /// </summary>
         /// <param name="element">The child element to be removed.</param>
         /// <exception cref="ArgumentNullException">
-        /// Thrown if the element to be removed is null.
+        /// Thrown if the <paramref name="element"/> to be removed is null.
         /// </exception>
         /// <seealso cref="RemoveChild(string)"/>
         public void RemoveChild(XMLElement element)
@@ -563,6 +608,33 @@ namespace SharpLSL
                 throw new ArgumentNullException(nameof(element));
 
             lsl_remove_child(_handle, element._handle);
+        }
+
+        /// <summary>
+        /// Gets an enumerator that iterates through the child elements in the
+        /// current element.
+        /// </summary>
+        /// <returns>
+        /// An IEnumerator object that can be used to iterate through the child
+        /// elements in the current element.
+        /// </returns>
+        // TODO: Test
+        public IEnumerator<XMLElement> GetEnumerator()
+        {
+            if (_handle == IntPtr.Zero)
+                yield break;
+
+            var child = FirstChild();
+            while (!child.IsEmpty)
+            {
+                yield return child;
+                child = child.NextSibling();
+            }
+        }
+
+        IEnumerator IEnumerable.GetEnumerator()
+        {
+            return GetEnumerator();
         }
 
         /// <summary>
@@ -584,3 +656,4 @@ namespace SharpLSL
 // https://github.com/labstreaminglayer/liblsl-Csharp/blob/master/LSL.cs
 // https://pugixml.org/docs/manual.html#access
 // https://github.com/zeux/pugixml/blob/master/src/pugixml.hpp
+// https://learn.microsoft.com/en-us/dotnet/api/system.xml.xmlnode?view=net-10.0

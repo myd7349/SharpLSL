@@ -124,7 +124,8 @@ ClangSharpPInvokeGenerator `
     --additional -m64 `
     --output ../src/SharpLSL/Interop/XML.g.cs `
     --remap `
-    lsl_xml_ptr=IntPtr
+    lsl_xml_ptr=IntPtr `
+    sbyte*=IntPtr
 
 
 # References:

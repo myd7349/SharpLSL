@@ -1,18 +1,18 @@
 #pragma warning disable CS1591
-using System;
 using System.Runtime.InteropServices;
 
 using lsl_continuous_resolver = System.IntPtr;
+using lsl_streaminfo = System.IntPtr;
 
 namespace SharpLSL.Interop
 {
-    public static unsafe partial class LSL
+    public static partial class LSL
     {
         [DllImport("lsl", CallingConvention = CallingConvention.Cdecl, ExactSpelling = true)]
-        public static extern int lsl_resolver_results(lsl_continuous_resolver res, [Out] IntPtr[] buffer, uint buffer_elements);
+        public static extern int lsl_resolver_results(lsl_continuous_resolver res, [Out] lsl_streaminfo[] buffer, uint buffer_elements);
 
         [DllImport("lsl", CallingConvention = CallingConvention.Cdecl, ExactSpelling = true)]
-        public static extern int lsl_resolve_all([Out] IntPtr[] buffer, uint buffer_elements, double wait_time);
+        public static extern int lsl_resolve_all([Out] lsl_streaminfo[] buffer, uint buffer_elements, double wait_time);
     }
 }
 

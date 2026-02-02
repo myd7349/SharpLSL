@@ -14,7 +14,7 @@ using System.Runtime.InteropServices;
 
 namespace SharpLSL.Interop
 {
-    public static unsafe partial class LSL
+    public static partial class LSL
     {
         [DllImport("lsl", CallingConvention = CallingConvention.Cdecl, ExactSpelling = true)]
         [return: NativeTypeName("lsl_xml_ptr")]
@@ -38,15 +38,15 @@ namespace SharpLSL.Interop
 
         [DllImport("lsl", CallingConvention = CallingConvention.Cdecl, ExactSpelling = true)]
         [return: NativeTypeName("lsl_xml_ptr")]
-        public static extern IntPtr lsl_child([NativeTypeName("lsl_xml_ptr")] IntPtr e, [NativeTypeName("const char *")] sbyte* name);
+        public static extern IntPtr lsl_child([NativeTypeName("lsl_xml_ptr")] IntPtr e, [NativeTypeName("const char *")] IntPtr name);
 
         [DllImport("lsl", CallingConvention = CallingConvention.Cdecl, ExactSpelling = true)]
         [return: NativeTypeName("lsl_xml_ptr")]
-        public static extern IntPtr lsl_next_sibling_n([NativeTypeName("lsl_xml_ptr")] IntPtr e, [NativeTypeName("const char *")] sbyte* name);
+        public static extern IntPtr lsl_next_sibling_n([NativeTypeName("lsl_xml_ptr")] IntPtr e, [NativeTypeName("const char *")] IntPtr name);
 
         [DllImport("lsl", CallingConvention = CallingConvention.Cdecl, ExactSpelling = true)]
         [return: NativeTypeName("lsl_xml_ptr")]
-        public static extern IntPtr lsl_previous_sibling_n([NativeTypeName("lsl_xml_ptr")] IntPtr e, [NativeTypeName("const char *")] sbyte* name);
+        public static extern IntPtr lsl_previous_sibling_n([NativeTypeName("lsl_xml_ptr")] IntPtr e, [NativeTypeName("const char *")] IntPtr name);
 
         [DllImport("lsl", CallingConvention = CallingConvention.Cdecl, ExactSpelling = true)]
         [return: NativeTypeName("int32_t")]
@@ -58,47 +58,47 @@ namespace SharpLSL.Interop
 
         [DllImport("lsl", CallingConvention = CallingConvention.Cdecl, ExactSpelling = true)]
         [return: NativeTypeName("const char *")]
-        public static extern sbyte* lsl_name([NativeTypeName("lsl_xml_ptr")] IntPtr e);
+        public static extern IntPtr lsl_name([NativeTypeName("lsl_xml_ptr")] IntPtr e);
 
         [DllImport("lsl", CallingConvention = CallingConvention.Cdecl, ExactSpelling = true)]
         [return: NativeTypeName("const char *")]
-        public static extern sbyte* lsl_value([NativeTypeName("lsl_xml_ptr")] IntPtr e);
+        public static extern IntPtr lsl_value([NativeTypeName("lsl_xml_ptr")] IntPtr e);
 
         [DllImport("lsl", CallingConvention = CallingConvention.Cdecl, ExactSpelling = true)]
         [return: NativeTypeName("const char *")]
-        public static extern sbyte* lsl_child_value([NativeTypeName("lsl_xml_ptr")] IntPtr e);
+        public static extern IntPtr lsl_child_value([NativeTypeName("lsl_xml_ptr")] IntPtr e);
 
         [DllImport("lsl", CallingConvention = CallingConvention.Cdecl, ExactSpelling = true)]
         [return: NativeTypeName("const char *")]
-        public static extern sbyte* lsl_child_value_n([NativeTypeName("lsl_xml_ptr")] IntPtr e, [NativeTypeName("const char *")] sbyte* name);
+        public static extern IntPtr lsl_child_value_n([NativeTypeName("lsl_xml_ptr")] IntPtr e, [NativeTypeName("const char *")] IntPtr name);
 
         [DllImport("lsl", CallingConvention = CallingConvention.Cdecl, ExactSpelling = true)]
         [return: NativeTypeName("lsl_xml_ptr")]
-        public static extern IntPtr lsl_append_child_value([NativeTypeName("lsl_xml_ptr")] IntPtr e, [NativeTypeName("const char *")] sbyte* name, [NativeTypeName("const char *")] sbyte* value);
+        public static extern IntPtr lsl_append_child_value([NativeTypeName("lsl_xml_ptr")] IntPtr e, [NativeTypeName("const char *")] IntPtr name, [NativeTypeName("const char *")] IntPtr value);
 
         [DllImport("lsl", CallingConvention = CallingConvention.Cdecl, ExactSpelling = true)]
         [return: NativeTypeName("lsl_xml_ptr")]
-        public static extern IntPtr lsl_prepend_child_value([NativeTypeName("lsl_xml_ptr")] IntPtr e, [NativeTypeName("const char *")] sbyte* name, [NativeTypeName("const char *")] sbyte* value);
+        public static extern IntPtr lsl_prepend_child_value([NativeTypeName("lsl_xml_ptr")] IntPtr e, [NativeTypeName("const char *")] IntPtr name, [NativeTypeName("const char *")] IntPtr value);
 
         [DllImport("lsl", CallingConvention = CallingConvention.Cdecl, ExactSpelling = true)]
         [return: NativeTypeName("int32_t")]
-        public static extern int lsl_set_child_value([NativeTypeName("lsl_xml_ptr")] IntPtr e, [NativeTypeName("const char *")] sbyte* name, [NativeTypeName("const char *")] sbyte* value);
+        public static extern int lsl_set_child_value([NativeTypeName("lsl_xml_ptr")] IntPtr e, [NativeTypeName("const char *")] IntPtr name, [NativeTypeName("const char *")] IntPtr value);
 
         [DllImport("lsl", CallingConvention = CallingConvention.Cdecl, ExactSpelling = true)]
         [return: NativeTypeName("int32_t")]
-        public static extern int lsl_set_name([NativeTypeName("lsl_xml_ptr")] IntPtr e, [NativeTypeName("const char *")] sbyte* rhs);
+        public static extern int lsl_set_name([NativeTypeName("lsl_xml_ptr")] IntPtr e, [NativeTypeName("const char *")] IntPtr rhs);
 
         [DllImport("lsl", CallingConvention = CallingConvention.Cdecl, ExactSpelling = true)]
         [return: NativeTypeName("int32_t")]
-        public static extern int lsl_set_value([NativeTypeName("lsl_xml_ptr")] IntPtr e, [NativeTypeName("const char *")] sbyte* rhs);
+        public static extern int lsl_set_value([NativeTypeName("lsl_xml_ptr")] IntPtr e, [NativeTypeName("const char *")] IntPtr rhs);
 
         [DllImport("lsl", CallingConvention = CallingConvention.Cdecl, ExactSpelling = true)]
         [return: NativeTypeName("lsl_xml_ptr")]
-        public static extern IntPtr lsl_append_child([NativeTypeName("lsl_xml_ptr")] IntPtr e, [NativeTypeName("const char *")] sbyte* name);
+        public static extern IntPtr lsl_append_child([NativeTypeName("lsl_xml_ptr")] IntPtr e, [NativeTypeName("const char *")] IntPtr name);
 
         [DllImport("lsl", CallingConvention = CallingConvention.Cdecl, ExactSpelling = true)]
         [return: NativeTypeName("lsl_xml_ptr")]
-        public static extern IntPtr lsl_prepend_child([NativeTypeName("lsl_xml_ptr")] IntPtr e, [NativeTypeName("const char *")] sbyte* name);
+        public static extern IntPtr lsl_prepend_child([NativeTypeName("lsl_xml_ptr")] IntPtr e, [NativeTypeName("const char *")] IntPtr name);
 
         [DllImport("lsl", CallingConvention = CallingConvention.Cdecl, ExactSpelling = true)]
         [return: NativeTypeName("lsl_xml_ptr")]
@@ -109,7 +109,7 @@ namespace SharpLSL.Interop
         public static extern IntPtr lsl_prepend_copy([NativeTypeName("lsl_xml_ptr")] IntPtr e, [NativeTypeName("lsl_xml_ptr")] IntPtr e2);
 
         [DllImport("lsl", CallingConvention = CallingConvention.Cdecl, ExactSpelling = true)]
-        public static extern void lsl_remove_child_n([NativeTypeName("lsl_xml_ptr")] IntPtr e, [NativeTypeName("const char *")] sbyte* name);
+        public static extern void lsl_remove_child_n([NativeTypeName("lsl_xml_ptr")] IntPtr e, [NativeTypeName("const char *")] IntPtr name);
 
         [DllImport("lsl", CallingConvention = CallingConvention.Cdecl, ExactSpelling = true)]
         public static extern void lsl_remove_child([NativeTypeName("lsl_xml_ptr")] IntPtr e, [NativeTypeName("lsl_xml_ptr")] IntPtr e2);

@@ -1,4 +1,4 @@
-﻿using SharpLSL;
+using SharpLSL;
 
 Console.WriteLine($"64 bit? {Environment.Is64BitProcess}");
 

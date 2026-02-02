@@ -1,4 +1,6 @@
 using System;
+using System.Runtime.CompilerServices;
+using System.Runtime.InteropServices;
 
 using SharpLSL.Interop;
 
@@ -25,7 +27,7 @@ namespace SharpLSL
     public class StreamInlet : LSLObject
     {
         /// <summary>
-        /// Constructs a new stream inlet from a resolved stream info.
+        /// Constructs a new stream inlet from a resolved <see cref="StreamInfo"/>.
         /// </summary>
         /// <param name="streamInfo">
         /// A resolved <see cref="StreamInfo"/> object, typically obtained from one
@@ -57,6 +59,12 @@ namespace SharpLSL
         /// <param name="transportOptions">
         /// Specifies additional options for data transport. Default is <see cref="TransportOptions.Default"/>.
         /// </param>
+        /// <exception cref="ArgumentNullException">
+        /// Thrown when <paramref name="streamInfo"/> is <c>null</c>.
+        /// </exception>
+        /// <exception cref="ArgumentException">
+        /// Thrown when <paramref name="streamInfo"/> wraps an invalid native handle.
+        /// </exception>
         /// <exception cref="LSLException">
         /// Thrown when creating a new instance of <see cref="StreamInlet"/> fails.
         /// </exception>
@@ -67,18 +75,18 @@ namespace SharpLSL
         /// if there is no time to resolve the stream up-front (e.g., due to limitations
         /// in the client program).
         /// </remarks>
-        // TODO:
-        // Comment on flags from liblsl:
-        // An integer that is the result of bitwise OR'ing one or more options from
-        // #lsl_transport_options_t together (e.g., #transp_bufsize_samples)
         public StreamInlet(
-            StreamInfo streamInfo, int maxChunkLength = 0, int maxBufferLength = 360,
-            bool recover = true, TransportOptions transportOptions = TransportOptions.Default)
-            : base(lsl_create_inlet_ex(
-                streamInfo.DangerousGetHandle(),
-                maxBufferLength, maxChunkLength,
-                recover ? 1 : 0,
-                (lsl_transport_options_t)transportOptions))
+            StreamInfo streamInfo,
+            int maxChunkLength = 0,
+            int maxBufferLength = 360,
+            bool recover = true,
+            TransportOptions transportOptions = TransportOptions.Default)
+            : base(CreateInlet(
+                streamInfo,
+                maxChunkLength,
+                maxBufferLength,
+                recover,
+                transportOptions))
         {
             ChannelCount = streamInfo.ChannelCount;
             _sampleBytes = streamInfo.SampleBytes;
@@ -147,16 +155,8 @@ namespace SharpLSL
 
             var errorCode = (int)lsl_error_code_t.lsl_no_error;
             var streamInfo = lsl_get_fullinfo(handle, timeout, ref errorCode);
-#if false
-            if (streamInfo != IntPtr.Zero)
-                return new StreamInfo(streamInfo, true);
-
-            CheckError(errorCode);
-            // [Is there something like [[noreturn]] in C# to indicate the compiler that the method will never return a value?](https://stackoverflow.com/questions/48232105/is-there-something-like-noreturn-in-c-sharp-to-indicate-the-compiler-that-th)
-#else
             CheckError(errorCode);
             return new StreamInfo(streamInfo, true);
-#endif
         }
 
         /// <summary>
@@ -355,6 +355,9 @@ namespace SharpLSL
         /// <exception cref="ArgumentException">
         /// Thrown if the size of the provided buffer <paramref name="sample"/> does not
         /// match the channel count (<see cref="ChannelCount"/>) of the stream inlet.
+        /// </exception>
+        /// <exception cref="LSLInternalException">
+        /// Thrown if an internal error occurs in the LSL library.
         /// </exception>
         /// <exception cref="StreamLostException">
         /// Thrown if the stream source has been lost.
@@ -556,7 +559,6 @@ namespace SharpLSL
 #endif
 
         /// <inheritdoc cref="PullSample(sbyte[], double)"/>
-        // TODO: Pull as byte sequence without calling PtrToString.
         public double PullSample(string[] sample, double timeout = Forever)
         {
             ThrowIfInvalid();
@@ -634,15 +636,21 @@ namespace SharpLSL
         /// Thrown if the size of the provided buffer <paramref name="sample"/> does not
         /// match the channel count (<see cref="ChannelCount"/>) of the stream inlet.
         /// </exception>
+        /// <exception cref="LSLInternalException">
+        /// Thrown if an internal error occurs in the LSL library.
+        /// </exception>
+        /// <exception cref="LSLException">
+        /// Thrown when the value length exceeds <c>int.MaxValue</c>.
+        /// </exception>
         /// <inheritdoc cref="PullSample(sbyte[], double)"/>
-        public unsafe double PullSample(byte[][] sample, double timeout = Forever)
+        public double PullSample(byte[][] sample, double timeout = Forever)
         {
             ThrowIfInvalid();
             CheckSampleBuffer(sample, ChannelCount);
 
             var errorCode = (int)lsl_error_code_t.lsl_no_error;
             var buffer = new IntPtr[ChannelCount];
-            var lengths = stackalloc uint[ChannelCount];
+            var lengths = new uint[ChannelCount];
 
             try
             {
@@ -655,6 +663,9 @@ namespace SharpLSL
 
                 for (int i = 0; i < buffer.Length; ++i)
                 {
+                    if (lengths[i] > int.MaxValue)
+                        throw new LSLException($"The value length at index {i} exceeds int.MaxValue.");
+
                     if (sample[i] == null || sample[i].Length != lengths[i])
                     {
 #if NET35 || NET45
@@ -666,20 +677,27 @@ namespace SharpLSL
 
                     if (lengths[i] > 0)
                     {
-                        fixed (byte* dest = sample[i])
-                        {
-#if NET35 || NET45
-                            byte* src = (byte*)buffer[i].ToPointer();
-                            for (int c = 0; c < lengths[i]; ++c)
-                                dest[c] = src[c];
+#if true
+                        Marshal.Copy(buffer[i], sample[i], 0, (int)lengths[i]);
 #else
-                            Buffer.MemoryCopy(
-                                buffer[i].ToPointer(),
-                                dest,
-                                lengths[i],
-                                lengths[i]);
+                        unsafe
+                        {
+                            fixed (byte* dest = sample[i])
+                            {
+#if NET35 || NET45
+                                byte* src = (byte*)buffer[i].ToPointer();
+                                for (int c = 0; c < lengths[i]; ++c)
+                                    dest[c] = src[c];
+#else
+                                Buffer.MemoryCopy(
+                                    buffer[i].ToPointer(),
+                                    dest,
+                                    lengths[i],
+                                    lengths[i]);
 #endif
+                            }
                         }
+#endif
                     }
                 }
 
@@ -802,7 +820,7 @@ namespace SharpLSL
         /// does not match the number of samples in the chunk.
         /// </exception>
         /// <inheritdoc cref="PullSample(sbyte[], double)"/>
-        public uint PullChunk(sbyte[] chunk, double[] timestamps, double timeout = 0.0)
+        public int PullChunk(sbyte[] chunk, double[] timestamps = null, double timeout = 0.0)
         {
             ThrowIfInvalid();
 
@@ -814,36 +832,33 @@ namespace SharpLSL
                 handle, chunk, timestamps, (uint)chunk.Length,
                 (uint)(timestamps?.Length ?? 0), timeout, ref errorCode);
             CheckError(errorCode);
-            return result;
+            return (int)result;
         }
 
 #if !NET35
         /// <inheritdoc cref="PullChunk(sbyte[], double[], double)"/>
-        public uint PullChunk(Span<sbyte> chunk, Span<double> timestamps, double timeout = 0.0)
+        public unsafe int PullChunk(Span<sbyte> chunk, Span<double> timestamps, double timeout = 0.0)
         {
             ThrowIfInvalid();
 
             var samples = CheckChunkBuffer(chunk, ChannelCount);
             CheckTimestampBufferAllowNull(timestamps, samples);
 
-            unsafe
+            fixed (sbyte* chunkBuffer = chunk)
+            fixed (double* timestampsBuffer = timestamps)
             {
-                fixed (sbyte* chunkBuffer = chunk)
-                fixed (double* timestampsBuffer = timestamps)
-                {
-                    var errorCode = (int)lsl_error_code_t.lsl_no_error;
-                    var result = lsl_pull_chunk_c(
-                        handle, chunkBuffer, timestampsBuffer, (uint)chunk.Length,
-                        (uint)timestamps.Length, timeout, &errorCode);
-                    CheckError(errorCode);
-                    return result;
-                }
+                var errorCode = (int)lsl_error_code_t.lsl_no_error;
+                var result = lsl_pull_chunk_c(
+                    handle, chunkBuffer, timestampsBuffer, (uint)chunk.Length,
+                    (uint)timestamps.Length, timeout, &errorCode);
+                CheckError(errorCode);
+                return (int)result;
             }
         }
 #endif
 
         /// <inheritdoc cref="PullChunk(sbyte[], double[], double)"/>
-        public uint PullChunk(short[] chunk, double[] timestamps, double timeout = 0.0)
+        public int PullChunk(short[] chunk, double[] timestamps = null, double timeout = 0.0)
         {
             ThrowIfInvalid();
 
@@ -855,36 +870,33 @@ namespace SharpLSL
                 handle, chunk, timestamps, (uint)chunk.Length,
                 (uint)(timestamps?.Length ?? 0), timeout, ref errorCode);
             CheckError(errorCode);
-            return result;
+            return (int)result;
         }
 
 #if !NET35
         /// <inheritdoc cref="PullChunk(sbyte[], double[], double)"/>
-        public uint PullChunk(Span<short> chunk, Span<double> timestamps, double timeout = 0.0)
+        public unsafe int PullChunk(Span<short> chunk, Span<double> timestamps, double timeout = 0.0)
         {
             ThrowIfInvalid();
 
             var samples = CheckChunkBuffer(chunk, ChannelCount);
             CheckTimestampBufferAllowNull(timestamps, samples);
 
-            unsafe
+            fixed (short* chunkBuffer = chunk)
+            fixed (double* timestampsBuffer = timestamps)
             {
-                fixed (short* chunkBuffer = chunk)
-                fixed (double* timestampsBuffer = timestamps)
-                {
-                    var errorCode = (int)lsl_error_code_t.lsl_no_error;
-                    var result = lsl_pull_chunk_s(
-                        handle, chunkBuffer, timestampsBuffer, (uint)chunk.Length,
-                        (uint)timestamps.Length, timeout, &errorCode);
-                    CheckError(errorCode);
-                    return result;
-                }
+                var errorCode = (int)lsl_error_code_t.lsl_no_error;
+                var result = lsl_pull_chunk_s(
+                    handle, chunkBuffer, timestampsBuffer, (uint)chunk.Length,
+                    (uint)timestamps.Length, timeout, &errorCode);
+                CheckError(errorCode);
+                return (int)result;
             }
         }
 #endif
 
         /// <inheritdoc cref="PullChunk(sbyte[], double[], double)"/>
-        public uint PullChunk(int[] chunk, double[] timestamps, double timeout = 0.0)
+        public int PullChunk(int[] chunk, double[] timestamps = null, double timeout = 0.0)
         {
             ThrowIfInvalid();
 
@@ -896,36 +908,33 @@ namespace SharpLSL
                 handle, chunk, timestamps, (uint)chunk.Length,
                 (uint)(timestamps?.Length ?? 0), timeout, ref errorCode);
             CheckError(errorCode);
-            return result;
+            return (int)result;
         }
 
 #if !NET35
         /// <inheritdoc cref="PullChunk(sbyte[], double[], double)"/>
-        public uint PullChunk(Span<int> chunk, Span<double> timestamps, double timeout = 0.0)
+        public unsafe int PullChunk(Span<int> chunk, Span<double> timestamps, double timeout = 0.0)
         {
             ThrowIfInvalid();
 
             var samples = CheckChunkBuffer(chunk, ChannelCount);
             CheckTimestampBufferAllowNull(timestamps, samples);
 
-            unsafe
+            fixed (int* chunkBuffer = chunk)
+            fixed (double* timestampsBuffer = timestamps)
             {
-                fixed (int* chunkBuffer = chunk)
-                fixed (double* timestampsBuffer = timestamps)
-                {
-                    var errorCode = (int)lsl_error_code_t.lsl_no_error;
-                    var result = lsl_pull_chunk_i(
-                        handle, chunkBuffer, timestampsBuffer, (uint)chunk.Length,
-                        (uint)timestamps.Length, timeout, &errorCode);
-                    CheckError(errorCode);
-                    return result;
-                }
+                var errorCode = (int)lsl_error_code_t.lsl_no_error;
+                var result = lsl_pull_chunk_i(
+                    handle, chunkBuffer, timestampsBuffer, (uint)chunk.Length,
+                    (uint)timestamps.Length, timeout, &errorCode);
+                CheckError(errorCode);
+                return (int)result;
             }
         }
 #endif
 
         /// <inheritdoc cref="PullChunk(sbyte[], double[], double)"/>
-        public uint PullChunk(long[] chunk, double[] timestamps, double timeout = 0.0)
+        public int PullChunk(long[] chunk, double[] timestamps = null, double timeout = 0.0)
         {
             ThrowIfInvalid();
 
@@ -937,36 +946,33 @@ namespace SharpLSL
                 handle, chunk, timestamps, (uint)chunk.Length,
                 (uint)(timestamps?.Length ?? 0), timeout, ref errorCode);
             CheckError(errorCode);
-            return result;
+            return (int)result;
         }
 
 #if !NET35
         /// <inheritdoc cref="PullChunk(sbyte[], double[], double)"/>
-        public uint PullChunk(Span<long> chunk, Span<double> timestamps, double timeout = 0.0)
+        public unsafe int PullChunk(Span<long> chunk, Span<double> timestamps, double timeout = 0.0)
         {
             ThrowIfInvalid();
 
             var samples = CheckChunkBuffer(chunk, ChannelCount);
             CheckTimestampBufferAllowNull(timestamps, samples);
 
-            unsafe
+            fixed (long* chunkBuffer = chunk)
+            fixed (double* timestampsBuffer = timestamps)
             {
-                fixed (long* chunkBuffer = chunk)
-                fixed (double* timestampsBuffer = timestamps)
-                {
-                    var errorCode = (int)lsl_error_code_t.lsl_no_error;
-                    var result = lsl_pull_chunk_l(
-                        handle, chunkBuffer, timestampsBuffer, (uint)chunk.Length,
-                        (uint)timestamps.Length, timeout, &errorCode);
-                    CheckError(errorCode);
-                    return result;
-                }
+                var errorCode = (int)lsl_error_code_t.lsl_no_error;
+                var result = lsl_pull_chunk_l(
+                    handle, chunkBuffer, timestampsBuffer, (uint)chunk.Length,
+                    (uint)timestamps.Length, timeout, &errorCode);
+                CheckError(errorCode);
+                return (int)result;
             }
         }
 #endif
 
         /// <inheritdoc cref="PullChunk(sbyte[], double[], double)"/>
-        public uint PullChunk(float[] chunk, double[] timestamps, double timeout = 0.0)
+        public int PullChunk(float[] chunk, double[] timestamps = null, double timeout = 0.0)
         {
             ThrowIfInvalid();
 
@@ -978,36 +984,33 @@ namespace SharpLSL
                 handle, chunk, timestamps, (uint)chunk.Length,
                 (uint)(timestamps?.Length ?? 0), timeout, ref errorCode);
             CheckError(errorCode);
-            return result;
+            return (int)result;
         }
 
 #if !NET35
         /// <inheritdoc cref="PullChunk(sbyte[], double[], double)"/>
-        public uint PullChunk(Span<float> chunk, Span<double> timestamps, double timeout = 0.0)
+        public unsafe int PullChunk(Span<float> chunk, Span<double> timestamps, double timeout = 0.0)
         {
             ThrowIfInvalid();
 
             var samples = CheckChunkBuffer(chunk, ChannelCount);
             CheckTimestampBufferAllowNull(timestamps, samples);
 
-            unsafe
+            fixed (float* chunkBuffer = chunk)
+            fixed (double* timestampsBuffer = timestamps)
             {
-                fixed (float* chunkBuffer = chunk)
-                fixed (double* timestampsBuffer = timestamps)
-                {
-                    var errorCode = (int)lsl_error_code_t.lsl_no_error;
-                    var result = lsl_pull_chunk_f(
-                        handle, chunkBuffer, timestampsBuffer, (uint)chunk.Length,
-                        (uint)timestamps.Length, timeout, &errorCode);
-                    CheckError(errorCode);
-                    return result;
-                }
+                var errorCode = (int)lsl_error_code_t.lsl_no_error;
+                var result = lsl_pull_chunk_f(
+                    handle, chunkBuffer, timestampsBuffer, (uint)chunk.Length,
+                    (uint)timestamps.Length, timeout, &errorCode);
+                CheckError(errorCode);
+                return (int)result;
             }
         }
 #endif
 
         /// <inheritdoc cref="PullChunk(sbyte[], double[], double)"/>
-        public uint PullChunk(double[] chunk, double[] timestamps, double timeout = 0.0)
+        public int PullChunk(double[] chunk, double[] timestamps = null, double timeout = 0.0)
         {
             ThrowIfInvalid();
 
@@ -1019,36 +1022,33 @@ namespace SharpLSL
                 handle, chunk, timestamps, (uint)chunk.Length,
                 (uint)(timestamps?.Length ?? 0), timeout, ref errorCode);
             CheckError(errorCode);
-            return result;
+            return (int)result;
         }
 
 #if !NET35
         /// <inheritdoc cref="PullChunk(sbyte[], double[], double)"/>
-        public uint PullChunk(Span<double> chunk, Span<double> timestamps, double timeout = 0.0)
+        public unsafe int PullChunk(Span<double> chunk, Span<double> timestamps, double timeout = 0.0)
         {
             ThrowIfInvalid();
 
             var samples = CheckChunkBuffer(chunk, ChannelCount);
             CheckTimestampBufferAllowNull(timestamps, samples);
 
-            unsafe
+            fixed (double* chunkBuffer = chunk)
+            fixed (double* timestampsBuffer = timestamps)
             {
-                fixed (double* chunkBuffer = chunk)
-                fixed (double* timestampsBuffer = timestamps)
-                {
-                    var errorCode = (int)lsl_error_code_t.lsl_no_error;
-                    var result = lsl_pull_chunk_d(
-                        handle, chunkBuffer, timestampsBuffer, (uint)chunk.Length,
-                        (uint)timestamps.Length, timeout, &errorCode);
-                    CheckError(errorCode);
-                    return result;
-                }
+                var errorCode = (int)lsl_error_code_t.lsl_no_error;
+                var result = lsl_pull_chunk_d(
+                    handle, chunkBuffer, timestampsBuffer, (uint)chunk.Length,
+                    (uint)timestamps.Length, timeout, &errorCode);
+                CheckError(errorCode);
+                return (int)result;
             }
         }
 #endif
 
         /// <inheritdoc cref="PullChunk(sbyte[], double[], double)"/>
-        public uint PullChunk(string[] chunk, double[] timestamps, double timeout = 0.0)
+        public int PullChunk(string[] chunk, double[] timestamps = null, double timeout = 0.0)
         {
             ThrowIfInvalid();
 
@@ -1069,7 +1069,7 @@ namespace SharpLSL
                 for (int i = 0; i < result; ++i)
                     chunk[i] = PtrToString(buffer[i]);
 
-                return result;
+                return (int)result;
             }
             finally
             {
@@ -1080,7 +1080,7 @@ namespace SharpLSL
 
 #if !NET35
         /// <inheritdoc cref="PullChunk(sbyte[], double[], double)"/>
-        public uint PullChunk(Span<string> chunk, Span<double> timestamps, double timeout = 0.0)
+        public unsafe int PullChunk(Span<string> chunk, Span<double> timestamps, double timeout = 0.0)
         {
             ThrowIfInvalid();
 
@@ -1093,14 +1093,11 @@ namespace SharpLSL
 
             try
             {
-                unsafe
+                fixed (double* timestampsBuffer = timestamps)
                 {
-                    fixed (double* timestampsBuffer = timestamps)
-                    {
-                        result = lsl_pull_chunk_str(
-                            handle, buffer, timestampsBuffer, (uint)chunk.Length,
-                            (uint)timestamps.Length, timeout, ref errorCode);
-                    }
+                    result = lsl_pull_chunk_str(
+                        handle, buffer, timestampsBuffer, (uint)chunk.Length,
+                        (uint)timestamps.Length, timeout, ref errorCode);
                 }
 
                 CheckError(errorCode);
@@ -1108,7 +1105,7 @@ namespace SharpLSL
                 for (int i = 0; i < result; ++i)
                     chunk[i] = PtrToString(buffer[i]);
 
-                return result;
+                return (int)result;
             }
             finally
             {
@@ -1137,8 +1134,7 @@ namespace SharpLSL
         /// default value of 0.0 will retrieve only data available for immediate pickup. 
         /// </param>
         /// <inheritdoc cref="PullChunk(sbyte[], double[], double)"/>
-        // TODO: Test
-        public unsafe uint PullChunk(byte[][] chunk, double[] timestamps, double timeout = 0.0)
+        public int PullChunk(byte[][] chunk, double[] timestamps = null, double timeout = 0.0)
         {
             ThrowIfInvalid();
 
@@ -1147,7 +1143,7 @@ namespace SharpLSL
 
             var errorCode = (int)lsl_error_code_t.lsl_no_error;
             var buffer = new IntPtr[chunk.Length];
-            var lengths = stackalloc uint[ChannelCount];
+            var lengths = new uint[ChannelCount];
             uint result = 0;
 
             try
@@ -1159,6 +1155,9 @@ namespace SharpLSL
 
                 for (int i = 0; i < result; ++i)
                 {
+                    if (lengths[i] > int.MaxValue)
+                        throw new LSLException($"The value length at index {i} exceeds int.MaxValue.");
+
                     if (chunk[i] == null || chunk[i].Length != lengths[i])
                     {
 #if NET35 || NET45
@@ -1170,24 +1169,31 @@ namespace SharpLSL
 
                     if (lengths[i] > 0)
                     {
-                        fixed (byte* dest = chunk[i])
-                        {
-#if NET35 || NET45
-                            byte* src = (byte*)buffer[i].ToPointer();
-                            for (int c = 0; c < lengths[i]; ++c)
-                                dest[c] = src[c];
+#if true
+                        Marshal.Copy(buffer[i], chunk[i], 0, (int)lengths[i]);
 #else
-                            Buffer.MemoryCopy(
-                                buffer[i].ToPointer(),
-                                dest,
-                                lengths[i],
-                                lengths[i]);
+                        unsafe
+                        {
+                            fixed (byte* dest = chunk[i])
+                            {
+#if NET35 || NET45
+                                byte* src = (byte*)buffer[i].ToPointer();
+                                for (int c = 0; c < lengths[i]; ++c)
+                                    dest[c] = src[c];
+#else
+                                Buffer.MemoryCopy(
+                                    buffer[i].ToPointer(),
+                                    dest,
+                                    lengths[i],
+                                    lengths[i]);
 #endif
+                            }
                         }
+#endif
                     }
                 }
 
-                return result;
+                return (int)result;
             }
             finally
             {
@@ -1202,7 +1208,7 @@ namespace SharpLSL
         /// and its length does not equal the number of rows in <paramref name="chunk"/>.
         /// </exception>
         /// <inheritdoc cref="PullChunk(sbyte[], double[], double)"/>
-        public uint PullChunk(sbyte[,] chunk, double[] timestamps, double timeout = 0.0)
+        public unsafe int PullChunk(sbyte[,] chunk, double[] timestamps = null, double timeout = 0.0)
         {
             ThrowIfInvalid();
 
@@ -1214,36 +1220,30 @@ namespace SharpLSL
 
             if (timestamps != null)
             {
-                unsafe
+                fixed (sbyte* chunkBuffer = &chunk[0, 0])
+                fixed (double* timestampsBuffer = timestamps)
                 {
-                    fixed (sbyte* chunkBuffer = &chunk[0, 0])
-                    fixed (double* timestampsBuffer = timestamps)
-                    {
-                        result = lsl_pull_chunk_c(
-                            handle, chunkBuffer, timestampsBuffer, (uint)chunk.Length,
-                            (uint)timestamps.Length, timeout, &errorCode);
-                    }
+                    result = lsl_pull_chunk_c(
+                        handle, chunkBuffer, timestampsBuffer, (uint)chunk.Length,
+                        (uint)timestamps.Length, timeout, &errorCode);
                 }
             }
             else
             {
-                unsafe
+                fixed (sbyte* chunkBuffer = &chunk[0, 0])
                 {
-                    fixed (sbyte* chunkBuffer = &chunk[0, 0])
-                    {
-                        result = lsl_pull_chunk_c(
-                            handle, chunkBuffer, null, (uint)chunk.Length,
-                            0, timeout, &errorCode);
-                    }
+                    result = lsl_pull_chunk_c(
+                        handle, chunkBuffer, null, (uint)chunk.Length,
+                        0, timeout, &errorCode);
                 }
             }
 
             CheckError(errorCode);
-            return result;
+            return (int)result;
         }
 
         /// <inheritdoc cref="PullChunk(sbyte[,], double[], double)"/>
-        public uint PullChunk(short[,] chunk, double[] timestamps, double timeout = 0.0)
+        public unsafe int PullChunk(short[,] chunk, double[] timestamps = null, double timeout = 0.0)
         {
             ThrowIfInvalid();
 
@@ -1255,36 +1255,30 @@ namespace SharpLSL
 
             if (timestamps != null)
             {
-                unsafe
+                fixed (short* chunkBuffer = &chunk[0, 0])
+                fixed (double* timestampsBuffer = timestamps)
                 {
-                    fixed (short* chunkBuffer = &chunk[0, 0])
-                    fixed (double* timestampsBuffer = timestamps)
-                    {
-                        result = lsl_pull_chunk_s(
-                            handle, chunkBuffer, timestampsBuffer, (uint)chunk.Length,
-                            (uint)timestamps.Length, timeout, &errorCode);
-                    }
+                    result = lsl_pull_chunk_s(
+                        handle, chunkBuffer, timestampsBuffer, (uint)chunk.Length,
+                        (uint)timestamps.Length, timeout, &errorCode);
                 }
             }
             else
             {
-                unsafe
+                fixed (short* chunkBuffer = &chunk[0, 0])
                 {
-                    fixed (short* chunkBuffer = &chunk[0, 0])
-                    {
-                        result = lsl_pull_chunk_s(
-                            handle, chunkBuffer, null, (uint)chunk.Length,
-                            0, timeout, &errorCode);
-                    }
+                    result = lsl_pull_chunk_s(
+                        handle, chunkBuffer, null, (uint)chunk.Length,
+                        0, timeout, &errorCode);
                 }
             }
 
             CheckError(errorCode);
-            return result;
+            return (int)result;
         }
 
         /// <inheritdoc cref="PullChunk(sbyte[,], double[], double)"/>
-        public uint PullChunk(int[,] chunk, double[] timestamps, double timeout = 0.0)
+        public unsafe int PullChunk(int[,] chunk, double[] timestamps = null, double timeout = 0.0)
         {
             ThrowIfInvalid();
 
@@ -1296,36 +1290,30 @@ namespace SharpLSL
 
             if (timestamps != null)
             {
-                unsafe
+                fixed (int* chunkBuffer = &chunk[0, 0])
+                fixed (double* timestampsBuffer = timestamps)
                 {
-                    fixed (int* chunkBuffer = &chunk[0, 0])
-                    fixed (double* timestampsBuffer = timestamps)
-                    {
-                        result = lsl_pull_chunk_i(
-                            handle, chunkBuffer, timestampsBuffer, (uint)chunk.Length,
-                            (uint)timestamps.Length, timeout, &errorCode);
-                    }
+                    result = lsl_pull_chunk_i(
+                        handle, chunkBuffer, timestampsBuffer, (uint)chunk.Length,
+                        (uint)timestamps.Length, timeout, &errorCode);
                 }
             }
             else
             {
-                unsafe
+                fixed (int* chunkBuffer = &chunk[0, 0])
                 {
-                    fixed (int* chunkBuffer = &chunk[0, 0])
-                    {
-                        result = lsl_pull_chunk_i(
-                            handle, chunkBuffer, null, (uint)chunk.Length,
-                            0, timeout, &errorCode);
-                    }
+                    result = lsl_pull_chunk_i(
+                        handle, chunkBuffer, null, (uint)chunk.Length,
+                        0, timeout, &errorCode);
                 }
             }
 
             CheckError(errorCode);
-            return result;
+            return (int)result;
         }
 
         /// <inheritdoc cref="PullChunk(sbyte[,], double[], double)"/>
-        public uint PullChunk(long[,] chunk, double[] timestamps, double timeout = 0.0)
+        public unsafe int PullChunk(long[,] chunk, double[] timestamps = null, double timeout = 0.0)
         {
             ThrowIfInvalid();
 
@@ -1337,36 +1325,30 @@ namespace SharpLSL
 
             if (timestamps != null)
             {
-                unsafe
+                fixed (long* chunkBuffer = &chunk[0, 0])
+                fixed (double* timestampsBuffer = timestamps)
                 {
-                    fixed (long* chunkBuffer = &chunk[0, 0])
-                    fixed (double* timestampsBuffer = timestamps)
-                    {
-                        result = lsl_pull_chunk_l(
-                            handle, chunkBuffer, timestampsBuffer, (uint)chunk.Length,
-                            (uint)timestamps.Length, timeout, &errorCode);
-                    }
+                    result = lsl_pull_chunk_l(
+                        handle, chunkBuffer, timestampsBuffer, (uint)chunk.Length,
+                        (uint)timestamps.Length, timeout, &errorCode);
                 }
             }
             else
             {
-                unsafe
+                fixed (long* chunkBuffer = &chunk[0, 0])
                 {
-                    fixed (long* chunkBuffer = &chunk[0, 0])
-                    {
-                        result = lsl_pull_chunk_l(
-                            handle, chunkBuffer, null, (uint)chunk.Length,
-                            0, timeout, &errorCode);
-                    }
+                    result = lsl_pull_chunk_l(
+                        handle, chunkBuffer, null, (uint)chunk.Length,
+                        0, timeout, &errorCode);
                 }
             }
 
             CheckError(errorCode);
-            return result;
+            return (int)result;
         }
 
         /// <inheritdoc cref="PullChunk(sbyte[,], double[], double)"/>
-        public uint PullChunk(float[,] chunk, double[] timestamps, double timeout = 0.0)
+        public unsafe int PullChunk(float[,] chunk, double[] timestamps = null, double timeout = 0.0)
         {
             ThrowIfInvalid();
 
@@ -1378,36 +1360,30 @@ namespace SharpLSL
 
             if (timestamps != null)
             {
-                unsafe
+                fixed (float* chunkBuffer = &chunk[0, 0])
+                fixed (double* timestampsBuffer = timestamps)
                 {
-                    fixed (float* chunkBuffer = &chunk[0, 0])
-                    fixed (double* timestampsBuffer = timestamps)
-                    {
-                        result = lsl_pull_chunk_f(
-                            handle, chunkBuffer, timestampsBuffer, (uint)chunk.Length,
-                            (uint)timestamps.Length, timeout, &errorCode);
-                    }
+                    result = lsl_pull_chunk_f(
+                        handle, chunkBuffer, timestampsBuffer, (uint)chunk.Length,
+                        (uint)timestamps.Length, timeout, &errorCode);
                 }
             }
             else
             {
-                unsafe
+                fixed (float* chunkBuffer = &chunk[0, 0])
                 {
-                    fixed (float* chunkBuffer = &chunk[0, 0])
-                    {
-                        result = lsl_pull_chunk_f(
-                            handle, chunkBuffer, null, (uint)chunk.Length,
-                            0, timeout, &errorCode);
-                    }
+                    result = lsl_pull_chunk_f(
+                        handle, chunkBuffer, null, (uint)chunk.Length,
+                        0, timeout, &errorCode);
                 }
             }
 
             CheckError(errorCode);
-            return result;
+            return (int)result;
         }
 
         /// <inheritdoc cref="PullChunk(sbyte[,], double[], double)"/>
-        public uint PullChunk(double[,] chunk, double[] timestamps, double timeout = 0.0)
+        public unsafe int PullChunk(double[,] chunk, double[] timestamps = null, double timeout = 0.0)
         {
             ThrowIfInvalid();
 
@@ -1419,36 +1395,30 @@ namespace SharpLSL
 
             if (timestamps != null)
             {
-                unsafe
+                fixed (double* chunkBuffer = &chunk[0, 0])
+                fixed (double* timestampsBuffer = timestamps)
                 {
-                    fixed (double* chunkBuffer = &chunk[0, 0])
-                    fixed (double* timestampsBuffer = timestamps)
-                    {
-                        result = lsl_pull_chunk_d(
-                            handle, chunkBuffer, timestampsBuffer, (uint)chunk.Length,
-                            (uint)timestamps.Length, timeout, &errorCode);
-                    }
+                    result = lsl_pull_chunk_d(
+                        handle, chunkBuffer, timestampsBuffer, (uint)chunk.Length,
+                        (uint)timestamps.Length, timeout, &errorCode);
                 }
             }
             else
             {
-                unsafe
+                fixed (double* chunkBuffer = &chunk[0, 0])
                 {
-                    fixed (double* chunkBuffer = &chunk[0, 0])
-                    {
-                        result = lsl_pull_chunk_d(
-                            handle, chunkBuffer, null, (uint)chunk.Length,
-                            0, timeout, &errorCode);
-                    }
+                    result = lsl_pull_chunk_d(
+                        handle, chunkBuffer, null, (uint)chunk.Length,
+                        0, timeout, &errorCode);
                 }
             }
 
             CheckError(errorCode);
-            return result;
+            return (int)result;
         }
 
         /// <inheritdoc cref="PullChunk(sbyte[,], double[], double)"/>
-        public uint PullChunk(string[,] chunk, double[] timestamps, double timeout = 0.0)
+        public int PullChunk(string[,] chunk, double[] timestamps = null, double timeout = 0.0)
         {
             ThrowIfInvalid();
 
@@ -1456,7 +1426,7 @@ namespace SharpLSL
             CheckTimestampBufferAllowNull(timestamps, chunk.GetLength(0));
 
             var errorCode = (int)lsl_error_code_t.lsl_no_error;
-            var buffer = new IntPtr[chunk.GetLength(0) * chunk.GetLength(1)];
+            var buffer = new IntPtr[chunk.Length];
             uint result = 0;
             uint samples = 0;
 
@@ -1474,15 +1444,12 @@ namespace SharpLSL
                         chunk[s, c] = PtrToString(buffer[s * ChannelCount + c]);
                 }
 
-                return result;
+                return (int)result;
             }
             finally
             {
-                for (int s = 0; s < samples; ++s)
-                {
-                    for (int c = 0; c < ChannelCount; ++c)
-                        lsl_destroy_string(buffer[s * ChannelCount + c]);
-                }
+                for (int i = 0; i < result; ++i)
+                    lsl_destroy_string(buffer[i]);
             }
         }
 
@@ -1583,14 +1550,40 @@ namespace SharpLSL
             lsl_destroy_inlet(handle);
         }
 
+#if !NET35
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+#endif
+        private static IntPtr CreateInlet(
+            StreamInfo streamInfo,
+            int maxChunkLength,
+            int maxBufferLength,
+            bool recover,
+            TransportOptions transportOptions)
+        {
+            if (streamInfo == null)
+                throw new ArgumentNullException(nameof(streamInfo));
+
+            if (streamInfo.DangerousGetHandle() == IntPtr.Zero)
+                throw new ArgumentException(nameof(streamInfo));
+
+            return lsl_create_inlet_ex(
+                streamInfo.DangerousGetHandle(),
+                maxBufferLength,
+                maxChunkLength,
+                recover ? 1 : 0,
+                (lsl_transport_options_t)transportOptions);
+        }
+
         private int _sampleBytes;
     }
 }
 
 
 // References:
+// [Is there something like [[noreturn]] in C# to indicate the compiler that the method will never return a value?](https://stackoverflow.com/questions/48232105/is-there-something-like-noreturn-in-c-sharp-to-indicate-the-compiler-that-th)
 // [Array versus List<T>: When to use which?](https://stackoverflow.com/questions/434761/array-versus-listt-when-to-use-which)
 // https://learn.microsoft.com/en-us/dotnet/api/system.runtime.compilerservices.unsafe.copyblock?view=net-8.0
 // [How to Convert IntPtr to native c++ object](https://stackoverflow.com/questions/4277681/how-to-convert-intptr-to-native-c-object)
 // [Documenting overloaded methods with the same XML comments](https://stackoverflow.com/questions/3667784/documenting-overloaded-methods-with-the-same-xml-comments)
 // [Alternative to Buffer.MemoryCopy pre .NET 4.6](https://stackoverflow.com/questions/54453119/alternative-to-buffer-memorycopy-pre-net-4-6)
+// [What is the difference between various memory copy functions in NetCore?](https://stackoverflow.com/questions/61877882/what-is-the-difference-between-various-memory-copy-functions-in-netcore)

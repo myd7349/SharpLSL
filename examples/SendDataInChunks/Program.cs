@@ -1,6 +1,4 @@
 // Port of: https://github.com/sccn/liblsl/blob/main/examples/SendDataInChunks.cpp
-using System.Threading.Tasks;
-
 namespace SharpLSL.Examples
 {
     internal class SendDataInChunks
@@ -67,10 +65,11 @@ namespace SharpLSL.Examples
                     .AppendChild("channels");
                 for (int c = 0; c < channelCount; ++c)
                 {
-                    var channelInfo = channelInfos.AppendChild("channel");
-                    channelInfo.AppendChildValue("label", $"Chan-{c}");
-                    channelInfo.AppendChildValue("unit", "microvolts");
-                    channelInfo.AppendChildValue("type", streamType);
+                    var channelInfo = channelInfos
+                        .AppendChild("channel")
+                        .AppendChildValue("label", $"Chan-{c}")
+                        .AppendChildValue("unit", "microvolts")
+                        .AppendChildValue("type", streamType);
                 }
 
                 var bufferedSamples = Convert.ToInt32(maxBuffered * sampleRate);

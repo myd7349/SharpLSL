@@ -15,14 +15,13 @@ namespace SharpLSL.Examples
             using (var streamOutlet = new StreamOutlet(streamInfo))
             {
                 var sample = new float[Channels];
-                var rng = new Random();
 
                 // Send data forever.
                 while (true)
                 {
                     // Generate random data.
                     for (int c = 0; c < Channels; ++c)
-                        sample[c] = Convert.ToSingle(rng.Next(1500) / 500.0 - 1.5);
+                        sample[c] = Convert.ToSingle(Random.Shared.Next(1500) / 500.0 - 1.5);
 
                     // Send it.
                     streamOutlet.PushSample(sample);

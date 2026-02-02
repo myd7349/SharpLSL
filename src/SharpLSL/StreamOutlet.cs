@@ -1,4 +1,8 @@
+//#define STRING_MARSHALING_SCHEME_1
+//#define STRING_MARSHALING_SCHEME_2
+
 using System;
+using System.Runtime.CompilerServices;
 using System.Runtime.InteropServices;
 
 using SharpLSL.Interop;
@@ -40,8 +44,8 @@ namespace SharpLSL
         /// </param>
         /// <param name="chunkSize">
         /// Specifies the desired chunk granularity (in samples) for transmission.
-        /// If unspecified, each push operation yields one chunk. Inlets can override
-        /// this setting.
+        /// If specified as 0, each push operation yields one chunk. Stream recipients
+        /// (inlets) can override this setting.
         /// </param>
         /// <param name="maxBuffered">
         /// Specifies the maximum amount of data to buffer (in seconds if there
@@ -52,13 +56,26 @@ namespace SharpLSL
         /// </param>
         /// <param name="transportOptions">
         /// Specifies additional options for data transport. Default is <see cref="TransportOptions.Default"/>.
-        /// TODO:
         /// </param>
+        /// <exception cref="ArgumentNullException">
+        /// Thrown when <paramref name="streamInfo"/> is <c>null</c>.
+        /// </exception>
+        /// <exception cref="ArgumentException">
+        /// Thrown when <paramref name="streamInfo"/> wraps an invalid native handle.
+        /// </exception>
         /// <exception cref="LSLException">
         /// Thrown when creating a new instance of <see cref="StreamOutlet"/> fails.
         /// </exception>
-        public StreamOutlet(StreamInfo streamInfo, int chunkSize = 0, int maxBuffered = 360, TransportOptions transportOptions = TransportOptions.Default)
-            : base(lsl_create_outlet_ex(streamInfo.DangerousGetHandle(), chunkSize, maxBuffered, (lsl_transport_options_t)transportOptions))
+        public StreamOutlet(
+            StreamInfo streamInfo,
+            int chunkSize = 0,
+            int maxBuffered = 360,
+            TransportOptions transportOptions = TransportOptions.Default)
+            : base(CreateOutlet(
+                streamInfo,
+                chunkSize,
+                maxBuffered,
+                transportOptions))
         {
             ChannelCount = streamInfo.ChannelCount;
         }
@@ -114,816 +131,12 @@ namespace SharpLSL
             if (streamInfo == IntPtr.Zero)
                 throw new LSLException("Failed to get stream info of this outlet.");
 
-            return new StreamInfo(streamInfo);
+            return new StreamInfo(streamInfo, true);
         }
 
         /// <summary>
         /// Pushes a sample into the outlet. Handles type checking and conversion.
         /// </summary>
-        /// <param name="sample">
-        /// The sample data to push.
-        /// </param>
-        /// <exception cref="InvalidOperationException">
-        /// Thrown if this stream outlet object is invalid.
-        /// </exception>
-        /// <exception cref="ArgumentNullException">
-        /// Thrown if the provided buffer <paramref name="sample"/> is null.
-        /// </exception>
-        /// <exception cref="ArgumentException">
-        /// Thrown if the size of the provided buffer <paramref name="sample"/> does not
-        /// match the channel count (<see cref="ChannelCount"/>) of the stream outlet.
-        /// </exception>
-        public void PushSample(sbyte[] sample)
-        {
-            ThrowIfInvalid();
-            CheckSampleBuffer(sample, ChannelCount);
-
-            CheckError(lsl_push_sample_c(handle, sample));
-        }
-
-#if !NET35
-        /// <inheritdoc cref="PushSample(sbyte[])"/>
-        public void PushSample(ReadOnlySpan<sbyte> sample)
-        {
-            ThrowIfInvalid();
-            CheckSampleBuffer(sample, ChannelCount);
-
-            unsafe
-            {
-                fixed (sbyte* buffer = sample)
-                {
-                    CheckError(lsl_push_sample_c(handle, buffer));
-                }
-            }
-        }
-#endif
-
-        /// <inheritdoc cref="PushSample(sbyte[])"/>
-        public void PushSample(short[] sample)
-        {
-            ThrowIfInvalid();
-            CheckSampleBuffer(sample, ChannelCount);
-
-            CheckError(lsl_push_sample_s(handle, sample));
-        }
-
-#if !NET35
-        /// <inheritdoc cref="PushSample(sbyte[])"/>
-        public void PushSample(ReadOnlySpan<short> sample)
-        {
-            ThrowIfInvalid();
-            CheckSampleBuffer(sample, ChannelCount);
-
-            unsafe
-            {
-                fixed (short* buffer = sample)
-                {
-                    CheckError(lsl_push_sample_s(handle, buffer));
-                }
-            }
-        }
-#endif
-
-        /// <inheritdoc cref="PushSample(sbyte[])"/>
-        public void PushSample(int[] sample)
-        {
-            ThrowIfInvalid();
-            CheckSampleBuffer(sample, ChannelCount);
-
-            CheckError(lsl_push_sample_i(handle, sample));
-        }
-
-#if !NET35
-        /// <inheritdoc cref="PushSample(sbyte[])"/>
-        public void PushSample(ReadOnlySpan<int> sample)
-        {
-            ThrowIfInvalid();
-            CheckSampleBuffer(sample, ChannelCount);
-
-            unsafe
-            {
-                fixed (int* buffer = sample)
-                {
-                    CheckError(lsl_push_sample_i(handle, buffer));
-                }
-            }
-        }
-#endif
-
-        /// <inheritdoc cref="PushSample(sbyte[])"/>
-        public void PushSample(long[] sample)
-        {
-            ThrowIfInvalid();
-            CheckSampleBuffer(sample, ChannelCount);
-
-            CheckError(lsl_push_sample_l(handle, sample));
-        }
-
-#if !NET35
-        /// <inheritdoc cref="PushSample(sbyte[])"/>
-        public void PushSample(ReadOnlySpan<long> sample)
-        {
-            ThrowIfInvalid();
-            CheckSampleBuffer(sample, ChannelCount);
-
-            unsafe
-            {
-                fixed (long* buffer = sample)
-                {
-                    CheckError(lsl_push_sample_l(handle, buffer));
-                }
-            }
-        }
-#endif
-
-        /// <inheritdoc cref="PushSample(sbyte[])"/>
-        public void PushSample(float[] sample)
-        {
-            ThrowIfInvalid();
-            CheckSampleBuffer(sample, ChannelCount);
-
-            CheckError(lsl_push_sample_f(handle, sample));
-        }
-
-#if !NET35
-        /// <inheritdoc cref="PushSample(sbyte[])"/>
-        public void PushSample(ReadOnlySpan<float> sample)
-        {
-            ThrowIfInvalid();
-            CheckSampleBuffer(sample, ChannelCount);
-
-            unsafe
-            {
-                fixed (float* buffer = sample)
-                {
-                    CheckError(lsl_push_sample_f(handle, buffer));
-                }
-            }
-        }
-#endif
-
-        /// <inheritdoc cref="PushSample(sbyte[])"/>
-        public void PushSample(double[] sample)
-        {
-            ThrowIfInvalid();
-            CheckSampleBuffer(sample, ChannelCount);
-
-            CheckError(lsl_push_sample_d(handle, sample));
-        }
-
-#if !NET35
-        /// <inheritdoc cref="PushSample(sbyte[])"/>
-        public void PushSample(ReadOnlySpan<double> sample)
-        {
-            ThrowIfInvalid();
-            CheckSampleBuffer(sample, ChannelCount);
-
-            unsafe
-            {
-                fixed (double* buffer = sample)
-                {
-                    CheckError(lsl_push_sample_d(handle, buffer));
-                }
-            }
-        }
-#endif
-
-        /// <inheritdoc cref="PushSample(sbyte[])"/>
-        public void PushSample(string[] sample)
-        {
-            ThrowIfInvalid();
-            CheckSampleBuffer(sample, ChannelCount);
-
-            var stringPointers = new IntPtr[sample.Length];
-            for (int i = 0; i < sample.Length; ++i)
-                stringPointers[i] = StringToPtr(sample[i]);
-
-            // TODO: Is this necessary?
-            var samplePointer = Marshal.AllocHGlobal(IntPtr.Size * sample.Length);
-            Marshal.Copy(stringPointers, 0, samplePointer, sample.Length);
-
-            try
-            {
-                CheckError(lsl_push_sample_str(handle, samplePointer)); // TODO: Test
-            }
-            finally
-            {
-                for (int i = 0; i < sample.Length; ++i)
-                    Marshal.FreeHGlobal(stringPointers[i]);
-
-                Marshal.FreeHGlobal(samplePointer);
-            }
-        }
-
-#if !NET35
-        /// <inheritdoc cref="PushSample(sbyte[])"/>
-        public void PushSample(ReadOnlySpan<string> sample)
-        {
-            ThrowIfInvalid();
-            CheckSampleBuffer(sample, ChannelCount);
-
-            var stringPointers = new IntPtr[sample.Length];
-            for (int i = 0; i < sample.Length; ++i)
-                stringPointers[i] = StringToPtr(sample[i]);
-
-            var samplePointer = Marshal.AllocHGlobal(IntPtr.Size * sample.Length);
-            Marshal.Copy(stringPointers, 0, samplePointer, sample.Length);
-
-            try
-            {
-                CheckError(lsl_push_sample_str(handle, samplePointer)); // TODO: Test
-            }
-            finally
-            {
-                for (int i = 0; i < sample.Length; ++i)
-                    Marshal.FreeHGlobal(stringPointers[i]);
-
-                Marshal.FreeHGlobal(samplePointer);
-            }
-        }
-#endif
-
-        /// <inheritdoc cref="PushSample(sbyte[])"/>
-        public void PushSample(byte[] sample)
-        {
-            ThrowIfInvalid();
-
-            if (sample == null)
-                throw new ArgumentNullException(nameof(sample));
-
-            CheckError(lsl_push_sample_v(handle, sample));
-        }
-
-#if !NET35
-        /// <inheritdoc cref="PushSample(sbyte[])"/>
-        public void PushSample(ReadOnlySpan<byte> sample)
-        {
-            ThrowIfInvalid();
-            CheckSampleBuffer(sample, ChannelCount);
-
-            unsafe
-            {
-                fixed (byte* buffer = sample)
-                {
-                    CheckError(lsl_push_sample_v(handle, buffer));
-                }
-            }
-        }
-#endif
-
-        /// <summary>
-        /// Pushes a pointer to some values as a sample into the outlet.
-        /// </summary>
-        /// <inheritdoc cref="PushSample(sbyte[])"/>
-        public unsafe void PushSample(IntPtr sample)
-        {
-            ThrowIfInvalid();
-
-            if (sample == IntPtr.Zero)
-                throw new ArgumentNullException(nameof(sample));
-
-            CheckError(lsl_push_sample_v(handle, sample.ToPointer()));
-        }
-
-        /// <summary>
-        /// Pushes a sample consisting of variable-length byte arrays into the outlet.
-        /// </summary>
-        /// <param name="sample">
-        /// An array of byte arrays, where each inner array represents data for one
-        /// channel. The length of this array must match the channel count of the
-        /// stream outlet.
-        /// </param>
-        /// <param name="lengths">
-        /// Optional. An array specifying the number of bytes to push for each channel.
-        /// If null, the full length of each byte array in <paramref name="sample"/>
-        /// is used.
-        /// </param>
-        /// <exception cref="ArgumentNullException">
-        /// Thrown if <paramref name="sample"/> is null, or if any of the inner byte
-        /// arrays in <paramref name="sample"/> are null.
-        /// </exception>
-        /// <exception cref="ArgumentException">
-        /// Thrown if the length of <paramref name="sample"/> does not match the
-        /// channel count of the stream outlet, if any of the inner byte arrays
-        /// in <paramref name="sample"/> are empty, if <paramref name="lengths"/>
-        /// is provided but its length does not match the channel count, or if any
-        /// value in <paramref name="lengths"/> is less than or equal to 0 or greater
-        /// than the length of the corresponding byte array in <paramref name="sample"/>.
-        /// </exception>
-        /// <inheritdoc cref="PushSample(sbyte[])"/>
-        // TODO: Test
-        public unsafe void PushSample(byte[][] sample, int[] lengths = null)
-        {
-            ThrowIfInvalid();
-            CheckSampleBuffer(sample, ChannelCount);
-
-            if (lengths != null)
-                CheckLengthBuffer(lengths, ChannelCount);
-
-            var ulengths = stackalloc uint[ChannelCount];
-            for (int i = 0; i < ChannelCount; ++i)
-            {
-                if (sample[i] == null)
-                    throw new ArgumentNullException(nameof(sample));
-
-                if (sample[i].Length == 0)
-                    throw new ArgumentException(nameof(sample));
-
-                if (lengths == null)
-                {
-                    ulengths[i] = (uint)sample[i].Length;
-                }
-                else
-                {
-                    if (lengths[i] <= 0 || lengths[i] > sample[i].Length)
-                        throw new ArgumentException(nameof(lengths));
-
-                    ulengths[i] = (uint)lengths[i];
-                }
-            }
-
-            var bytesPointers = new IntPtr[ChannelCount];
-            for (int i = 0; i < ChannelCount; ++i)
-            {
-                var bytesLength = (int)ulengths[i];
-                bytesPointers[i] = Marshal.AllocHGlobal(bytesLength);
-                Marshal.Copy(sample[i], 0, bytesPointers[i], bytesLength);
-            }
-
-            var samplePointer = Marshal.AllocHGlobal(IntPtr.Size * ChannelCount);
-            Marshal.Copy(bytesPointers, 0, samplePointer, sample.Length);
-
-            try
-            {
-                CheckError(lsl_push_sample_buf(handle, samplePointer, ulengths));
-            }
-            finally
-            {
-                for (int i = 0; i < sample.Length; ++i)
-                    Marshal.FreeHGlobal(bytesPointers[i]);
-
-                Marshal.FreeHGlobal(samplePointer);
-            }
-        }
-
-        /// <summary>
-        /// Pushes a sample consisting of memory buffers into the outlet.
-        /// </summary>
-        /// <param name="sample">
-        /// An array of IntPtr, where each IntPtr points to a memory buffer containing
-        /// data for one channel. The length of this array must match the channel
-        /// count of the stream outlet.
-        /// </param>
-        /// <param name="lengths">
-        /// An array specifying the number of elements to push for each channel. The
-        /// length of this array must match the channel count of the stream outlet.
-        /// </param>
-        /// <exception cref="ArgumentNullException">
-        /// Thrown if <paramref name="sample"/> or <paramref name="lengths"/> is
-        /// null, or if any element in <paramref name="sample"/> is <see cref="IntPtr.Zero"/>.
-        /// </exception>
-        /// <exception cref="ArgumentException">
-        /// Thrown if the length of <paramref name="sample"/> or <paramref name="lengths"/> 
-        /// does not match the channel count (<see cref="ChannelCount"/>) of the
-        /// stream outlet, or if any element in <paramref name="lengths"/> is less
-        /// than or equal to 0.
-        /// </exception>
-        /// <inheritdoc cref="PushSample(sbyte[])"/>
-        public unsafe void PushSample(IntPtr[] sample, int[] lengths)
-        {
-            ThrowIfInvalid();
-            CheckSampleBuffer(sample, ChannelCount);
-            CheckLengthBuffer(lengths, ChannelCount);
-
-            var ulengths = stackalloc uint[ChannelCount];
-            for (int i = 0; i < ChannelCount; ++i)
-            {
-                if (sample[i] == IntPtr.Zero)
-                    throw new ArgumentNullException(nameof(sample));
-
-                if (lengths[i] <= 0)
-                    throw new ArgumentException(nameof(lengths));
-
-                ulengths[i] = (uint)lengths[i];
-            }
-
-            var samplePointer = Marshal.AllocHGlobal(IntPtr.Size * sample.Length);
-            Marshal.Copy(sample, 0, samplePointer, sample.Length);
-
-            try
-            {
-                CheckError(lsl_push_sample_buf(handle, samplePointer, ulengths));
-            }
-            finally
-            {
-                Marshal.FreeHGlobal(samplePointer);
-            }
-        }
-
-        /// <param name="sample">
-        /// The sample data to push.
-        /// </param>
-        /// <param name="timestamp">
-        /// The capture time of the sample, in agreement with <see cref="GetLocalClock"/>.
-        /// If the timestamp is omitted (set to 0.0), the current time is used.
-        /// </param>
-        /// <inheritdoc cref="PushSample(sbyte[])"/>
-        public void PushSample(sbyte[] sample, double timestamp)
-        {
-            ThrowIfInvalid();
-            CheckSampleBuffer(sample, ChannelCount);
-
-            CheckError(lsl_push_sample_ct(handle, sample, timestamp));
-        }
-
-#if !NET35
-        /// <inheritdoc cref="PushSample(sbyte[], double)"/>
-        public void PushSample(ReadOnlySpan<sbyte> sample, double timestamp)
-        {
-            ThrowIfInvalid();
-            CheckSampleBuffer(sample, ChannelCount);
-
-            unsafe
-            {
-                fixed (sbyte* buffer = sample)
-                {
-                    CheckError(lsl_push_sample_ct(handle, buffer, timestamp));
-                }
-            }
-        }
-#endif
-
-        /// <inheritdoc cref="PushSample(sbyte[], double)"/>
-        public void PushSample(short[] sample, double timestamp)
-        {
-            ThrowIfInvalid();
-            CheckSampleBuffer(sample, ChannelCount);
-
-            CheckError(lsl_push_sample_st(handle, sample, timestamp));
-        }
-
-#if !NET35
-        /// <inheritdoc cref="PushSample(sbyte[], double)"/>
-        public void PushSample(ReadOnlySpan<short> sample, double timestamp)
-        {
-            ThrowIfInvalid();
-            CheckSampleBuffer(sample, ChannelCount);
-
-            unsafe
-            {
-                fixed (short* buffer = sample)
-                {
-                    CheckError(lsl_push_sample_st(handle, buffer, timestamp));
-                }
-            }
-        }
-#endif
-
-        /// <inheritdoc cref="PushSample(sbyte[], double)"/>
-        public void PushSample(int[] sample, double timestamp)
-        {
-            ThrowIfInvalid();
-            CheckSampleBuffer(sample, ChannelCount);
-
-            CheckError(lsl_push_sample_it(handle, sample, timestamp));
-        }
-
-#if !NET35
-        /// <inheritdoc cref="PushSample(sbyte[], double)"/>
-        public void PushSample(ReadOnlySpan<int> sample, double timestamp)
-        {
-            ThrowIfInvalid();
-            CheckSampleBuffer(sample, ChannelCount);
-
-            unsafe
-            {
-                fixed (int* buffer = sample)
-                {
-                    CheckError(lsl_push_sample_it(handle, buffer, timestamp));
-                }
-            }
-        }
-#endif
-
-        /// <inheritdoc cref="PushSample(sbyte[], double)"/>
-        public void PushSample(long[] sample, double timestamp)
-        {
-            ThrowIfInvalid();
-            CheckSampleBuffer(sample, ChannelCount);
-
-            CheckError(lsl_push_sample_lt(handle, sample, timestamp));
-        }
-
-#if !NET35
-        /// <inheritdoc cref="PushSample(sbyte[], double)"/>
-        public void PushSample(ReadOnlySpan<long> sample, double timestamp)
-        {
-            ThrowIfInvalid();
-            CheckSampleBuffer(sample, ChannelCount);
-
-            unsafe
-            {
-                fixed (long* buffer = sample)
-                {
-                    CheckError(lsl_push_sample_lt(handle, buffer, timestamp));
-                }
-            }
-        }
-#endif
-
-        /// <inheritdoc cref="PushSample(sbyte[], double)"/>
-        public void PushSample(float[] sample, double timestamp)
-        {
-            ThrowIfInvalid();
-            CheckSampleBuffer(sample, ChannelCount);
-
-            CheckError(lsl_push_sample_ft(handle, sample, timestamp));
-        }
-
-#if !NET35
-        /// <inheritdoc cref="PushSample(sbyte[], double)"/>
-        public void PushSample(ReadOnlySpan<float> sample, double timestamp)
-        {
-            ThrowIfInvalid();
-            CheckSampleBuffer(sample, ChannelCount);
-
-            unsafe
-            {
-                fixed (float* buffer = sample)
-                {
-                    CheckError(lsl_push_sample_ft(handle, buffer, timestamp));
-                }
-            }
-        }
-#endif
-
-        /// <inheritdoc cref="PushSample(sbyte[], double)"/>
-        public void PushSample(double[] sample, double timestamp)
-        {
-            ThrowIfInvalid();
-            CheckSampleBuffer(sample, ChannelCount);
-
-            CheckError(lsl_push_sample_dt(handle, sample, timestamp));
-        }
-
-#if !NET35
-        /// <inheritdoc cref="PushSample(sbyte[], double)"/>
-        public void PushSample(ReadOnlySpan<double> sample, double timestamp)
-        {
-            ThrowIfInvalid();
-            CheckSampleBuffer(sample, ChannelCount);
-
-            unsafe
-            {
-                fixed (double* buffer = sample)
-                {
-                    CheckError(lsl_push_sample_dt(handle, buffer, timestamp));
-                }
-            }
-        }
-#endif
-
-        /// <inheritdoc cref="PushSample(sbyte[], double)"/>
-        public void PushSample(string[] sample, double timestamp)
-        {
-            ThrowIfInvalid();
-            CheckSampleBuffer(sample, ChannelCount);
-
-            var stringPointers = new IntPtr[sample.Length];
-            for (int i = 0; i < sample.Length; ++i)
-                stringPointers[i] = StringToPtr(sample[i]);
-
-            // TODO: Is this necessary?
-            var samplePointer = Marshal.AllocHGlobal(IntPtr.Size * sample.Length);
-            Marshal.Copy(stringPointers, 0, samplePointer, sample.Length);
-
-            try
-            {
-                CheckError(lsl_push_sample_strt(handle, samplePointer, timestamp)); // TODO: Test
-            }
-            finally
-            {
-                for (int i = 0; i < sample.Length; ++i)
-                    Marshal.FreeHGlobal(stringPointers[i]);
-
-                Marshal.FreeHGlobal(samplePointer);
-            }
-        }
-
-#if !NET35
-        /// <inheritdoc cref="PushSample(sbyte[], double)"/>
-        public void PushSample(ReadOnlySpan<string> sample, double timestamp)
-        {
-            ThrowIfInvalid();
-            CheckSampleBuffer(sample, ChannelCount);
-
-            var stringPointers = new IntPtr[sample.Length];
-            for (int i = 0; i < sample.Length; ++i)
-                stringPointers[i] = StringToPtr(sample[i]);
-
-            // TODO: Is this necessary?
-            var samplePointer = Marshal.AllocHGlobal(IntPtr.Size * sample.Length);
-            Marshal.Copy(stringPointers, 0, samplePointer, sample.Length);
-
-            try
-            {
-                CheckError(lsl_push_sample_strt(handle, samplePointer, timestamp)); // TODO: Test
-            }
-            finally
-            {
-                for (int i = 0; i < sample.Length; ++i)
-                    Marshal.FreeHGlobal(stringPointers[i]);
-
-                Marshal.FreeHGlobal(samplePointer);
-            }
-        }
-#endif
-
-        /// <inheritdoc cref="PushSample(sbyte[], double)"/>
-        public void PushSample(byte[] sample, double timestamp)
-        {
-            ThrowIfInvalid();
-
-            if (sample == null)
-                throw new ArgumentNullException(nameof(sample));
-
-            CheckError(lsl_push_sample_vt(handle, sample, timestamp));
-        }
-
-#if !NET35
-        /// <inheritdoc cref="PushSample(sbyte[], double)"/>
-        public void PushSample(ReadOnlySpan<byte> sample, double timestamp)
-        {
-            ThrowIfInvalid();
-            CheckSampleBuffer(sample, ChannelCount);
-
-            unsafe
-            {
-                fixed (byte* buffer = sample)
-                {
-                    CheckError(lsl_push_sample_vt(handle, buffer, timestamp));
-                }
-            }
-        }
-#endif
-
-        /// <summary>
-        /// Pushes a sample consisting of values pointed to by a pointer into the outlet.
-        /// </summary>
-        /// <inheritdoc cref="PushSample(sbyte[], double)"/>
-        public unsafe void PushSample(IntPtr sample, double timestamp)
-        {
-            ThrowIfInvalid();
-
-            if (sample == IntPtr.Zero)
-                throw new ArgumentNullException(nameof(sample));
-
-            CheckError(lsl_push_sample_vt(handle, sample.ToPointer(), timestamp));
-        }
-
-        /// <summary>
-        /// Pushes a sample consisting of variable-length byte arrays into the outlet.
-        /// </summary>
-        /// <param name="sample">
-        /// An array of byte arrays, where each inner array represents data for one
-        /// channel. The length of this array must match the channel count of the
-        /// stream outlet.
-        /// </param>
-        /// <param name="lengths">
-        /// Optional. An array specifying the number of bytes to push for each channel.
-        /// If null, the full length of each byte array in <paramref name="sample"/>
-        /// is used.
-        /// </param>
-        /// <param name="timestamp">
-        /// The capture time of the sample, in agreement with <see cref="GetLocalClock"/>.
-        /// If the timestamp is omitted (set to 0.0), the current time is used.
-        /// </param>
-        /// <exception cref="ArgumentNullException">
-        /// Thrown if <paramref name="sample"/> is null, or if any of the inner byte
-        /// arrays in <paramref name="sample"/> are null.
-        /// </exception>
-        /// <exception cref="ArgumentException">
-        /// Thrown if the length of <paramref name="sample"/> does not match the
-        /// channel count of the stream outlet, if any of the inner byte arrays
-        /// in <paramref name="sample"/> are empty, if <paramref name="lengths"/>
-        /// is provided but its length does not match the channel count, or if any
-        /// value in <paramref name="lengths"/> is less than or equal to 0 or greater
-        /// than the length of the corresponding byte array in <paramref name="sample"/>.
-        /// </exception>
-        /// <inheritdoc cref="PushSample(byte[][], int[])"/>
-        // TODO: Test
-        public unsafe void PushSample(byte[][] sample, int[] lengths, double timestamp)
-        {
-            ThrowIfInvalid();
-            CheckSampleBuffer(sample, ChannelCount);
-
-            if (lengths != null)
-                CheckLengthBuffer(lengths, ChannelCount);
-
-            var ulengths = stackalloc uint[ChannelCount];
-            for (int i = 0; i < ChannelCount; ++i)
-            {
-                if (sample[i] == null)
-                    throw new ArgumentNullException(nameof(sample));
-
-                if (sample[i].Length == 0)
-                    throw new ArgumentException(nameof(sample));
-
-                if (lengths == null)
-                {
-                    ulengths[i] = (uint)sample[i].Length;
-                }
-                else
-                {
-                    if (lengths[i] <= 0 || lengths[i] > sample[i].Length)
-                        throw new ArgumentException(nameof(lengths));
-
-                    ulengths[i] = (uint)lengths[i];
-                }
-            }
-
-            var bytesPointers = new IntPtr[ChannelCount];
-            for (int i = 0; i < ChannelCount; ++i)
-            {
-                var bytesLength = (int)ulengths[i];
-                bytesPointers[i] = Marshal.AllocHGlobal(bytesLength);
-                Marshal.Copy(sample[i], 0, bytesPointers[i], bytesLength);
-            }
-
-            var samplePointer = Marshal.AllocHGlobal(IntPtr.Size * ChannelCount);
-            Marshal.Copy(bytesPointers, 0, samplePointer, sample.Length);
-
-            try
-            {
-                CheckError(lsl_push_sample_buft(handle, samplePointer, ulengths, timestamp));
-            }
-            finally
-            {
-                for (int i = 0; i < sample.Length; ++i)
-                    Marshal.FreeHGlobal(bytesPointers[i]);
-
-                Marshal.FreeHGlobal(samplePointer);
-            }
-        }
-
-        /// <summary>
-        /// Pushes a sample consisting of memory buffers into the outlet.
-        /// </summary>
-        /// <param name="sample">
-        /// An array of IntPtr, where each IntPtr points to a memory buffer containing
-        /// data for one channel. The length of this array must match the channel
-        /// count of the stream outlet.
-        /// </param>
-        /// <param name="lengths">
-        /// An array specifying the number of elements to push for each channel. The
-        /// length of this array must match the channel count of the stream outlet.
-        /// </param>
-        /// <param name="timestamp">
-        /// The capture time of the sample, in agreement with <see cref="GetLocalClock"/>.
-        /// If the timestamp is omitted (set to 0.0), the current time is used.
-        /// </param>
-        /// <exception cref="ArgumentNullException">
-        /// Thrown if <paramref name="sample"/> or <paramref name="lengths"/> is
-        /// null, or if any element in <paramref name="sample"/> is <see cref="IntPtr.Zero"/>.
-        /// </exception>
-        /// <exception cref="ArgumentException">
-        /// Thrown if the length of <paramref name="sample"/> or <paramref name="lengths"/> 
-        /// does not match the channel count (<see cref="ChannelCount"/>) of the
-        /// stream outlet, or if any element in <paramref name="lengths"/> is less
-        /// than or equal to 0.
-        /// </exception>
-        /// <inheritdoc cref="PushSample(IntPtr[], int[])"/>
-        public unsafe void PushSample(IntPtr[] sample, int[] lengths, double timestamp)
-        {
-            ThrowIfInvalid();
-            CheckSampleBuffer(sample, ChannelCount);
-            CheckLengthBuffer(lengths, ChannelCount);
-
-            var ulengths = stackalloc uint[ChannelCount];
-            for (int i = 0; i < ChannelCount; ++i)
-            {
-                if (sample[i] == IntPtr.Zero)
-                    throw new ArgumentNullException(nameof(sample));
-
-                if (lengths[i] <= 0)
-                    throw new ArgumentException(nameof(lengths));
-
-                ulengths[i] = (uint)lengths[i];
-            }
-
-            var samplePointer = Marshal.AllocHGlobal(IntPtr.Size * sample.Length);
-            Marshal.Copy(sample, 0, samplePointer, sample.Length);
-
-            try
-            {
-                CheckError(lsl_push_sample_buft(handle, samplePointer, ulengths, timestamp));
-            }
-            finally
-            {
-                Marshal.FreeHGlobal(samplePointer);
-            }
-        }
-
         /// <param name="sample">
         /// The sample data to push.
         /// </param>
@@ -937,8 +150,17 @@ namespace SharpLSL
         /// outlet construction, takes precedence over the <paramref name="pushThrough"/>
         /// flag.
         /// </param>
-        /// <inheritdoc cref="PushSample(sbyte[], double)"/>
-        public void PushSample(sbyte[] sample, double timestamp, bool pushThrough)
+        /// <exception cref="InvalidOperationException">
+        /// Thrown if this stream outlet object is invalid.
+        /// </exception>
+        /// <exception cref="ArgumentNullException">
+        /// Thrown if the provided buffer <paramref name="sample"/> is null.
+        /// </exception>
+        /// <exception cref="ArgumentException">
+        /// Thrown if the size of the provided buffer <paramref name="sample"/> does not
+        /// match the channel count (<see cref="ChannelCount"/>) of the stream outlet.
+        /// </exception>
+        public void PushSample(sbyte[] sample, double timestamp = 0.0, bool pushThrough = true)
         {
             ThrowIfInvalid();
             CheckSampleBuffer(sample, ChannelCount);
@@ -948,7 +170,7 @@ namespace SharpLSL
 
 #if !NET35
         /// <inheritdoc cref="PushSample(sbyte[], double, bool)"/>
-        public void PushSample(ReadOnlySpan<sbyte> sample, double timestamp, bool pushThrough)
+        public void PushSample(ReadOnlySpan<sbyte> sample, double timestamp = 0.0, bool pushThrough = true)
         {
             ThrowIfInvalid();
             CheckSampleBuffer(sample, ChannelCount);
@@ -964,7 +186,7 @@ namespace SharpLSL
 #endif
 
         /// <inheritdoc cref="PushSample(sbyte[], double, bool)"/>
-        public void PushSample(short[] sample, double timestamp, bool pushThrough)
+        public void PushSample(short[] sample, double timestamp = 0.0, bool pushThrough = true)
         {
             ThrowIfInvalid();
             CheckSampleBuffer(sample, ChannelCount);
@@ -974,7 +196,7 @@ namespace SharpLSL
 
 #if !NET35
         /// <inheritdoc cref="PushSample(sbyte[], double, bool)"/>
-        public void PushSample(ReadOnlySpan<short> sample, double timestamp, bool pushThrough)
+        public void PushSample(ReadOnlySpan<short> sample, double timestamp = 0.0, bool pushThrough = true)
         {
             ThrowIfInvalid();
             CheckSampleBuffer(sample, ChannelCount);
@@ -990,7 +212,7 @@ namespace SharpLSL
 #endif
 
         /// <inheritdoc cref="PushSample(sbyte[], double, bool)"/>
-        public void PushSample(int[] sample, double timestamp, bool pushThrough)
+        public void PushSample(int[] sample, double timestamp = 0.0, bool pushThrough = true)
         {
             ThrowIfInvalid();
             CheckSampleBuffer(sample, ChannelCount);
@@ -1000,7 +222,7 @@ namespace SharpLSL
 
 #if !NET35
         /// <inheritdoc cref="PushSample(sbyte[], double, bool)"/>
-        public void PushSample(ReadOnlySpan<int> sample, double timestamp, bool pushThrough)
+        public void PushSample(ReadOnlySpan<int> sample, double timestamp = 0.0, bool pushThrough = true)
         {
             ThrowIfInvalid();
             CheckSampleBuffer(sample, ChannelCount);
@@ -1016,7 +238,7 @@ namespace SharpLSL
 #endif
 
         /// <inheritdoc cref="PushSample(sbyte[], double, bool)"/>
-        public void PushSample(long[] sample, double timestamp, bool pushThrough)
+        public void PushSample(long[] sample, double timestamp = 0.0, bool pushThrough = true)
         {
             ThrowIfInvalid();
             CheckSampleBuffer(sample, ChannelCount);
@@ -1026,7 +248,7 @@ namespace SharpLSL
 
 #if !NET35
         /// <inheritdoc cref="PushSample(sbyte[], double, bool)"/>
-        public void PushSample(ReadOnlySpan<long> sample, double timestamp, bool pushThrough)
+        public void PushSample(ReadOnlySpan<long> sample, double timestamp = 0.0, bool pushThrough = true)
         {
             ThrowIfInvalid();
             CheckSampleBuffer(sample, ChannelCount);
@@ -1042,7 +264,7 @@ namespace SharpLSL
 #endif
 
         /// <inheritdoc cref="PushSample(sbyte[], double, bool)"/>
-        public void PushSample(float[] sample, double timestamp, bool pushThrough)
+        public void PushSample(float[] sample, double timestamp = 0.0, bool pushThrough = true)
         {
             ThrowIfInvalid();
             CheckSampleBuffer(sample, ChannelCount);
@@ -1052,7 +274,7 @@ namespace SharpLSL
 
 #if !NET35
         /// <inheritdoc cref="PushSample(sbyte[], double, bool)"/>
-        public void PushSample(ReadOnlySpan<float> sample, double timestamp, bool pushThrough)
+        public void PushSample(ReadOnlySpan<float> sample, double timestamp = 0.0, bool pushThrough = true)
         {
             ThrowIfInvalid();
             CheckSampleBuffer(sample, ChannelCount);
@@ -1068,7 +290,7 @@ namespace SharpLSL
 #endif
 
         /// <inheritdoc cref="PushSample(sbyte[], double, bool)"/>
-        public void PushSample(double[] sample, double timestamp, bool pushThrough)
+        public void PushSample(double[] sample, double timestamp = 0.0, bool pushThrough = true)
         {
             ThrowIfInvalid();
             CheckSampleBuffer(sample, ChannelCount);
@@ -1078,7 +300,7 @@ namespace SharpLSL
 
 #if !NET35
         /// <inheritdoc cref="PushSample(sbyte[], double, bool)"/>
-        public void PushSample(ReadOnlySpan<double> sample, double timestamp, bool pushThrough)
+        public void PushSample(ReadOnlySpan<double> sample, double timestamp = 0.0, bool pushThrough = true)
         {
             ThrowIfInvalid();
             CheckSampleBuffer(sample, ChannelCount);
@@ -1094,78 +316,127 @@ namespace SharpLSL
 #endif
 
         /// <inheritdoc cref="PushSample(sbyte[], double, bool)"/>
-        public void PushSample(string[] sample, double timestamp, bool pushThrough)
+        public void PushSample(string[] sample, double timestamp = 0.0, bool pushThrough = true)
         {
             ThrowIfInvalid();
             CheckSampleBuffer(sample, ChannelCount);
 
             var stringPointers = new IntPtr[sample.Length];
             for (int i = 0; i < sample.Length; ++i)
+            {
                 stringPointers[i] = StringToPtr(sample[i]);
+                if (stringPointers[i] == IntPtr.Zero)
+                {
+                    for (int j = 0; j < i; ++j)
+                        Marshal.FreeHGlobal(stringPointers[j]);
 
-            // TODO: Is this necessary?
+                    throw new ArgumentException(
+                        $"Failed to convert {sample[i]} to bytes.",
+                        nameof(sample));
+                }
+            }
+
+#if STRING_MARSHALING_SCHEME_1
+            var pinnedStringPointers = GCHandle.Alloc(stringPointers, GCHandleType.Pinned);
+            var samplePointer = pinnedStringPointers.AddrOfPinnedObject();
+#elif STRING_MARSHALING_SCHEME_2
             var samplePointer = Marshal.AllocHGlobal(IntPtr.Size * sample.Length);
             Marshal.Copy(stringPointers, 0, samplePointer, sample.Length);
+#endif
 
             try
             {
-                CheckError(lsl_push_sample_strtp(handle, samplePointer, timestamp, pushThrough ? 1 : 0)); // TODO: Test
+#if STRING_MARSHALING_SCHEME_1 || STRING_MARSHALING_SCHEME_2
+                CheckError(lsl_push_sample_strtp(handle, samplePointer, timestamp, pushThrough ? 1 : 0));
+#else
+                CheckError(lsl_push_sample_strtp(handle, stringPointers, timestamp, pushThrough ? 1 : 0));
+#endif
             }
             finally
             {
                 for (int i = 0; i < sample.Length; ++i)
                     Marshal.FreeHGlobal(stringPointers[i]);
 
+#if STRING_MARSHALING_SCHEME_1
+                pinnedStringPointers.Free();
+#elif STRING_MARSHALING_SCHEME_2
                 Marshal.FreeHGlobal(samplePointer);
+#endif
             }
         }
 
 #if !NET35
         /// <inheritdoc cref="PushSample(sbyte[], double, bool)"/>
-        public void PushSample(ReadOnlySpan<string> sample, double timestamp, bool pushThrough)
+        public void PushSample(ReadOnlySpan<string> sample, double timestamp = 0.0, bool pushThrough = true)
         {
             ThrowIfInvalid();
             CheckSampleBuffer(sample, ChannelCount);
 
             var stringPointers = new IntPtr[sample.Length];
             for (int i = 0; i < sample.Length; ++i)
+            {
                 stringPointers[i] = StringToPtr(sample[i]);
+                if (stringPointers[i] == IntPtr.Zero)
+                {
+                    for (int j = 0; j < i; ++j)
+                        Marshal.FreeHGlobal(stringPointers[j]);
 
-            // TODO: Is this necessary?
+                    throw new ArgumentException(
+                        $"Failed to convert {sample[i]} to bytes.",
+                        nameof(sample));
+                }
+            }
+
+#if STRING_MARSHALING_SCHEME_1
+            var pinnedStringPointers = GCHandle.Alloc(stringPointers, GCHandleType.Pinned);
+            var samplePointer = pinnedStringPointers.AddrOfPinnedObject();
+#elif STRING_MARSHALING_SCHEME_2
             var samplePointer = Marshal.AllocHGlobal(IntPtr.Size * sample.Length);
             Marshal.Copy(stringPointers, 0, samplePointer, sample.Length);
+#endif
 
             try
             {
-                CheckError(lsl_push_sample_strtp(handle, samplePointer, timestamp, pushThrough ? 1 : 0)); // TODO: Test
+#if STRING_MARSHALING_SCHEME_1 || STRING_MARSHALING_SCHEME_2
+                CheckError(lsl_push_sample_strtp(handle, samplePointer, timestamp, pushThrough ? 1 : 0));
+#else
+                CheckError(lsl_push_sample_strtp(handle, stringPointers, timestamp, pushThrough ? 1 : 0));
+#endif
             }
             finally
             {
                 for (int i = 0; i < sample.Length; ++i)
                     Marshal.FreeHGlobal(stringPointers[i]);
 
+#if STRING_MARSHALING_SCHEME_1
+                pinnedStringPointers.Free();
+#elif STRING_MARSHALING_SCHEME_2
                 Marshal.FreeHGlobal(samplePointer);
+#endif
             }
         }
 #endif
 
         /// <inheritdoc cref="PushSample(sbyte[], double, bool)"/>
-        public void PushSample(byte[] sample, double timestamp, bool pushThrough)
+        public void PushSample(byte[] sample, double timestamp = 0.0, bool pushThrough = true)
         {
             ThrowIfInvalid();
 
             if (sample == null)
                 throw new ArgumentNullException(nameof(sample));
 
+            // TODO: Check sample length.
+
             CheckError(lsl_push_sample_vtp(handle, sample, timestamp, pushThrough ? 1 : 0));
         }
 
 #if !NET35
         /// <inheritdoc cref="PushSample(sbyte[], double, bool)"/>
-        public void PushSample(ReadOnlySpan<byte> sample, double timestamp, bool pushThrough)
+        public void PushSample(ReadOnlySpan<byte> sample, double timestamp = 0.0, bool pushThrough = true)
         {
             ThrowIfInvalid();
-            CheckSampleBuffer(sample, ChannelCount);
+
+            // TODO: Check sample length.
 
             unsafe
             {
@@ -1177,28 +448,18 @@ namespace SharpLSL
         }
 #endif
 
-        /// <param name="sample">
-        /// The sample data to push.
-        /// </param>
-        /// <param name="timestamp">
-        /// The capture time of the sample, in agreement with <see cref="GetLocalClock"/>.
-        /// If the timestamp is omitted (set to 0.0), the current time is used.
-        /// </param>
-        /// <param name="pushThrough">
-        /// Whether to push the sample through to the receivers instead of buffering
-        /// it with subsequent samples. Note that the chunk size, if specified at
-        /// outlet construction, takes precedence over the <paramref name="pushThrough"/>
-        /// flag.
-        /// </param>
-        /// <inheritdoc cref="PushSample(IntPtr, double)"/>
-        public unsafe void PushSample(IntPtr sample, double timestamp, bool pushThrough)
+        /// <summary>
+        /// Pushes a sample consisting of values pointed to by a pointer into the outlet.
+        /// </summary>
+        /// <inheritdoc cref="PushSample(sbyte[], double, bool)"/>
+        public void PushSample(IntPtr sample, double timestamp = 0.0, bool pushThrough = true)
         {
             ThrowIfInvalid();
 
             if (sample == IntPtr.Zero)
                 throw new ArgumentNullException(nameof(sample));
 
-            CheckError(lsl_push_sample_vtp(handle, sample.ToPointer(), timestamp, pushThrough ? 1 : 0));
+            CheckError(lsl_push_sample_vtp(handle, sample, timestamp, pushThrough ? 1 : 0));
         }
 
         /// <summary>
@@ -1206,8 +467,8 @@ namespace SharpLSL
         /// </summary>
         /// <param name="sample">
         /// An array of byte arrays, where each inner array represents data for one
-        /// channel. The length of this array must match the channel count of the
-        /// stream outlet.
+        /// channel. The length of this array must match the <see cref="ChannelCount"/>
+        /// of the stream outlet.
         /// </param>
         /// <param name="lengths">
         /// Optional. An array specifying the number of bytes to push for each channel.
@@ -1236,59 +497,78 @@ namespace SharpLSL
         /// value in <paramref name="lengths"/> is less than or equal to 0 or greater
         /// than the length of the corresponding byte array in <paramref name="sample"/>.
         /// </exception>
-        /// <inheritdoc cref="PushSample(byte[][], int[], double)"/>
-        // TODO: Test
-        public unsafe void PushSample(byte[][] sample, int[] lengths, double timestamp, bool pushThrough)
+        /// <inheritdoc cref="PushSample(sbyte[], double, bool)"/>
+        public void PushSample(byte[][] sample, int[] lengths = null, double timestamp = 0.0, bool pushThrough = true)
         {
             ThrowIfInvalid();
             CheckSampleBuffer(sample, ChannelCount);
 
             if (lengths != null)
+            {
                 CheckLengthBuffer(lengths, ChannelCount);
 
-            var ulengths = stackalloc uint[ChannelCount];
-            for (int i = 0; i < ChannelCount; ++i)
-            {
-                if (sample[i] == null)
-                    throw new ArgumentNullException(nameof(sample));
-
-                if (sample[i].Length == 0)
-                    throw new ArgumentException(nameof(sample));
-
-                if (lengths == null)
+                for (int i = 0; i < ChannelCount; ++i)
                 {
-                    ulengths[i] = (uint)sample[i].Length;
-                }
-                else
-                {
+                    if (sample[i] == null)
+                        throw new ArgumentNullException(nameof(sample));
+
+                    if (sample[i].Length == 0)
+                        throw new ArgumentException(nameof(sample));
+
                     if (lengths[i] <= 0 || lengths[i] > sample[i].Length)
                         throw new ArgumentException(nameof(lengths));
+                }
+            }
+            else
+            {
+                lengths = new int[ChannelCount];
 
-                    ulengths[i] = (uint)lengths[i];
+                for (int i = 0; i < ChannelCount; ++i)
+                {
+                    if (sample[i] == null)
+                        throw new ArgumentNullException(nameof(sample));
+
+                    if (sample[i].Length == 0)
+                        throw new ArgumentException(nameof(sample));
+
+                    lengths[i] = sample[i].Length;
                 }
             }
 
             var bytesPointers = new IntPtr[ChannelCount];
             for (int i = 0; i < ChannelCount; ++i)
             {
-                var bytesLength = (int)ulengths[i];
-                bytesPointers[i] = Marshal.AllocHGlobal(bytesLength);
-                Marshal.Copy(sample[i], 0, bytesPointers[i], bytesLength);
+                bytesPointers[i] = Marshal.AllocHGlobal(lengths[i]);
+                Marshal.Copy(sample[i], 0, bytesPointers[i], lengths[i]);
             }
 
+#if STRING_MARSHALING_SCHEME_2
             var samplePointer = Marshal.AllocHGlobal(IntPtr.Size * ChannelCount);
             Marshal.Copy(bytesPointers, 0, samplePointer, sample.Length);
+#endif
 
             try
             {
-                CheckError(lsl_push_sample_buftp(handle, samplePointer, ulengths, timestamp, pushThrough ? 1 : 0));
+                unsafe
+                {
+                    fixed (int* lengthsBuffer = lengths)
+                    {
+#if STRING_MARSHALING_SCHEME_2
+                        CheckError(lsl_push_sample_buftp(handle, samplePointer, (uint*)lengthsBuffer, timestamp, pushThrough ? 1 : 0));
+#else
+                        CheckError(lsl_push_sample_buftp(handle, bytesPointers, (uint*)lengthsBuffer, timestamp, pushThrough ? 1 : 0));
+#endif
+                    }
+                }
             }
             finally
             {
                 for (int i = 0; i < sample.Length; ++i)
                     Marshal.FreeHGlobal(bytesPointers[i]);
 
+#if STRING_MARSHALING_SCHEME_2
                 Marshal.FreeHGlobal(samplePointer);
+#endif
             }
         }
 
@@ -1324,14 +604,13 @@ namespace SharpLSL
         /// stream outlet, or if any element in <paramref name="lengths"/> is less
         /// than or equal to 0.
         /// </exception>
-        /// <inheritdoc cref="PushSample(IntPtr[], int[], double)"/>
-        public unsafe void PushSample(IntPtr[] sample, int[] lengths, double timestamp, bool pushThrough)
+        /// <inheritdoc cref="PushSample(sbyte[], double, bool)"/>
+        public unsafe void PushSample(IntPtr[] sample, int[] lengths, double timestamp = 0.0, bool pushThrough = true)
         {
             ThrowIfInvalid();
             CheckSampleBuffer(sample, ChannelCount);
             CheckLengthBuffer(lengths, ChannelCount);
 
-            var ulengths = stackalloc uint[ChannelCount];
             for (int i = 0; i < ChannelCount; ++i)
             {
                 if (sample[i] == IntPtr.Zero)
@@ -1339,20 +618,32 @@ namespace SharpLSL
 
                 if (lengths[i] <= 0)
                     throw new ArgumentException(nameof(lengths));
-
-                ulengths[i] = (uint)lengths[i];
             }
 
+#if STRING_MARSHALING_SCHEME_2
             var samplePointer = Marshal.AllocHGlobal(IntPtr.Size * sample.Length);
             Marshal.Copy(sample, 0, samplePointer, sample.Length);
+#endif
 
             try
             {
-                CheckError(lsl_push_sample_buftp(handle, samplePointer, ulengths, timestamp, pushThrough ? 1 : 0));
+                unsafe
+                {
+                    fixed (int* lengthsBuffer = lengths)
+                    {
+#if STRING_MARSHALING_SCHEME_2
+                        CheckError(lsl_push_sample_buftp(handle, samplePointer, (uint*)lengthsBuffer, timestamp, pushThrough ? 1 : 0));
+#else
+                        CheckError(lsl_push_sample_buftp(handle, sample, (uint*)lengthsBuffer, timestamp, pushThrough ? 1 : 0));
+#endif
+                    }
+                }
             }
             finally
             {
+#if STRING_MARSHALING_SCHEME_2
                 Marshal.FreeHGlobal(samplePointer);
+#endif
             }
         }
 
@@ -1360,709 +651,6 @@ namespace SharpLSL
         /// Pushes a chunk of multiplexed samples into the outlet. Handles type
         /// checking and conversion.
         /// </summary>
-        /// <param name="chunk">
-        /// A buffer of channel values holding the data for zero or more successive
-        /// samples to send.
-        /// </param>
-        /// <exception cref="InvalidOperationException">
-        /// Thrown if this stream outlet object is invalid.
-        /// </exception>
-        /// <exception cref="ArgumentNullException">
-        /// Thrown if the provided buffer <paramref name="chunk"/> is null.
-        /// </exception>
-        /// <exception cref="ArgumentException">
-        /// Thrown if the size of the provided buffer is not a multiple of the stream's
-        /// channel count.
-        /// </exception>
-        public void PushChunk(sbyte[] chunk) // TODO: chunk.Length == 0 test.
-        {
-            ThrowIfInvalid();
-            CheckChunkBuffer(chunk, ChannelCount);
-
-            CheckError(lsl_push_chunk_c(handle, chunk, (uint)chunk.Length));
-        }
-
-#if !NET35
-        /// <inheritdoc cref="PushChunk(sbyte[])"/>
-        public void PushChunk(ReadOnlySpan<sbyte> chunk)
-        {
-            ThrowIfInvalid();
-            CheckChunkBuffer(chunk, ChannelCount);
-
-            unsafe
-            {
-                fixed (sbyte* buffer = chunk)
-                {
-                    CheckError(lsl_push_chunk_c(handle, buffer, (uint)chunk.Length));
-                }
-            }
-        }
-#endif
-
-        /// <inheritdoc cref="PushChunk(sbyte[])"/>
-        public void PushChunk(short[] chunk)
-        {
-            ThrowIfInvalid();
-            CheckChunkBuffer(chunk, ChannelCount);
-
-            CheckError(lsl_push_chunk_s(handle, chunk, (uint)chunk.Length));
-        }
-
-#if !NET35
-        /// <inheritdoc cref="PushChunk(sbyte[])"/>
-        public void PushChunk(ReadOnlySpan<short> chunk)
-        {
-            ThrowIfInvalid();
-            CheckChunkBuffer(chunk, ChannelCount);
-
-            unsafe
-            {
-                fixed (short* buffer = chunk)
-                {
-                    CheckError(lsl_push_chunk_s(handle, buffer, (uint)chunk.Length));
-                }
-            }
-        }
-#endif
-
-        /// <inheritdoc cref="PushChunk(sbyte[])"/>
-        public void PushChunk(int[] chunk)
-        {
-            ThrowIfInvalid();
-            CheckChunkBuffer(chunk, ChannelCount);
-
-            CheckError(lsl_push_chunk_i(handle, chunk, (uint)chunk.Length));
-        }
-
-#if !NET35
-        /// <inheritdoc cref="PushChunk(sbyte[])"/>
-        public void PushChunk(ReadOnlySpan<int> chunk)
-        {
-            ThrowIfInvalid();
-            CheckChunkBuffer(chunk, ChannelCount);
-
-            unsafe
-            {
-                fixed (int* buffer = chunk)
-                {
-                    CheckError(lsl_push_chunk_i(handle, buffer, (uint)chunk.Length));
-                }
-            }
-        }
-#endif
-
-        /// <inheritdoc cref="PushChunk(sbyte[])"/>
-        public void PushChunk(long[] chunk)
-        {
-            ThrowIfInvalid();
-            CheckChunkBuffer(chunk, ChannelCount);
-
-            CheckError(lsl_push_chunk_l(handle, chunk, (uint)chunk.Length));
-        }
-
-#if !NET35
-        /// <inheritdoc cref="PushChunk(sbyte[])"/>
-        public void PushChunk(ReadOnlySpan<long> chunk)
-        {
-            ThrowIfInvalid();
-            CheckChunkBuffer(chunk, ChannelCount);
-
-            unsafe
-            {
-                fixed (long* buffer = chunk)
-                {
-                    CheckError(lsl_push_chunk_l(handle, buffer, (uint)chunk.Length));
-                }
-            }
-        }
-#endif
-
-        /// <inheritdoc cref="PushChunk(sbyte[])"/>
-        public void PushChunk(float[] chunk)
-        {
-            ThrowIfInvalid();
-            CheckChunkBuffer(chunk, ChannelCount);
-
-            CheckError(lsl_push_chunk_f(handle, chunk, (uint)chunk.Length));
-        }
-
-#if !NET35
-        /// <inheritdoc cref="PushChunk(sbyte[])"/>
-        public void PushChunk(ReadOnlySpan<float> chunk)
-        {
-            ThrowIfInvalid();
-            CheckChunkBuffer(chunk, ChannelCount);
-
-            unsafe
-            {
-                fixed (float* buffer = chunk)
-                {
-                    CheckError(lsl_push_chunk_f(handle, buffer, (uint)chunk.Length));
-                }
-            }
-        }
-#endif
-
-        /// <inheritdoc cref="PushChunk(sbyte[])"/>
-        public void PushChunk(double[] chunk)
-        {
-            ThrowIfInvalid();
-            CheckChunkBuffer(chunk, ChannelCount);
-
-            CheckError(lsl_push_chunk_d(handle, chunk, (uint)chunk.Length));
-        }
-
-#if !NET35
-        /// <inheritdoc cref="PushChunk(sbyte[])"/>
-        public void PushChunk(ReadOnlySpan<double> chunk)
-        {
-            ThrowIfInvalid();
-            CheckChunkBuffer(chunk, ChannelCount);
-
-            unsafe
-            {
-                fixed (double* buffer = chunk)
-                {
-                    CheckError(lsl_push_chunk_d(handle, buffer, (uint)chunk.Length));
-                }
-            }
-        }
-#endif
-
-        /// <inheritdoc cref="PushChunk(sbyte[])"/>
-        public void PushChunk(string[] chunk)
-        {
-            ThrowIfInvalid();
-            CheckChunkBuffer(chunk, ChannelCount);
-
-            var stringPointers = new IntPtr[chunk.Length];
-            for (int i = 0; i < chunk.Length; ++i)
-                stringPointers[i] = StringToPtr(chunk[i]);
-
-            // TODO: Is this necessary?
-            var chunkPointer = Marshal.AllocHGlobal(IntPtr.Size * chunk.Length);
-            Marshal.Copy(stringPointers, 0, chunkPointer, chunk.Length);
-
-            try
-            {
-                CheckError(lsl_push_chunk_str(handle, chunkPointer, (uint)chunk.Length));
-            }
-            finally
-            {
-                for (int i = 0; i < chunk.Length; ++i)
-                    Marshal.FreeHGlobal(stringPointers[i]);
-
-                Marshal.FreeHGlobal(chunkPointer);
-            }
-        }
-
-#if !NET35
-        /// <inheritdoc cref="PushChunk(sbyte[])"/>
-        public void PushChunk(ReadOnlySpan<string> chunk)
-        {
-            ThrowIfInvalid();
-            CheckChunkBuffer(chunk, ChannelCount);
-
-            var stringPointers = new IntPtr[chunk.Length];
-            for (int i = 0; i < chunk.Length; ++i)
-                stringPointers[i] = StringToPtr(chunk[i]);
-
-            // TODO: Is this necessary?
-            var chunkPointer = Marshal.AllocHGlobal(IntPtr.Size * chunk.Length);
-            Marshal.Copy(stringPointers, 0, chunkPointer, chunk.Length);
-
-            try
-            {
-                CheckError(lsl_push_chunk_str(handle, chunkPointer, (uint)chunk.Length));
-            }
-            finally
-            {
-                for (int i = 0; i < chunk.Length; ++i)
-                    Marshal.FreeHGlobal(stringPointers[i]);
-
-                Marshal.FreeHGlobal(chunkPointer);
-            }
-        }
-#endif
-
-        /// <exception cref="ArgumentException">
-        /// Thrown if the number of columns in <paramref name="chunk"/> does not match
-        /// the <see cref="ChannelCount"/>.
-        /// </exception>
-        /// <inheritdoc cref="PushChunk(sbyte[])"/>
-        public void PushChunk(sbyte[,] chunk)
-        {
-            ThrowIfInvalid();
-            CheckChunkBuffer(chunk, ChannelCount);
-
-            unsafe
-            {
-                fixed (sbyte* buffer = chunk)
-                {
-                    CheckError(lsl_push_chunk_c(handle, buffer, (uint)chunk.Length));
-                }
-            }
-        }
-
-        /// <inheritdoc cref="PushChunk(sbyte[])"/>
-        public void PushChunk(short[,] chunk)
-        {
-            ThrowIfInvalid();
-            CheckChunkBuffer(chunk, ChannelCount);
-
-            unsafe
-            {
-                fixed (short* buffer = chunk)
-                {
-                    CheckError(lsl_push_chunk_s(handle, buffer, (uint)chunk.Length));
-                }
-            }
-        }
-
-        /// <inheritdoc cref="PushChunk(sbyte[])"/>
-        public void PushChunk(int[,] chunk)
-        {
-            ThrowIfInvalid();
-            CheckChunkBuffer(chunk, ChannelCount);
-
-            unsafe
-            {
-                fixed (int* buffer = chunk)
-                {
-                    CheckError(lsl_push_chunk_i(handle, buffer, (uint)chunk.Length));
-                }
-            }
-        }
-
-        /// <inheritdoc cref="PushChunk(sbyte[])"/>
-        public void PushChunk(long[,] chunk)
-        {
-            ThrowIfInvalid();
-            CheckChunkBuffer(chunk, ChannelCount);
-
-            unsafe
-            {
-                fixed (long* buffer = chunk)
-                {
-                    CheckError(lsl_push_chunk_l(handle, buffer, (uint)chunk.Length));
-                }
-            }
-        }
-
-        /// <inheritdoc cref="PushChunk(sbyte[])"/>
-        public void PushChunk(float[,] chunk)
-        {
-            ThrowIfInvalid();
-            CheckChunkBuffer(chunk, ChannelCount);
-
-            unsafe
-            {
-                fixed (float* buffer = chunk)
-                {
-                    CheckError(lsl_push_chunk_f(handle, buffer, (uint)chunk.Length));
-                }
-            }
-        }
-
-        /// <inheritdoc cref="PushChunk(sbyte[])"/>
-        public void PushChunk(double[,] chunk)
-        {
-            ThrowIfInvalid();
-            CheckChunkBuffer(chunk, ChannelCount);
-
-            unsafe
-            {
-                fixed (double* buffer = chunk)
-                {
-                    CheckError(lsl_push_chunk_d(handle, buffer, (uint)chunk.Length));
-                }
-            }
-        }
-
-        /// <inheritdoc cref="PushChunk(sbyte[])"/>
-        public void PushChunk(string[,] chunk)
-        {
-            ThrowIfInvalid();
-            CheckChunkBuffer(chunk, ChannelCount);
-
-            var stringPointers = new IntPtr[chunk.Length];
-
-            int rows = chunk.GetLength(0);
-            int cols = chunk.GetLength(1);
-
-            for (int r = 0; r < rows; ++r)
-            {
-                for (int c = 0; c < cols; ++c)
-                    stringPointers[r * cols + c] = StringToPtr(chunk[r, c]);
-            }
-
-            // TODO: Is this necessary?
-            var chunkPointer = Marshal.AllocHGlobal(IntPtr.Size * chunk.Length);
-            Marshal.Copy(stringPointers, 0, chunkPointer, chunk.Length);
-
-            try
-            {
-                CheckError(lsl_push_chunk_str(handle, chunkPointer, (uint)chunk.Length));
-            }
-            finally
-            {
-                for (int i = 0; i < stringPointers.Length; ++i)
-                    Marshal.FreeHGlobal(stringPointers[i]);
-
-                Marshal.FreeHGlobal(chunkPointer);
-            }
-        }
-
-        /// <param name="chunk">
-        /// A buffer of channel values holding the data for zero or more successive
-        /// samples to send.
-        /// </param>
-        /// <param name="timestamp">
-        /// The capture time of the most recent sample, in agreement with <see cref="GetLocalClock"/>.
-        /// If the timestamp is omitted (set to 0.0), the current time is used.
-        /// The timestamps of other samples are automatically derived based on the
-        /// sampling rate of the stream.
-        /// </param>
-        /// <inheritdoc cref="PushChunk(sbyte[])"/>
-        public void PushChunk(sbyte[] chunk, double timestamp)
-        {
-            ThrowIfInvalid();
-            CheckChunkBuffer(chunk, ChannelCount);
-
-            CheckError(lsl_push_chunk_ct(handle, chunk, (uint)chunk.Length, timestamp));
-        }
-
-#if !NET35
-        /// <inheritdoc cref="PushChunk(sbyte[], double)"/>
-        public void PushChunk(ReadOnlySpan<sbyte> chunk, double timestamp)
-        {
-            ThrowIfInvalid();
-            CheckChunkBuffer(chunk, ChannelCount);
-
-            unsafe
-            {
-                fixed (sbyte* buffer = chunk)
-                {
-                    CheckError(lsl_push_chunk_ct(handle, buffer, (uint)chunk.Length, timestamp));
-                }
-            }
-        }
-#endif
-
-        /// <inheritdoc cref="PushChunk(sbyte[], double)"/>
-        public void PushChunk(short[] chunk, double timestamp)
-        {
-            ThrowIfInvalid();
-            CheckChunkBuffer(chunk, ChannelCount);
-
-            CheckError(lsl_push_chunk_st(handle, chunk, (uint)chunk.Length, timestamp));
-        }
-
-#if !NET35
-        /// <inheritdoc cref="PushChunk(sbyte[], double)"/>
-        public void PushChunk(ReadOnlySpan<short> chunk, double timestamp)
-        {
-            ThrowIfInvalid();
-            CheckChunkBuffer(chunk, ChannelCount);
-
-            unsafe
-            {
-                fixed (short* buffer = chunk)
-                {
-                    CheckError(lsl_push_chunk_st(handle, buffer, (uint)chunk.Length, timestamp));
-                }
-            }
-        }
-#endif
-
-        /// <inheritdoc cref="PushChunk(sbyte[], double)"/>
-        public void PushChunk(int[] chunk, double timestamp)
-        {
-            ThrowIfInvalid();
-            CheckChunkBuffer(chunk, ChannelCount);
-
-            CheckError(lsl_push_chunk_it(handle, chunk, (uint)chunk.Length, timestamp));
-        }
-
-#if !NET35
-        /// <inheritdoc cref="PushChunk(sbyte[], double)"/>
-        public void PushChunk(ReadOnlySpan<int> chunk, double timestamp)
-        {
-            ThrowIfInvalid();
-            CheckChunkBuffer(chunk, ChannelCount);
-
-            unsafe
-            {
-                fixed (int* buffer = chunk)
-                {
-                    CheckError(lsl_push_chunk_it(handle, buffer, (uint)chunk.Length, timestamp));
-                }
-            }
-        }
-#endif
-
-        /// <inheritdoc cref="PushChunk(sbyte[], double)"/>
-        public void PushChunk(long[] chunk, double timestamp)
-        {
-            ThrowIfInvalid();
-            CheckChunkBuffer(chunk, ChannelCount);
-
-            CheckError(lsl_push_chunk_lt(handle, chunk, (uint)chunk.Length, timestamp));
-        }
-
-#if !NET35
-        /// <inheritdoc cref="PushChunk(sbyte[], double)"/>
-        public void PushChunk(ReadOnlySpan<long> chunk, double timestamp)
-        {
-            ThrowIfInvalid();
-            CheckChunkBuffer(chunk, ChannelCount);
-
-            unsafe
-            {
-                fixed (long* buffer = chunk)
-                {
-                    CheckError(lsl_push_chunk_lt(handle, buffer, (uint)chunk.Length, timestamp));
-                }
-            }
-        }
-#endif
-
-        /// <inheritdoc cref="PushChunk(sbyte[], double)"/>
-        public void PushChunk(float[] chunk, double timestamp)
-        {
-            ThrowIfInvalid();
-            CheckChunkBuffer(chunk, ChannelCount);
-
-            CheckError(lsl_push_chunk_ft(handle, chunk, (uint)chunk.Length, timestamp));
-        }
-
-#if !NET35
-        /// <inheritdoc cref="PushChunk(sbyte[], double)"/>
-        public void PushChunk(ReadOnlySpan<float> chunk, double timestamp)
-        {
-            ThrowIfInvalid();
-            CheckChunkBuffer(chunk, ChannelCount);
-
-            unsafe
-            {
-                fixed (float* buffer = chunk)
-                {
-                    CheckError(lsl_push_chunk_ft(handle, buffer, (uint)chunk.Length, timestamp));
-                }
-            }
-        }
-#endif
-
-        /// <inheritdoc cref="PushChunk(sbyte[], double)"/>
-        public void PushChunk(double[] chunk, double timestamp)
-        {
-            ThrowIfInvalid();
-            CheckChunkBuffer(chunk, ChannelCount);
-
-            CheckError(lsl_push_chunk_dt(handle, chunk, (uint)chunk.Length, timestamp));
-        }
-
-#if !NET35
-        /// <inheritdoc cref="PushChunk(sbyte[], double)"/>
-        public void PushChunk(ReadOnlySpan<double> chunk, double timestamp)
-        {
-            ThrowIfInvalid();
-            CheckChunkBuffer(chunk, ChannelCount);
-
-            unsafe
-            {
-                fixed (double* buffer = chunk)
-                {
-                    CheckError(lsl_push_chunk_dt(handle, buffer, (uint)chunk.Length, timestamp));
-                }
-            }
-        }
-#endif
-
-        /// <inheritdoc cref="PushChunk(sbyte[], double)"/>
-        public void PushChunk(string[] chunk, double timestamp)
-        {
-            ThrowIfInvalid();
-            CheckChunkBuffer(chunk, ChannelCount);
-
-            var stringPointers = new IntPtr[chunk.Length];
-            for (int i = 0; i < chunk.Length; ++i)
-                stringPointers[i] = StringToPtr(chunk[i]);
-
-            // TODO: Is this necessary?
-            var chunkPointer = Marshal.AllocHGlobal(IntPtr.Size * chunk.Length);
-            Marshal.Copy(stringPointers, 0, chunkPointer, chunk.Length);
-
-            try
-            {
-                CheckError(lsl_push_chunk_strt(handle, chunkPointer, (uint)chunk.Length, timestamp));
-            }
-            finally
-            {
-                for (int i = 0; i < chunk.Length; ++i)
-                    Marshal.FreeHGlobal(stringPointers[i]);
-
-                Marshal.FreeHGlobal(chunkPointer);
-            }
-        }
-
-#if !NET35
-        /// <inheritdoc cref="PushChunk(sbyte[], double)"/>
-        public void PushChunk(ReadOnlySpan<string> chunk, double timestamp)
-        {
-            ThrowIfInvalid();
-            CheckChunkBuffer(chunk, ChannelCount);
-
-            var stringPointers = new IntPtr[chunk.Length];
-            for (int i = 0; i < chunk.Length; ++i)
-                stringPointers[i] = StringToPtr(chunk[i]);
-
-            // TODO: Is this necessary?
-            var chunkPointer = Marshal.AllocHGlobal(IntPtr.Size * chunk.Length);
-            Marshal.Copy(stringPointers, 0, chunkPointer, chunk.Length);
-
-            try
-            {
-                CheckError(lsl_push_chunk_strt(handle, chunkPointer, (uint)chunk.Length, timestamp));
-            }
-            finally
-            {
-                for (int i = 0; i < chunk.Length; ++i)
-                    Marshal.FreeHGlobal(stringPointers[i]);
-
-                Marshal.FreeHGlobal(chunkPointer);
-            }
-        }
-#endif
-
-        /// <exception cref="ArgumentException">
-        /// Thrown if the number of columns in <paramref name="chunk"/> does not match
-        /// the <see cref="ChannelCount"/>.
-        /// </exception>
-        /// <inheritdoc cref="PushChunk(sbyte[], double)"/>
-        public void PushChunk(sbyte[,] chunk, double timestamp)
-        {
-            ThrowIfInvalid();
-            CheckChunkBuffer(chunk, ChannelCount);
-
-            unsafe
-            {
-                fixed (sbyte* buffer = chunk)
-                {
-                    CheckError(lsl_push_chunk_ct(handle, buffer, (uint)chunk.Length, timestamp));
-                }
-            }
-        }
-
-        /// <inheritdoc cref="PushChunk(sbyte[,], double)"/>
-        public void PushChunk(short[,] chunk, double timestamp)
-        {
-            ThrowIfInvalid();
-            CheckChunkBuffer(chunk, ChannelCount);
-
-            unsafe
-            {
-                fixed (short* buffer = chunk)
-                {
-                    CheckError(lsl_push_chunk_st(handle, buffer, (uint)chunk.Length, timestamp));
-                }
-            }
-        }
-
-        /// <inheritdoc cref="PushChunk(sbyte[,], double)"/>
-        public void PushChunk(int[,] chunk, double timestamp)
-        {
-            ThrowIfInvalid();
-            CheckChunkBuffer(chunk, ChannelCount);
-
-            unsafe
-            {
-                fixed (int* buffer = chunk)
-                {
-                    CheckError(lsl_push_chunk_it(handle, buffer, (uint)chunk.Length, timestamp));
-                }
-            }
-        }
-
-        /// <inheritdoc cref="PushChunk(sbyte[,], double)"/>
-        public void PushChunk(long[,] chunk, double timestamp)
-        {
-            ThrowIfInvalid();
-            CheckChunkBuffer(chunk, ChannelCount);
-
-            unsafe
-            {
-                fixed (long* buffer = chunk)
-                {
-                    CheckError(lsl_push_chunk_lt(handle, buffer, (uint)chunk.Length, timestamp));
-                }
-            }
-        }
-
-        /// <inheritdoc cref="PushChunk(sbyte[,], double)"/>
-        public void PushChunk(float[,] chunk, double timestamp)
-        {
-            ThrowIfInvalid();
-            CheckChunkBuffer(chunk, ChannelCount);
-
-            unsafe
-            {
-                fixed (float* buffer = chunk)
-                {
-                    CheckError(lsl_push_chunk_ft(handle, buffer, (uint)chunk.Length, timestamp));
-                }
-            }
-        }
-
-        /// <inheritdoc cref="PushChunk(sbyte[,], double)"/>
-        public void PushChunk(double[,] chunk, double timestamp)
-        {
-            ThrowIfInvalid();
-            CheckChunkBuffer(chunk, ChannelCount);
-
-            unsafe
-            {
-                fixed (double* buffer = chunk)
-                {
-                    CheckError(lsl_push_chunk_dt(handle, buffer, (uint)chunk.Length, timestamp));
-                }
-            }
-        }
-
-        /// <inheritdoc cref="PushChunk(sbyte[,], double)"/>
-        public void PushChunk(string[,] chunk, double timestamp)
-        {
-            ThrowIfInvalid();
-            CheckChunkBuffer(chunk, ChannelCount);
-
-            var stringPointers = new IntPtr[chunk.Length];
-
-            int rows = chunk.GetLength(0);
-            int cols = chunk.GetLength(1);
-
-            for (int r = 0; r < rows; ++r)
-            {
-                for (int c = 0; c < cols; ++c)
-                    stringPointers[r * cols + c] = StringToPtr(chunk[r, c]);
-            }
-
-            // TODO: Is this necessary?
-            var chunkPointer = Marshal.AllocHGlobal(IntPtr.Size * chunk.Length);
-            Marshal.Copy(stringPointers, 0, chunkPointer, chunk.Length);
-
-            try
-            {
-                CheckError(lsl_push_chunk_strt(handle, chunkPointer, (uint)chunk.Length, timestamp));
-            }
-            finally
-            {
-                for (int i = 0; i < stringPointers.Length; ++i)
-                    Marshal.FreeHGlobal(stringPointers[i]);
-
-                Marshal.FreeHGlobal(chunkPointer);
-            }
-        }
-
         /// <param name="chunk">
         /// A buffer of channel values holding the data for zero or more successive
         /// samples to send.
@@ -2078,8 +666,17 @@ namespace SharpLSL
         /// it with subsequent samples. Note that the chunk size, if specified at
         /// outlet construction, takes precedence over the pushThrough flag.
         /// </param>
-        /// <inheritdoc cref="PushChunk(sbyte[], double)"/>
-        public void PushChunk(sbyte[] chunk, double timestamp, bool pushThrough)
+        /// <exception cref="InvalidOperationException">
+        /// Thrown if this stream outlet object is invalid.
+        /// </exception>
+        /// <exception cref="ArgumentNullException">
+        /// Thrown if the provided buffer <paramref name="chunk"/> is null.
+        /// </exception>
+        /// <exception cref="ArgumentException">
+        /// Thrown if the size of the provided buffer is not a multiple of the stream's
+        /// channel count.
+        /// </exception>
+        public void PushChunk(sbyte[] chunk, double timestamp = 0.0, bool pushThrough = true)
         {
             ThrowIfInvalid();
             CheckChunkBuffer(chunk, ChannelCount);
@@ -2089,7 +686,7 @@ namespace SharpLSL
 
 #if !NET35
         /// <inheritdoc cref="PushChunk(sbyte[], double, bool)"/>
-        public void PushChunk(ReadOnlySpan<sbyte> chunk, double timestamp, bool pushThrough)
+        public void PushChunk(ReadOnlySpan<sbyte> chunk, double timestamp = 0.0, bool pushThrough = true)
         {
             ThrowIfInvalid();
             CheckChunkBuffer(chunk, ChannelCount);
@@ -2105,7 +702,7 @@ namespace SharpLSL
 #endif
 
         /// <inheritdoc cref="PushChunk(sbyte[], double, bool)"/>
-        public void PushChunk(short[] chunk, double timestamp, bool pushThrough)
+        public void PushChunk(short[] chunk, double timestamp = 0.0, bool pushThrough = true)
         {
             ThrowIfInvalid();
             CheckChunkBuffer(chunk, ChannelCount);
@@ -2115,7 +712,7 @@ namespace SharpLSL
 
 #if !NET35
         /// <inheritdoc cref="PushChunk(sbyte[], double, bool)"/>
-        public void PushChunk(ReadOnlySpan<short> chunk, double timestamp, bool pushThrough)
+        public void PushChunk(ReadOnlySpan<short> chunk, double timestamp = 0.0, bool pushThrough = true)
         {
             ThrowIfInvalid();
             CheckChunkBuffer(chunk, ChannelCount);
@@ -2131,7 +728,7 @@ namespace SharpLSL
 #endif
 
         /// <inheritdoc cref="PushChunk(sbyte[], double, bool)"/>
-        public void PushChunk(int[] chunk, double timestamp, bool pushThrough)
+        public void PushChunk(int[] chunk, double timestamp = 0.0, bool pushThrough = true)
         {
             ThrowIfInvalid();
             CheckChunkBuffer(chunk, ChannelCount);
@@ -2141,7 +738,7 @@ namespace SharpLSL
 
 #if !NET35
         /// <inheritdoc cref="PushChunk(sbyte[], double, bool)"/>
-        public void PushChunk(ReadOnlySpan<int> chunk, double timestamp, bool pushThrough)
+        public void PushChunk(ReadOnlySpan<int> chunk, double timestamp = 0.0, bool pushThrough = true)
         {
             ThrowIfInvalid();
             CheckChunkBuffer(chunk, ChannelCount);
@@ -2157,7 +754,7 @@ namespace SharpLSL
 #endif
 
         /// <inheritdoc cref="PushChunk(sbyte[], double, bool)"/>
-        public void PushChunk(long[] chunk, double timestamp, bool pushThrough)
+        public void PushChunk(long[] chunk, double timestamp = 0.0, bool pushThrough = true)
         {
             ThrowIfInvalid();
             CheckChunkBuffer(chunk, ChannelCount);
@@ -2167,7 +764,7 @@ namespace SharpLSL
 
 #if !NET35
         /// <inheritdoc cref="PushChunk(sbyte[], double, bool)"/>
-        public void PushChunk(ReadOnlySpan<long> chunk, double timestamp, bool pushThrough)
+        public void PushChunk(ReadOnlySpan<long> chunk, double timestamp = 0.0, bool pushThrough = true)
         {
             ThrowIfInvalid();
             CheckChunkBuffer(chunk, ChannelCount);
@@ -2183,7 +780,7 @@ namespace SharpLSL
 #endif
 
         /// <inheritdoc cref="PushChunk(sbyte[], double, bool)"/>
-        public void PushChunk(float[] chunk, double timestamp, bool pushThrough)
+        public void PushChunk(float[] chunk, double timestamp = 0.0, bool pushThrough = true)
         {
             ThrowIfInvalid();
             CheckChunkBuffer(chunk, ChannelCount);
@@ -2193,7 +790,7 @@ namespace SharpLSL
 
 #if !NET35
         /// <inheritdoc cref="PushChunk(sbyte[], double, bool)"/>
-        public void PushChunk(ReadOnlySpan<float> chunk, double timestamp, bool pushThrough)
+        public void PushChunk(ReadOnlySpan<float> chunk, double timestamp = 0.0, bool pushThrough = true)
         {
             ThrowIfInvalid();
             CheckChunkBuffer(chunk, ChannelCount);
@@ -2209,7 +806,7 @@ namespace SharpLSL
 #endif
 
         /// <inheritdoc cref="PushChunk(sbyte[], double, bool)"/>
-        public void PushChunk(double[] chunk, double timestamp, bool pushThrough)
+        public void PushChunk(double[] chunk, double timestamp = 0.0, bool pushThrough = true)
         {
             ThrowIfInvalid();
             CheckChunkBuffer(chunk, ChannelCount);
@@ -2219,7 +816,7 @@ namespace SharpLSL
 
 #if !NET35
         /// <inheritdoc cref="PushChunk(sbyte[], double, bool)"/>
-        public void PushChunk(ReadOnlySpan<double> chunk, double timestamp, bool pushThrough)
+        public void PushChunk(ReadOnlySpan<double> chunk, double timestamp = 0.0, bool pushThrough = true)
         {
             ThrowIfInvalid();
             CheckChunkBuffer(chunk, ChannelCount);
@@ -2235,67 +832,284 @@ namespace SharpLSL
 #endif
 
         /// <inheritdoc cref="PushChunk(sbyte[], double, bool)"/>
-        public void PushChunk(string[] chunk, double timestamp, bool pushThrough)
+        public void PushChunk(string[] chunk, double timestamp = 0.0, bool pushThrough = true)
         {
             ThrowIfInvalid();
             CheckChunkBuffer(chunk, ChannelCount);
 
             var stringPointers = new IntPtr[chunk.Length];
             for (int i = 0; i < chunk.Length; ++i)
+            {
                 stringPointers[i] = StringToPtr(chunk[i]);
+                if (stringPointers[i] == IntPtr.Zero)
+                {
+                    for (int j = 0; j < i; ++j)
+                        Marshal.FreeHGlobal(stringPointers[j]);
 
-            // TODO: Is this necessary?
+                    throw new ArgumentException(
+                        $"Failed to convert {chunk[i]} to bytes.",
+                        nameof(chunk));
+                }
+            }
+
+#if STRING_MARSHALING_SCHEME_1
+            var pinnedStringPointers = GCHandle.Alloc(stringPointers, GCHandleType.Pinned);
+            var chunkPointer = pinnedStringPointers.AddrOfPinnedObject();
+#elif STRING_MARSHALING_SCHEME_2
             var chunkPointer = Marshal.AllocHGlobal(IntPtr.Size * chunk.Length);
             Marshal.Copy(stringPointers, 0, chunkPointer, chunk.Length);
+#endif
 
             try
             {
+#if STRING_MARSHALING_SCHEME_1 || STRING_MARSHALING_SCHEME_2
                 CheckError(lsl_push_chunk_strtp(handle, chunkPointer, (uint)chunk.Length, timestamp, pushThrough ? 1 : 0));
+#else
+                CheckError(lsl_push_chunk_strtp(handle, stringPointers, (uint)chunk.Length, timestamp, pushThrough ? 1 : 0));
+#endif
             }
             finally
             {
                 for (int i = 0; i < chunk.Length; ++i)
                     Marshal.FreeHGlobal(stringPointers[i]);
 
+#if STRING_MARSHALING_SCHEME_1
+                pinnedStringPointers.Free();
+#elif STRING_MARSHALING_SCHEME_2
                 Marshal.FreeHGlobal(chunkPointer);
+#endif
             }
         }
 
 #if !NET35
         /// <inheritdoc cref="PushChunk(sbyte[], double, bool)"/>
-        public void PushChunk(ReadOnlySpan<string> chunk, double timestamp, bool pushThrough)
+        public void PushChunk(ReadOnlySpan<string> chunk, double timestamp = 0.0, bool pushThrough = true)
         {
             ThrowIfInvalid();
             CheckChunkBuffer(chunk, ChannelCount);
 
             var stringPointers = new IntPtr[chunk.Length];
             for (int i = 0; i < chunk.Length; ++i)
+            {
                 stringPointers[i] = StringToPtr(chunk[i]);
+                if (stringPointers[i] == IntPtr.Zero)
+                {
+                    for (int j = 0; j < i; ++j)
+                        Marshal.FreeHGlobal(stringPointers[j]);
 
-            // TODO: Is this necessary?
+                    throw new ArgumentException(
+                        $"Failed to convert {chunk[i]} to bytes.",
+                        nameof(chunk));
+                }
+            }
+
+#if STRING_MARSHALING_SCHEME_1
+            var pinnedStringPointers = GCHandle.Alloc(stringPointers, GCHandleType.Pinned);
+            var chunkPointer = pinnedStringPointers.AddrOfPinnedObject();
+#elif STRING_MARSHALING_SCHEME_2
             var chunkPointer = Marshal.AllocHGlobal(IntPtr.Size * chunk.Length);
             Marshal.Copy(stringPointers, 0, chunkPointer, chunk.Length);
+#endif
 
             try
             {
+#if STRING_MARSHALING_SCHEME_1 || STRING_MARSHALING_SCHEME_2
                 CheckError(lsl_push_chunk_strtp(handle, chunkPointer, (uint)chunk.Length, timestamp, pushThrough ? 1 : 0));
+#else
+                CheckError(lsl_push_chunk_strtp(handle, stringPointers, (uint)chunk.Length, timestamp, pushThrough ? 1 : 0));
+#endif
             }
             finally
             {
                 for (int i = 0; i < chunk.Length; ++i)
                     Marshal.FreeHGlobal(stringPointers[i]);
 
+#if STRING_MARSHALING_SCHEME_1
+                pinnedStringPointers.Free();
+#elif STRING_MARSHALING_SCHEME_2
                 Marshal.FreeHGlobal(chunkPointer);
+#endif
             }
         }
 #endif
+
+        /// <summary>
+        /// Pushes a chunk of multiplexed samples consisting of variable-length byte
+        /// arrays into the outlet.
+        /// </summary>
+        /// <param name="chunk">
+        /// An array of byte arrays holding the data for zero or more successive
+        /// samples to send.
+        /// </param>
+        /// <param name="lengths">
+        /// Optional. An array specifying the number of bytes to push for each element.
+        /// If null, the full length of each byte array in <paramref name="chunk"/>
+        /// is used.
+        /// </param>
+        /// <param name="timestamp">
+        /// The capture time of the most recent sample, in agreement with <see cref="GetLocalClock"/>.
+        /// If the timestamp is omitted (set to 0.0), the current time is used.
+        /// The timestamps of other samples are automatically derived based on the
+        /// sampling rate of the stream.
+        /// </param>
+        /// <param name="pushThrough">
+        /// Whether to push the sample through to the receivers instead of buffering
+        /// it with subsequent samples. Note that the chunk size, if specified at
+        /// outlet construction, takes precedence over the pushThrough flag.
+        /// </param>
+        /// <inheritdoc cref="PushChunk(sbyte[], double, bool)"/>
+        public void PushChunk(byte[][] chunk, int[] lengths = null, double timestamp = 0.0, bool pushThrough = true)
+        {
+            ThrowIfInvalid();
+            CheckChunkBuffer(chunk, ChannelCount);
+
+            if (lengths != null)
+            {
+                if (lengths.Length != chunk.Length)
+                    throw new ArgumentException(nameof(lengths));
+
+                for (int i = 0; i < chunk.Length; ++i)
+                {
+                    if (chunk[i] == null)
+                        throw new ArgumentNullException(nameof(chunk));
+
+                    if (chunk[i].Length == 0)
+                        throw new ArgumentException(nameof(chunk));
+
+                    if (lengths[i] <= 0 || lengths[i] > chunk[i].Length)
+                        throw new ArgumentException(nameof(lengths));
+                }
+            }
+            else
+            {
+                lengths = new int[chunk.Length];
+
+                for (int i = 0; i < chunk.Length; ++i)
+                {
+                    if (chunk[i] == null)
+                        throw new ArgumentNullException(nameof(chunk));
+
+                    if (chunk[i].Length == 0)
+                        throw new ArgumentException(nameof(chunk));
+
+                    lengths[i] = chunk[i].Length;
+                }
+            }
+
+            var bytesPointers = new IntPtr[chunk.Length];
+            for (int i = 0; i < chunk.Length; ++i)
+            {
+                bytesPointers[i] = Marshal.AllocHGlobal(lengths[i]);
+                Marshal.Copy(chunk[i], 0, bytesPointers[i], lengths[i]);
+            }
+
+#if STRING_MARSHALING_SCHEME_2
+            var chunkPointer = Marshal.AllocHGlobal(IntPtr.Size * chunk.Length);
+            Marshal.Copy(bytesPointers, 0, chunkPointer, chunk.Length);
+#endif
+
+            try
+            {
+                unsafe
+                {
+                    fixed (int* lengthsBuffer = lengths)
+                    {
+#if STRING_MARSHALING_SCHEME_2
+                        CheckError(lsl_push_chunk_buftp(handle, chunkPointer, (uint*)lengthsBuffer, (uint)chunk.Length, timestamp, pushThrough ? 1 : 0));
+#else
+                        CheckError(lsl_push_chunk_buftp(handle, bytesPointers, (uint*)lengthsBuffer, (uint)chunk.Length, timestamp, pushThrough ? 1 : 0));
+#endif
+                    }
+                }
+            }
+            finally
+            {
+                for (int i = 0; i < chunk.Length; ++i)
+                    Marshal.FreeHGlobal(bytesPointers[i]);
+
+#if STRING_MARSHALING_SCHEME_2
+                Marshal.FreeHGlobal(chunkPointer);
+#endif
+            }
+        }
+
+        /// <summary>
+        /// Pushes a chunk of multiplexed samples consisting of memory buffers
+        /// into the outlet.
+        /// </summary>
+        /// <param name="chunk">
+        /// An array of IntPtr, where each IntPtr points to a memory buffer containing
+        /// data for one channel.
+        /// </param>
+        /// <param name="lengths">
+        /// An array specifying the number of elements to push for each value. The
+        /// length of this array must match the length of <paramref name="chunk"/>.
+        /// </param>
+        /// <param name="timestamp">
+        /// The capture time of the most recent sample, in agreement with <see cref="GetLocalClock"/>.
+        /// If the timestamp is omitted (set to 0.0), the current time is used.
+        /// The timestamps of other samples are automatically derived based on the
+        /// sampling rate of the stream.
+        /// </param>
+        /// <param name="pushThrough">
+        /// Whether to push the sample through to the receivers instead of buffering
+        /// it with subsequent samples. Note that the chunk size, if specified at
+        /// outlet construction, takes precedence over the pushThrough flag.
+        /// </param>
+        /// <inheritdoc cref="PushChunk(byte[][], int[], double, bool)"/>
+        public void PushChunk(IntPtr[] chunk, int[] lengths, double timestamp = 0.0, bool pushThrough = true)
+        {
+            ThrowIfInvalid();
+            CheckChunkBuffer(chunk, ChannelCount);
+
+            if (lengths == null)
+                throw new ArgumentNullException(nameof(lengths));
+
+            if (lengths.Length != chunk.Length)
+                throw new ArgumentException(nameof(lengths));
+
+            for (int i = 0; i < lengths.Length; ++i)
+            {
+                if (chunk[i] == IntPtr.Zero)
+                    throw new ArgumentException(nameof(chunk));
+
+                if (lengths[i] <= 0)
+                    throw new ArgumentException(nameof(lengths));
+            }
+
+#if STRING_MARSHALING_SCHEME_2
+            var chunkPointer = Marshal.AllocHGlobal(IntPtr.Size * chunk.Length);
+            Marshal.Copy(chunk, 0, chunkPointer, chunk.Length);
+#endif
+
+            try
+            {
+                unsafe
+                {
+                    fixed (int* lengthsBuffer = lengths)
+                    {
+#if STRING_MARSHALING_SCHEME_2
+                        CheckError(lsl_push_chunk_buftp(handle, chunkPointer, (uint*)lengthsBuffer, (uint)chunk.Length, timestamp, pushThrough ? 1 : 0));
+#else
+                        CheckError(lsl_push_chunk_buftp(handle, chunk, (uint*)lengthsBuffer, (uint)chunk.Length, timestamp, pushThrough ? 1 : 0));
+#endif
+                    }
+                }
+            }
+            finally
+            {
+#if STRING_MARSHALING_SCHEME_2
+                Marshal.FreeHGlobal(chunkPointer);
+#endif
+            }
+        }
 
         /// <exception cref="ArgumentException">
         /// Thrown if the number of columns in <paramref name="chunk"/> does not match
         /// the <see cref="ChannelCount"/>.
         /// </exception>
         /// <inheritdoc cref="PushChunk(sbyte[], double, bool)"/>
-        public void PushChunk(sbyte[,] chunk, double timestamp, bool pushThrough)
+        public void PushChunk(sbyte[,] chunk, double timestamp = 0.0, bool pushThrough = true)
         {
             ThrowIfInvalid();
             CheckChunkBuffer(chunk, ChannelCount);
@@ -2310,7 +1124,7 @@ namespace SharpLSL
         }
 
         /// <inheritdoc cref="PushChunk(sbyte[,], double, bool)"/>
-        public void PushChunk(short[,] chunk, double timestamp, bool pushThrough)
+        public void PushChunk(short[,] chunk, double timestamp = 0.0, bool pushThrough = true)
         {
             ThrowIfInvalid();
             CheckChunkBuffer(chunk, ChannelCount);
@@ -2325,7 +1139,7 @@ namespace SharpLSL
         }
 
         /// <inheritdoc cref="PushChunk(sbyte[,], double, bool)"/>
-        public void PushChunk(int[,] chunk, double timestamp, bool pushThrough)
+        public void PushChunk(int[,] chunk, double timestamp = 0.0, bool pushThrough = true)
         {
             ThrowIfInvalid();
             CheckChunkBuffer(chunk, ChannelCount);
@@ -2340,7 +1154,7 @@ namespace SharpLSL
         }
 
         /// <inheritdoc cref="PushChunk(sbyte[,], double, bool)"/>
-        public void PushChunk(long[,] chunk, double timestamp, bool pushThrough)
+        public void PushChunk(long[,] chunk, double timestamp = 0.0, bool pushThrough = true)
         {
             ThrowIfInvalid();
             CheckChunkBuffer(chunk, ChannelCount);
@@ -2355,7 +1169,7 @@ namespace SharpLSL
         }
 
         /// <inheritdoc cref="PushChunk(sbyte[,], double, bool)"/>
-        public void PushChunk(float[,] chunk, double timestamp, bool pushThrough)
+        public void PushChunk(float[,] chunk, double timestamp = 0.0, bool pushThrough = true)
         {
             ThrowIfInvalid();
             CheckChunkBuffer(chunk, ChannelCount);
@@ -2370,7 +1184,7 @@ namespace SharpLSL
         }
 
         /// <inheritdoc cref="PushChunk(sbyte[,], double, bool)"/>
-        public void PushChunk(double[,] chunk, double timestamp, bool pushThrough)
+        public void PushChunk(double[,] chunk, double timestamp = 0.0, bool pushThrough = true)
         {
             ThrowIfInvalid();
             CheckChunkBuffer(chunk, ChannelCount);
@@ -2385,36 +1199,59 @@ namespace SharpLSL
         }
 
         /// <inheritdoc cref="PushChunk(sbyte[,], double, bool)"/>
-        public void PushChunk(string[,] chunk, double timestamp, bool pushThrough)
+        public void PushChunk(string[,] chunk, double timestamp = 0.0, bool pushThrough = true)
         {
             ThrowIfInvalid();
             CheckChunkBuffer(chunk, ChannelCount);
 
             var stringPointers = new IntPtr[chunk.Length];
 
-            int rows = chunk.GetLength(0);
-            int cols = chunk.GetLength(1);
+            int samples = chunk.GetLength(0);
 
-            for (int r = 0; r < rows; ++r)
+            for (int s = 0; s < samples; ++s)
             {
-                for (int c = 0; c < cols; ++c)
-                    stringPointers[r * cols + c] = StringToPtr(chunk[r, c]);
+                for (int c = 0; c < ChannelCount; ++c)
+                {
+                    var index = s * ChannelCount + c;
+                    stringPointers[index] = StringToPtr(chunk[s, c]);
+                    if (stringPointers[index] == IntPtr.Zero)
+                    {
+                        for (int i = 0; i < index; ++i)
+                            Marshal.FreeHGlobal(stringPointers[i]);
+
+                        throw new ArgumentException(
+                            $"Failed to convert {chunk[s, c]} to bytes.",
+                            nameof(chunk));
+                    }
+                }
             }
 
-            // TODO: Is this necessary?
+#if STRING_MARSHALING_SCHEME_1
+            var pinnedStringPointers = GCHandle.Alloc(stringPointers, GCHandleType.Pinned);
+            var chunkPointer = pinnedStringPointers.AddrOfPinnedObject();
+#elif STRING_MARSHALING_SCHEME_2
             var chunkPointer = Marshal.AllocHGlobal(IntPtr.Size * chunk.Length);
             Marshal.Copy(stringPointers, 0, chunkPointer, chunk.Length);
+#endif
 
             try
             {
+#if STRING_MARSHALING_SCHEME_1 || STRING_MARSHALING_SCHEME_2
                 CheckError(lsl_push_chunk_strtp(handle, chunkPointer, (uint)chunk.Length, timestamp, pushThrough ? 1 : 0));
+#else
+                CheckError(lsl_push_chunk_strtp(handle, stringPointers, (uint)chunk.Length, timestamp, pushThrough ? 1 : 0));
+#endif
             }
             finally
             {
                 for (int i = 0; i < stringPointers.Length; ++i)
                     Marshal.FreeHGlobal(stringPointers[i]);
 
+#if STRING_MARSHALING_SCHEME_1
+                pinnedStringPointers.Free();
+#elif STRING_MARSHALING_SCHEME_2
                 Marshal.FreeHGlobal(chunkPointer);
+#endif
             }
         }
 
@@ -2425,6 +1262,11 @@ namespace SharpLSL
         /// <param name="timestamps">
         /// The buffer holding one timestamp for each sample in the data buffer.
         /// </param>
+        /// <param name="pushThrough">
+        /// Whether to push the samples through to the receivers instead of buffering
+        /// them with subsequent samples. Note that the chunk size, if specified at
+        /// outlet construction, takes precedence over the pushThrough flag.
+        /// </param>
         /// <exception cref="ArgumentNullException">
         /// Thrown if the provided data buffer <paramref name="chunk"/> or timestamp
         /// buffer <paramref name="timestamps"/> is null.
@@ -2434,428 +1276,8 @@ namespace SharpLSL
         /// channel count, or if <paramref name="timestamps"/> is provided but its length
         /// does not match the number of samples in the chunk.
         /// </exception>
-        /// <inheritdoc cref="PushChunk(sbyte[])"/>
-        public void PushChunk(sbyte[] chunk, double[] timestamps)
-        {
-            ThrowIfInvalid();
-
-            var samples = CheckChunkBuffer(chunk, ChannelCount);
-            CheckTimestampBuffer(timestamps, samples);
-
-            CheckError(lsl_push_chunk_ctn(handle, chunk, (uint)chunk.Length, timestamps));
-        }
-
-#if !NET35
-        /// <inheritdoc cref="PushChunk(sbyte[], double[])"/>
-        public void PushChunk(ReadOnlySpan<sbyte> chunk, ReadOnlySpan<double> timestamps)
-        {
-            ThrowIfInvalid();
-
-            var samples = CheckChunkBuffer(chunk, ChannelCount);
-            CheckTimestampBuffer(timestamps, samples);
-
-            unsafe
-            {
-                fixed (sbyte* chunkBuffer = chunk)
-                fixed (double* timestampsBuffer = timestamps)
-                {
-                    CheckError(lsl_push_chunk_ctn(handle, chunkBuffer, (uint)chunk.Length, timestampsBuffer));
-                }
-            }
-        }
-#endif
-
-        /// <inheritdoc cref="PushChunk(sbyte[], double[])"/>
-        public void PushChunk(short[] chunk, double[] timestamps)
-        {
-            ThrowIfInvalid();
-
-            var samples = CheckChunkBuffer(chunk, ChannelCount);
-            CheckTimestampBuffer(timestamps, samples);
-
-            CheckError(lsl_push_chunk_stn(handle, chunk, (uint)chunk.Length, timestamps));
-        }
-
-#if !NET35
-        /// <inheritdoc cref="PushChunk(sbyte[], double[])"/>
-        public void PushChunk(ReadOnlySpan<short> chunk, ReadOnlySpan<double> timestamps)
-        {
-            ThrowIfInvalid();
-
-            var samples = CheckChunkBuffer(chunk, ChannelCount);
-            CheckTimestampBuffer(timestamps, samples);
-
-            unsafe
-            {
-                fixed (short* chunkBuffer = chunk)
-                fixed (double* timestampsBuffer = timestamps)
-                {
-                    CheckError(lsl_push_chunk_stn(handle, chunkBuffer, (uint)chunk.Length, timestampsBuffer));
-                }
-            }
-        }
-#endif
-
-        /// <inheritdoc cref="PushChunk(sbyte[], double[])"/>
-        public void PushChunk(int[] chunk, double[] timestamps)
-        {
-            ThrowIfInvalid();
-
-            var samples = CheckChunkBuffer(chunk, ChannelCount);
-            CheckTimestampBuffer(timestamps, samples);
-
-            CheckError(lsl_push_chunk_itn(handle, chunk, (uint)chunk.Length, timestamps));
-        }
-
-#if !NET35
-        /// <inheritdoc cref="PushChunk(sbyte[], double[])"/>
-        public void PushChunk(ReadOnlySpan<int> chunk, ReadOnlySpan<double> timestamps)
-        {
-            ThrowIfInvalid();
-
-            var samples = CheckChunkBuffer(chunk, ChannelCount);
-            CheckTimestampBuffer(timestamps, samples);
-
-            unsafe
-            {
-                fixed (int* chunkBuffer = chunk)
-                fixed (double* timestampsBuffer = timestamps)
-                {
-                    CheckError(lsl_push_chunk_itn(handle, chunkBuffer, (uint)chunk.Length, timestampsBuffer));
-                }
-            }
-        }
-#endif
-
-        /// <inheritdoc cref="PushChunk(sbyte[], double[])"/>
-        public void PushChunk(long[] chunk, double[] timestamps)
-        {
-            ThrowIfInvalid();
-
-            var samples = CheckChunkBuffer(chunk, ChannelCount);
-            CheckTimestampBuffer(timestamps, samples);
-
-            CheckError(lsl_push_chunk_ltn(handle, chunk, (uint)chunk.Length, timestamps));
-        }
-
-#if !NET35
-        /// <inheritdoc cref="PushChunk(sbyte[], double[])"/>
-        public void PushChunk(ReadOnlySpan<long> chunk, ReadOnlySpan<double> timestamps)
-        {
-            ThrowIfInvalid();
-
-            var samples = CheckChunkBuffer(chunk, ChannelCount);
-            CheckTimestampBuffer(timestamps, samples);
-
-            unsafe
-            {
-                fixed (long* chunkBuffer = chunk)
-                fixed (double* timestampsBuffer = timestamps)
-                {
-                    CheckError(lsl_push_chunk_ltn(handle, chunkBuffer, (uint)chunk.Length, timestampsBuffer));
-                }
-            }
-        }
-#endif
-
-        /// <inheritdoc cref="PushChunk(sbyte[], double[])"/>
-        public void PushChunk(float[] chunk, double[] timestamps)
-        {
-            ThrowIfInvalid();
-
-            var samples = CheckChunkBuffer(chunk, ChannelCount);
-            CheckTimestampBuffer(timestamps, samples);
-
-            CheckError(lsl_push_chunk_ftn(handle, chunk, (uint)chunk.Length, timestamps));
-        }
-
-#if !NET35
-        /// <inheritdoc cref="PushChunk(sbyte[], double[])"/>
-        public void PushChunk(ReadOnlySpan<float> chunk, ReadOnlySpan<double> timestamps)
-        {
-            ThrowIfInvalid();
-
-            var samples = CheckChunkBuffer(chunk, ChannelCount);
-            CheckTimestampBuffer(timestamps, samples);
-
-            unsafe
-            {
-                fixed (float* chunkBuffer = chunk)
-                fixed (double* timestampsBuffer = timestamps)
-                {
-                    CheckError(lsl_push_chunk_ftn(handle, chunkBuffer, (uint)chunk.Length, timestampsBuffer));
-                }
-            }
-        }
-#endif
-
-        /// <inheritdoc cref="PushChunk(sbyte[], double[])"/>
-        public void PushChunk(double[] chunk, double[] timestamps)
-        {
-            ThrowIfInvalid();
-
-            var samples = CheckChunkBuffer(chunk, ChannelCount);
-            CheckTimestampBuffer(timestamps, samples);
-
-            CheckError(lsl_push_chunk_dtn(handle, chunk, (uint)chunk.Length, timestamps));
-        }
-
-#if !NET35
-        /// <inheritdoc cref="PushChunk(sbyte[], double[])"/>
-        public void PushChunk(ReadOnlySpan<double> chunk, ReadOnlySpan<double> timestamps)
-        {
-            ThrowIfInvalid();
-
-            var samples = CheckChunkBuffer(chunk, ChannelCount);
-            CheckTimestampBuffer(timestamps, samples);
-
-            unsafe
-            {
-                fixed (double* chunkBuffer = chunk)
-                fixed (double* timestampsBuffer = timestamps)
-                {
-                    CheckError(lsl_push_chunk_dtn(handle, chunkBuffer, (uint)chunk.Length, timestampsBuffer));
-                }
-            }
-        }
-#endif
-
-        /// <inheritdoc cref="PushChunk(sbyte[], double[])"/>
-        public void PushChunk(string[] chunk, double[] timestamps)
-        {
-            ThrowIfInvalid();
-
-            var samples = CheckChunkBuffer(chunk, ChannelCount);
-            CheckTimestampBuffer(timestamps, samples);
-
-            var stringPointers = new IntPtr[chunk.Length];
-            for (int i = 0; i < chunk.Length; ++i)
-                stringPointers[i] = StringToPtr(chunk[i]);
-
-            // TODO: Is this necessary?
-            var chunkPointer = Marshal.AllocHGlobal(IntPtr.Size * chunk.Length);
-            Marshal.Copy(stringPointers, 0, chunkPointer, chunk.Length);
-
-            try
-            {
-                unsafe
-                {
-                    fixed (double* timestampsBuffer = timestamps)
-                    {
-                        CheckError(lsl_push_chunk_strtn(handle, chunkPointer, (uint)chunk.Length, timestampsBuffer));
-                    }
-                }
-            }
-            finally
-            {
-                for (int i = 0; i < chunk.Length; ++i)
-                    Marshal.FreeHGlobal(stringPointers[i]);
-
-                Marshal.FreeHGlobal(chunkPointer);
-            }
-        }
-
-#if !NET35
-        /// <inheritdoc cref="PushChunk(sbyte[], double[])"/>
-        public void PushChunk(ReadOnlySpan<string> chunk, ReadOnlySpan<double> timestamps)
-        {
-            ThrowIfInvalid();
-
-            var samples = CheckChunkBuffer(chunk, ChannelCount);
-            CheckTimestampBuffer(timestamps, samples);
-
-            var stringPointers = new IntPtr[chunk.Length];
-            for (int i = 0; i < chunk.Length; ++i)
-                stringPointers[i] = StringToPtr(chunk[i]);
-
-            // TODO: Is this necessary?
-            var chunkPointer = Marshal.AllocHGlobal(IntPtr.Size * chunk.Length);
-            Marshal.Copy(stringPointers, 0, chunkPointer, chunk.Length);
-
-            try
-            {
-                unsafe
-                {
-                    fixed (double* timestampsBuffer = timestamps)
-                    {
-                        CheckError(lsl_push_chunk_strtn(handle, chunkPointer, (uint)chunk.Length, timestampsBuffer));
-                    }
-                }
-            }
-            finally
-            {
-                for (int i = 0; i < chunk.Length; ++i)
-                    Marshal.FreeHGlobal(stringPointers[i]);
-
-                Marshal.FreeHGlobal(chunkPointer);
-            }
-        }
-#endif
-
-        /// <inheritdoc cref="PushChunk(sbyte[], double[])"/>
-        public void PushChunk(sbyte[,] chunk, double[] timestamps)
-        {
-            ThrowIfInvalid();
-
-            CheckChunkBuffer(chunk, ChannelCount);
-            CheckTimestampBuffer(timestamps, chunk.GetLength(0));
-
-            unsafe
-            {
-                fixed (sbyte* chunkBuffer = chunk)
-                fixed (double* timestampsBuffer = timestamps)
-                {
-                    CheckError(lsl_push_chunk_ctn(handle, chunkBuffer, (uint)chunk.Length, timestampsBuffer));
-                }
-            }
-        }
-
-        /// <inheritdoc cref="PushChunk(sbyte[,], double[])"/>
-        public void PushChunk(short[,] chunk, double[] timestamps)
-        {
-            ThrowIfInvalid();
-
-            CheckChunkBuffer(chunk, ChannelCount);
-            CheckTimestampBuffer(timestamps, chunk.GetLength(0));
-
-            unsafe
-            {
-                fixed (short* chunkBuffer = chunk)
-                fixed (double* timestampsBuffer = timestamps)
-                {
-                    CheckError(lsl_push_chunk_stn(handle, chunkBuffer, (uint)chunk.Length, timestampsBuffer));
-                }
-            }
-        }
-
-        /// <inheritdoc cref="PushChunk(sbyte[,], double[])"/>
-        public void PushChunk(int[,] chunk, double[] timestamps)
-        {
-            ThrowIfInvalid();
-
-            CheckChunkBuffer(chunk, ChannelCount);
-            CheckTimestampBuffer(timestamps, chunk.GetLength(0));
-
-            unsafe
-            {
-                fixed (int* chunkBuffer = chunk)
-                fixed (double* timestampsBuffer = timestamps)
-                {
-                    CheckError(lsl_push_chunk_itn(handle, chunkBuffer, (uint)chunk.Length, timestampsBuffer));
-                }
-            }
-        }
-
-        /// <inheritdoc cref="PushChunk(sbyte[,], double[])"/>
-        public void PushChunk(long[,] chunk, double[] timestamps)
-        {
-            ThrowIfInvalid();
-
-            CheckChunkBuffer(chunk, ChannelCount);
-            CheckTimestampBuffer(timestamps, chunk.GetLength(0));
-
-            unsafe
-            {
-                fixed (long* chunkBuffer = chunk)
-                fixed (double* timestampsBuffer = timestamps)
-                {
-                    CheckError(lsl_push_chunk_ltn(handle, chunkBuffer, (uint)chunk.Length, timestampsBuffer));
-                }
-            }
-        }
-
-        /// <inheritdoc cref="PushChunk(sbyte[,], double[])"/>
-        public void PushChunk(float[,] chunk, double[] timestamps)
-        {
-            ThrowIfInvalid();
-
-            CheckChunkBuffer(chunk, ChannelCount);
-            CheckTimestampBuffer(timestamps, chunk.GetLength(0));
-
-            unsafe
-            {
-                fixed (float* chunkBuffer = chunk)
-                fixed (double* timestampsBuffer = timestamps)
-                {
-                    CheckError(lsl_push_chunk_ftn(handle, chunkBuffer, (uint)chunk.Length, timestampsBuffer));
-                }
-            }
-        }
-
-        /// <inheritdoc cref="PushChunk(sbyte[,], double[])"/>
-        public void PushChunk(double[,] chunk, double[] timestamps)
-        {
-            ThrowIfInvalid();
-
-            CheckChunkBuffer(chunk, ChannelCount);
-            CheckTimestampBuffer(timestamps, chunk.GetLength(0));
-
-            unsafe
-            {
-                fixed (double* chunkBuffer = chunk)
-                fixed (double* timestampsBuffer = timestamps)
-                {
-                    CheckError(lsl_push_chunk_dtn(handle, chunkBuffer, (uint)chunk.Length, timestampsBuffer));
-                }
-            }
-        }
-
-        /// <inheritdoc cref="PushChunk(sbyte[,], double[])"/>
-        public void PushChunk(string[,] chunk, double[] timestamps)
-        {
-            ThrowIfInvalid();
-
-            CheckChunkBuffer(chunk, ChannelCount);
-            CheckTimestampBuffer(timestamps, chunk.GetLength(0));
-
-            var stringPointers = new IntPtr[chunk.Length];
-
-            int rows = chunk.GetLength(0);
-            int cols = chunk.GetLength(1);
-
-            for (int r = 0; r < rows; ++r)
-            {
-                for (int c = 0; c < cols; ++c)
-                    stringPointers[r * cols + c] = StringToPtr(chunk[r, c]);
-            }
-
-            // TODO: Is this necessary?
-            var chunkPointer = Marshal.AllocHGlobal(IntPtr.Size * chunk.Length);
-            Marshal.Copy(stringPointers, 0, chunkPointer, chunk.Length);
-
-            try
-            {
-                unsafe
-                {
-                    fixed (double* timestampsBuffer = timestamps)
-                    {
-                        CheckError(lsl_push_chunk_strtn(handle, chunkPointer, (uint)chunk.Length, timestampsBuffer));
-                    }
-                }
-            }
-            finally
-            {
-                for (int i = 0; i < stringPointers.Length; ++i)
-                    Marshal.FreeHGlobal(stringPointers[i]);
-
-                Marshal.FreeHGlobal(chunkPointer);
-            }
-        }
-
-        /// <param name="chunk">
-        /// A buffer of channel values holding the data for zero or more successive
-        /// samples to send.
-        /// </param>
-        /// <param name="timestamps">
-        /// A buffer holding one timestamp for each sample in the data buffer.
-        /// </param>
-        /// <param name="pushThrough">
-        /// Whether to push the samples through to the receivers instead of buffering
-        /// them with subsequent samples. Note that the chunk size, if specified at
-        /// outlet construction, takes precedence over the pushThrough flag.
-        /// </param>
-        /// <inheritdoc cref="PushChunk(sbyte[], double[])"/>
-        public void PushChunk(sbyte[] chunk, double[] timestamps, bool pushThrough)
+        /// <inheritdoc cref="PushChunk(sbyte[], double, bool)"/>
+        public void PushChunk(sbyte[] chunk, double[] timestamps, bool pushThrough = true)
         {
             ThrowIfInvalid();
 
@@ -2867,7 +1289,7 @@ namespace SharpLSL
 
 #if !NET35
         /// <inheritdoc cref="PushChunk(sbyte[], double[], bool)"/>
-        public void PushChunk(ReadOnlySpan<sbyte> chunk, ReadOnlySpan<double> timestamps, bool pushThrough)
+        public void PushChunk(ReadOnlySpan<sbyte> chunk, ReadOnlySpan<double> timestamps, bool pushThrough = true)
         {
             ThrowIfInvalid();
 
@@ -2886,7 +1308,7 @@ namespace SharpLSL
 #endif
 
         /// <inheritdoc cref="PushChunk(sbyte[], double[], bool)"/>
-        public void PushChunk(short[] chunk, double[] timestamps, bool pushThrough)
+        public void PushChunk(short[] chunk, double[] timestamps, bool pushThrough = true)
         {
             ThrowIfInvalid();
 
@@ -2898,7 +1320,7 @@ namespace SharpLSL
 
 #if !NET35
         /// <inheritdoc cref="PushChunk(sbyte[], double[], bool)"/>
-        public void PushChunk(ReadOnlySpan<short> chunk, ReadOnlySpan<double> timestamps, bool pushThrough)
+        public void PushChunk(ReadOnlySpan<short> chunk, ReadOnlySpan<double> timestamps, bool pushThrough = true)
         {
             ThrowIfInvalid();
 
@@ -2917,7 +1339,7 @@ namespace SharpLSL
 #endif
 
         /// <inheritdoc cref="PushChunk(sbyte[], double[], bool)"/>
-        public void PushChunk(int[] chunk, double[] timestamps, bool pushThrough)
+        public void PushChunk(int[] chunk, double[] timestamps, bool pushThrough = true)
         {
             ThrowIfInvalid();
 
@@ -2929,7 +1351,7 @@ namespace SharpLSL
 
 #if !NET35
         /// <inheritdoc cref="PushChunk(sbyte[], double[], bool)"/>
-        public void PushChunk(ReadOnlySpan<int> chunk, ReadOnlySpan<double> timestamps, bool pushThrough)
+        public void PushChunk(ReadOnlySpan<int> chunk, ReadOnlySpan<double> timestamps, bool pushThrough = true)
         {
             ThrowIfInvalid();
 
@@ -2948,7 +1370,7 @@ namespace SharpLSL
 #endif
 
         /// <inheritdoc cref="PushChunk(sbyte[], double[], bool)"/>
-        public void PushChunk(long[] chunk, double[] timestamps, bool pushThrough)
+        public void PushChunk(long[] chunk, double[] timestamps, bool pushThrough = true)
         {
             ThrowIfInvalid();
 
@@ -2960,7 +1382,7 @@ namespace SharpLSL
 
 #if !NET35
         /// <inheritdoc cref="PushChunk(sbyte[], double[], bool)"/>
-        public void PushChunk(ReadOnlySpan<long> chunk, ReadOnlySpan<double> timestamps, bool pushThrough)
+        public void PushChunk(ReadOnlySpan<long> chunk, ReadOnlySpan<double> timestamps, bool pushThrough = true)
         {
             ThrowIfInvalid();
 
@@ -2979,7 +1401,7 @@ namespace SharpLSL
 #endif
 
         /// <inheritdoc cref="PushChunk(sbyte[], double[], bool)"/>
-        public void PushChunk(float[] chunk, double[] timestamps, bool pushThrough)
+        public void PushChunk(float[] chunk, double[] timestamps, bool pushThrough = true)
         {
             ThrowIfInvalid();
 
@@ -2991,7 +1413,7 @@ namespace SharpLSL
 
 #if !NET35
         /// <inheritdoc cref="PushChunk(sbyte[], double[], bool)"/>
-        public void PushChunk(ReadOnlySpan<float> chunk, ReadOnlySpan<double> timestamps, bool pushThrough)
+        public void PushChunk(ReadOnlySpan<float> chunk, ReadOnlySpan<double> timestamps, bool pushThrough = true)
         {
             ThrowIfInvalid();
 
@@ -3010,7 +1432,7 @@ namespace SharpLSL
 #endif
 
         /// <inheritdoc cref="PushChunk(sbyte[], double[], bool)"/>
-        public void PushChunk(double[] chunk, double[] timestamps, bool pushThrough)
+        public void PushChunk(double[] chunk, double[] timestamps, bool pushThrough = true)
         {
             ThrowIfInvalid();
 
@@ -3022,7 +1444,7 @@ namespace SharpLSL
 
 #if !NET35
         /// <inheritdoc cref="PushChunk(sbyte[], double[], bool)"/>
-        public void PushChunk(ReadOnlySpan<double> chunk, ReadOnlySpan<double> timestamps, bool pushThrough)
+        public void PushChunk(ReadOnlySpan<double> chunk, ReadOnlySpan<double> timestamps, bool pushThrough = true)
         {
             ThrowIfInvalid();
 
@@ -3041,7 +1463,7 @@ namespace SharpLSL
 #endif
 
         /// <inheritdoc cref="PushChunk(sbyte[], double[], bool)"/>
-        public void PushChunk(string[] chunk, double[] timestamps, bool pushThrough)
+        public void PushChunk(string[] chunk, double[] timestamps, bool pushThrough = true)
         {
             ThrowIfInvalid();
 
@@ -3050,11 +1472,26 @@ namespace SharpLSL
 
             var stringPointers = new IntPtr[chunk.Length];
             for (int i = 0; i < chunk.Length; ++i)
+            {
                 stringPointers[i] = StringToPtr(chunk[i]);
+                if (stringPointers[i] == IntPtr.Zero)
+                {
+                    for (int j = 0; j < i; ++j)
+                        Marshal.FreeHGlobal(stringPointers[j]);
 
-            // TODO: Is this necessary?
+                    throw new ArgumentException(
+                        $"Failed to convert {chunk[i]} to bytes.",
+                        nameof(chunk));
+                }
+            }
+
+#if STRING_MARSHALING_SCHEME_1
+            var pinnedStringPointers = GCHandle.Alloc(stringPointers, GCHandleType.Pinned);
+            var chunkPointer = pinnedStringPointers.AddrOfPinnedObject();
+#elif STRING_MARSHALING_SCHEME_2
             var chunkPointer = Marshal.AllocHGlobal(IntPtr.Size * chunk.Length);
             Marshal.Copy(stringPointers, 0, chunkPointer, chunk.Length);
+#endif
 
             try
             {
@@ -3062,7 +1499,11 @@ namespace SharpLSL
                 {
                     fixed (double* timestampsBuffer = timestamps)
                     {
+#if STRING_MARSHALING_SCHEME_1 || STRING_MARSHALING_SCHEME_2
                         CheckError(lsl_push_chunk_strtnp(handle, chunkPointer, (uint)chunk.Length, timestampsBuffer, pushThrough ? 1 : 0));
+#else
+                        CheckError(lsl_push_chunk_strtnp(handle, stringPointers, (uint)chunk.Length, timestampsBuffer, pushThrough ? 1 : 0));
+#endif
                     }
                 }
             }
@@ -3071,13 +1512,17 @@ namespace SharpLSL
                 for (int i = 0; i < chunk.Length; ++i)
                     Marshal.FreeHGlobal(stringPointers[i]);
 
+#if STRING_MARSHALING_SCHEME_1
+                pinnedStringPointers.Free();
+#elif STRING_MARSHALING_SCHEME_2
                 Marshal.FreeHGlobal(chunkPointer);
+#endif
             }
         }
 
 #if !NET35
         /// <inheritdoc cref="PushChunk(sbyte[], double[], bool)"/>
-        public void PushChunk(ReadOnlySpan<string> chunk, ReadOnlySpan<double> timestamps, bool pushThrough)
+        public void PushChunk(ReadOnlySpan<string> chunk, ReadOnlySpan<double> timestamps, bool pushThrough = true)
         {
             ThrowIfInvalid();
 
@@ -3086,11 +1531,26 @@ namespace SharpLSL
 
             var stringPointers = new IntPtr[chunk.Length];
             for (int i = 0; i < chunk.Length; ++i)
+            {
                 stringPointers[i] = StringToPtr(chunk[i]);
+                if (stringPointers[i] == IntPtr.Zero)
+                {
+                    for (int j = 0; j < i; ++j)
+                        Marshal.FreeHGlobal(stringPointers[j]);
 
-            // TODO: Is this necessary?
+                    throw new ArgumentException(
+                        $"Failed to convert {chunk[i]} to bytes.",
+                        nameof(chunk));
+                }
+            }
+
+#if STRING_MARSHALING_SCHEME_1
+            var pinnedStringPointers = GCHandle.Alloc(stringPointers, GCHandleType.Pinned);
+            var chunkPointer = pinnedStringPointers.AddrOfPinnedObject();
+#elif STRING_MARSHALING_SCHEME_2
             var chunkPointer = Marshal.AllocHGlobal(IntPtr.Size * chunk.Length);
             Marshal.Copy(stringPointers, 0, chunkPointer, chunk.Length);
+#endif
 
             try
             {
@@ -3098,7 +1558,11 @@ namespace SharpLSL
                 {
                     fixed (double* timestampsBuffer = timestamps)
                     {
+#if STRING_MARSHALING_SCHEME_1 || STRING_MARSHALING_SCHEME_2
                         CheckError(lsl_push_chunk_strtnp(handle, chunkPointer, (uint)chunk.Length, timestampsBuffer, pushThrough ? 1 : 0));
+#else
+                        CheckError(lsl_push_chunk_strtnp(handle, stringPointers, (uint)chunk.Length, timestampsBuffer, pushThrough ? 1 : 0));
+#endif
                     }
                 }
             }
@@ -3107,10 +1571,184 @@ namespace SharpLSL
                 for (int i = 0; i < chunk.Length; ++i)
                     Marshal.FreeHGlobal(stringPointers[i]);
 
+#if STRING_MARSHALING_SCHEME_1
+                pinnedStringPointers.Free();
+#elif STRING_MARSHALING_SCHEME_2
                 Marshal.FreeHGlobal(chunkPointer);
+#endif
             }
         }
 #endif
+
+        /// <summary>
+        /// Pushes a chunk of multiplexed samples consisting of variable-length byte
+        /// arrays into the outlet.
+        /// </summary>
+        /// <param name="chunk">
+        /// An array of byte arrays holding the data for zero or more successive
+        /// samples to send.
+        /// </param>
+        /// <param name="lengths">
+        /// Optional. An array specifying the number of bytes to push for each element.
+        /// If null, the full length of each byte array in <paramref name="chunk"/>
+        /// is used.
+        /// </param>
+        /// <param name="timestamps">
+        /// The buffer holding one timestamp for each sample in the data buffer.
+        /// </param>
+        /// <param name="pushThrough">
+        /// Whether to push the sample through to the receivers instead of buffering
+        /// it with subsequent samples. Note that the chunk size, if specified at
+        /// outlet construction, takes precedence over the pushThrough flag.
+        /// </param>
+        /// <inheritdoc cref="PushChunk(sbyte[], double, bool)"/>
+        public void PushChunk(byte[][] chunk, int[] lengths, double[] timestamps, bool pushThrough = true)
+        {
+            ThrowIfInvalid();
+
+            var samples = CheckChunkBuffer(chunk, ChannelCount);
+            CheckTimestampBuffer(timestamps, samples);
+
+            if (lengths != null)
+            {
+                if (lengths.Length != chunk.Length)
+                    throw new ArgumentException(nameof(lengths));
+
+                for (int i = 0; i < chunk.Length; ++i)
+                {
+                    if (chunk[i] == null)
+                        throw new ArgumentNullException(nameof(chunk));
+
+                    if (chunk[i].Length == 0)
+                        throw new ArgumentException(nameof(chunk));
+
+                    if (lengths[i] <= 0 || lengths[i] > chunk[i].Length)
+                        throw new ArgumentException(nameof(lengths));
+                }
+            }
+            else
+            {
+                lengths = new int[chunk.Length];
+
+                for (int i = 0; i < chunk.Length; ++i)
+                {
+                    if (chunk[i] == null)
+                        throw new ArgumentNullException(nameof(chunk));
+
+                    if (chunk[i].Length == 0)
+                        throw new ArgumentException(nameof(chunk));
+
+                    lengths[i] = chunk[i].Length;
+                }
+            }
+
+            var bytesPointers = new IntPtr[chunk.Length];
+            for (int i = 0; i < chunk.Length; ++i)
+            {
+                bytesPointers[i] = Marshal.AllocHGlobal(lengths[i]);
+                Marshal.Copy(chunk[i], 0, bytesPointers[i], lengths[i]);
+            }
+
+#if STRING_MARSHALING_SCHEME_2
+            var chunkPointer = Marshal.AllocHGlobal(IntPtr.Size * chunk.Length);
+            Marshal.Copy(bytesPointers, 0, chunkPointer, chunk.Length);
+#endif
+
+            try
+            {
+                unsafe
+                {
+                    fixed (int* lengthsBuffer = lengths)
+                    {
+#if STRING_MARSHALING_SCHEME_2
+                        CheckError(lsl_push_chunk_buftnp(handle, chunkPointer, (uint*)lengthsBuffer, (uint)chunk.Length, timestamps, pushThrough ? 1 : 0));
+#else
+                        CheckError(lsl_push_chunk_buftnp(handle, bytesPointers, (uint*)lengthsBuffer, (uint)chunk.Length, timestamps, pushThrough ? 1 : 0));
+#endif
+                    }
+                }
+            }
+            finally
+            {
+                for (int i = 0; i < chunk.Length; ++i)
+                    Marshal.FreeHGlobal(bytesPointers[i]);
+
+#if STRING_MARSHALING_SCHEME_2
+                Marshal.FreeHGlobal(chunkPointer);
+#endif
+            }
+        }
+
+        /// <summary>
+        /// Pushes a chunk of multiplexed samples consisting of memory buffers
+        /// into the outlet.
+        /// </summary>
+        /// <param name="chunk">
+        /// An array of IntPtr, where each IntPtr points to a memory buffer containing
+        /// data for one channel.
+        /// </param>
+        /// <param name="lengths">
+        /// An array specifying the number of elements to push for each value. The
+        /// length of this array must match the length of <paramref name="chunk"/>.
+        /// </param>
+        /// <param name="timestamps">
+        /// The buffer holding one timestamp for each sample in the data buffer.
+        /// </param>
+        /// <param name="pushThrough">
+        /// Whether to push the sample through to the receivers instead of buffering
+        /// it with subsequent samples. Note that the chunk size, if specified at
+        /// outlet construction, takes precedence over the pushThrough flag.
+        /// </param>
+        /// <inheritdoc cref="PushChunk(byte[][], int[], double, bool)"/>
+        public void PushChunk(IntPtr[] chunk, int[] lengths, double[] timestamps, bool pushThrough = true)
+        {
+            ThrowIfInvalid();
+
+            var samples = CheckChunkBuffer(chunk, ChannelCount);
+
+            if (lengths == null)
+                throw new ArgumentNullException(nameof(lengths));
+
+            if (lengths.Length != chunk.Length)
+                throw new ArgumentException(nameof(lengths));
+
+            CheckTimestampBuffer(timestamps, samples);
+
+            for (int i = 0; i < lengths.Length; ++i)
+            {
+                if (chunk[i] == IntPtr.Zero)
+                    throw new ArgumentException(nameof(chunk));
+
+                if (lengths[i] <= 0)
+                    throw new ArgumentException(nameof(lengths));
+            }
+
+#if STRING_MARSHALING_SCHEME_2
+            var chunkPointer = Marshal.AllocHGlobal(IntPtr.Size * chunk.Length);
+            Marshal.Copy(chunk, 0, chunkPointer, chunk.Length);
+#endif
+
+            try
+            {
+                unsafe
+                {
+                    fixed (int* lengthsBuffer = lengths)
+                    {
+#if STRING_MARSHALING_SCHEME_2
+                        CheckError(lsl_push_chunk_buftnp(handle, chunkPointer, (uint*)lengthsBuffer, (uint)chunk.Length, timestamps, pushThrough ? 1 : 0));
+#else
+                        CheckError(lsl_push_chunk_buftnp(handle, chunk, (uint*)lengthsBuffer, (uint)chunk.Length, timestamps, pushThrough ? 1 : 0));
+#endif
+                    }
+                }
+            }
+            finally
+            {
+#if STRING_MARSHALING_SCHEME_2
+                Marshal.FreeHGlobal(chunkPointer);
+#endif
+            }
+        }
 
         /// <exception cref="ArgumentException">
         /// Thrown if the number of columns in <paramref name="chunk"/> does not match
@@ -3118,7 +1756,7 @@ namespace SharpLSL
         /// provided but its length does not match the number of samples in the chunk.
         /// </exception>
         /// <inheritdoc cref="PushChunk(sbyte[], double[], bool)"/>
-        public void PushChunk(sbyte[,] chunk, double[] timestamps, bool pushThrough)
+        public void PushChunk(sbyte[,] chunk, double[] timestamps, bool pushThrough = true)
         {
             ThrowIfInvalid();
 
@@ -3136,7 +1774,7 @@ namespace SharpLSL
         }
 
         /// <inheritdoc cref="PushChunk(sbyte[,], double[], bool)"/>
-        public void PushChunk(short[,] chunk, double[] timestamps, bool pushThrough)
+        public void PushChunk(short[,] chunk, double[] timestamps, bool pushThrough = true)
         {
             ThrowIfInvalid();
 
@@ -3154,7 +1792,7 @@ namespace SharpLSL
         }
 
         /// <inheritdoc cref="PushChunk(sbyte[,], double[], bool)"/>
-        public void PushChunk(int[,] chunk, double[] timestamps, bool pushThrough)
+        public void PushChunk(int[,] chunk, double[] timestamps, bool pushThrough = true)
         {
             ThrowIfInvalid();
 
@@ -3172,7 +1810,7 @@ namespace SharpLSL
         }
 
         /// <inheritdoc cref="PushChunk(sbyte[,], double[], bool)"/>
-        public void PushChunk(long[,] chunk, double[] timestamps, bool pushThrough)
+        public void PushChunk(long[,] chunk, double[] timestamps, bool pushThrough = true)
         {
             ThrowIfInvalid();
 
@@ -3190,7 +1828,7 @@ namespace SharpLSL
         }
 
         /// <inheritdoc cref="PushChunk(sbyte[,], double[], bool)"/>
-        public void PushChunk(float[,] chunk, double[] timestamps, bool pushThrough)
+        public void PushChunk(float[,] chunk, double[] timestamps, bool pushThrough = true)
         {
             ThrowIfInvalid();
 
@@ -3208,7 +1846,7 @@ namespace SharpLSL
         }
 
         /// <inheritdoc cref="PushChunk(sbyte[,], double[], bool)"/>
-        public void PushChunk(double[,] chunk, double[] timestamps, bool pushThrough)
+        public void PushChunk(double[,] chunk, double[] timestamps, bool pushThrough = true)
         {
             ThrowIfInvalid();
 
@@ -3226,7 +1864,7 @@ namespace SharpLSL
         }
 
         /// <inheritdoc cref="PushChunk(sbyte[,], double[], bool)"/>
-        public void PushChunk(string[,] chunk, double[] timestamps, bool pushThrough)
+        public void PushChunk(string[,] chunk, double[] timestamps, bool pushThrough = true)
         {
             ThrowIfInvalid();
 
@@ -3235,18 +1873,33 @@ namespace SharpLSL
 
             var stringPointers = new IntPtr[chunk.Length];
 
-            int rows = chunk.GetLength(0);
-            int cols = chunk.GetLength(1);
+            int samples = chunk.GetLength(0);
 
-            for (int r = 0; r < rows; ++r)
+            for (int s = 0; s < samples; ++s)
             {
-                for (int c = 0; c < cols; ++c)
-                    stringPointers[r * cols + c] = StringToPtr(chunk[r, c]);
+                for (int c = 0; c < ChannelCount; ++c)
+                {
+                    var index = s * ChannelCount + c;
+                    stringPointers[index] = StringToPtr(chunk[s, c]);
+                    if (stringPointers[index] == IntPtr.Zero)
+                    {
+                        for (int i = 0; i < index; ++i)
+                            Marshal.FreeHGlobal(stringPointers[i]);
+
+                        throw new ArgumentException(
+                            $"Failed to convert {chunk[s, c]} to bytes.",
+                            nameof(chunk));
+                    }
+                }
             }
 
-            // TODO: Is this necessary?
+#if STRING_MARSHALING_SCHEME_1
+            var pinnedStringPointers = GCHandle.Alloc(stringPointers, GCHandleType.Pinned);
+            var chunkPointer = pinnedStringPointers.AddrOfPinnedObject();
+#elif STRING_MARSHALING_SCHEME_2
             var chunkPointer = Marshal.AllocHGlobal(IntPtr.Size * chunk.Length);
             Marshal.Copy(stringPointers, 0, chunkPointer, chunk.Length);
+#endif
 
             try
             {
@@ -3254,7 +1907,11 @@ namespace SharpLSL
                 {
                     fixed (double* timestampsBuffer = timestamps)
                     {
+#if STRING_MARSHALING_SCHEME_1 || STRING_MARSHALING_SCHEME_2
                         CheckError(lsl_push_chunk_strtnp(handle, chunkPointer, (uint)chunk.Length, timestampsBuffer, pushThrough ? 1 : 0));
+#else
+                        CheckError(lsl_push_chunk_strtnp(handle, stringPointers, (uint)chunk.Length, timestampsBuffer, pushThrough ? 1 : 0));
+#endif
                     }
                 }
             }
@@ -3263,7 +1920,11 @@ namespace SharpLSL
                 for (int i = 0; i < stringPointers.Length; ++i)
                     Marshal.FreeHGlobal(stringPointers[i]);
 
+#if STRING_MARSHALING_SCHEME_1
+                pinnedStringPointers.Free();
+#elif STRING_MARSHALING_SCHEME_2
                 Marshal.FreeHGlobal(chunkPointer);
+#endif
             }
         }
 
@@ -3319,6 +1980,28 @@ namespace SharpLSL
         {
             lsl_destroy_outlet(handle);
         }
+
+#if !NET35
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+#endif
+        private static IntPtr CreateOutlet(
+            StreamInfo streamInfo,
+            int chunkSize,
+            int maxBuffered,
+            TransportOptions transportOptions)
+        {
+            if (streamInfo == null)
+                throw new ArgumentNullException(nameof(streamInfo));
+
+            if (streamInfo.DangerousGetHandle() == IntPtr.Zero)
+                throw new ArgumentException(nameof(streamInfo));
+
+            return lsl_create_outlet_ex(
+                streamInfo.DangerousGetHandle(),
+                chunkSize,
+                maxBuffered,
+                (lsl_transport_options_t)transportOptions);
+        }
     }
 }
 
@@ -3328,3 +2011,9 @@ namespace SharpLSL
 // [PInvoke an Array of a Byte Arrays](https://stackoverflow.com/questions/778475/pinvoke-an-array-of-a-byte-arrays)
 // [Fixed statement with jagged array](https://stackoverflow.com/questions/4033054/fixed-statement-with-jagged-array)
 // [Understanding GCHandle.Alloc pinning in C#](https://stackoverflow.com/questions/45620700/understanding-gchandle-alloc-pinning-in-c-sharp)
+// [Keyword "unsafe" - before method or block of code?](https://stackoverflow.com/questions/9459419/keyword-unsafe-before-method-or-block-of-code)
+// [How should I pass an array of strings to a C library using P/Invoke?](https://stackoverflow.com/questions/63077017/how-should-i-pass-an-array-of-strings-to-a-c-library-using-p-invoke)
+// [Marshal an array of strings from C# to C code using p/invoke](https://stackoverflow.com/questions/13317931/marshal-an-array-of-strings-from-c-sharp-to-c-code-using-p-invoke)
+// [Marshal.StringToHGlobalAnsi(String) Method](https://learn.microsoft.com/en-us/dotnet/api/system.runtime.interopservices.marshal.stringtohglobalansi?view=net-10.0)
+// https://github.com/MicrosoftDocs/cpp-docs/blob/main/docs/dotnet/how-to-marshal-ansi-strings-using-cpp-interop.md
+// [Fixed statement with jagged array](https://stackoverflow.com/questions/4033054/fixed-statement-with-jagged-array)

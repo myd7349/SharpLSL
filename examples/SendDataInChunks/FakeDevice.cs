@@ -51,7 +51,7 @@ namespace SharpLSL.Examples
             var result = new short[elapsedSamples * _channelCount];
             var samplesRead = GetData(result);
 
-            if (samplesRead == result.Length)
+            if (samplesRead == elapsedSamples)
             {
                 return result;
             }

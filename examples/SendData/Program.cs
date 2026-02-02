@@ -1,9 +1,10 @@
 // Port of: https://github.com/sccn/liblsl/blob/main/examples/SendData.cpp
 // This example program offers an 8-channel stream, float-formatted, that resembles EEG data.
-// The example demonstrates also how per-channel meta-data can be specified using the .desc() field
-// of the stream information object.
+// The example demonstrates also how per-channel meta-data can be specified using the
+// `Description` property of the stream information object.
 // Note that the timer used in the send loop of this program is not particularly accurate.
 using System.Diagnostics;
+using System.Formats.Asn1;
 
 namespace SharpLSL.Examples
 {
@@ -54,11 +55,8 @@ namespace SharpLSL.Examples
 
                 Console.WriteLine("Please enter the stream name and the stream type (e.g. \"BioSemi EEG\" (without the quotes)):");
                 var input = Console.ReadLine();
-                if (input == null)
-                    return;
-
-                var inputParts = input.Split();
-                if (inputParts.Length != 2)
+                var inputParts = input?.Split();
+                if (inputParts?.Length != 2)
                     return;
 
                 name = inputParts[0];
@@ -122,12 +120,9 @@ namespace SharpLSL.Examples
                 Console.WriteLine($"Time slice: {timeSliceInMilliseconds}ms, samples: {samples}.");
                 Console.WriteLine("Now sending data...");
 
-                var rng = new Random();
-
-                uint t = 0;
-
                 var stopwatch = Stopwatch.StartNew();
                 long expectedElapsedMs = 0;
+                uint t = 0;
 
                 while (true)
                 {
@@ -135,7 +130,7 @@ namespace SharpLSL.Examples
                     {
                         // Create random data for the first 8 channels.
                         for (int c = 0; c < Math.Min(channels, 8); ++c)
-                            sample[c] = (rng.Next() % 1500) / 500f - 1.5f;
+                            sample[c] = (Random.Shared.Next() % 1500) / 500f - 1.5f;
 
                         // For the remaining channels, fill them with a sample counter (wraps at 1M).
                         for (int c = 8; c < channels; ++c)

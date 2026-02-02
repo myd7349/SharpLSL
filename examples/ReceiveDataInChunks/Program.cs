@@ -117,7 +117,7 @@ namespace SharpLSL.Examples
 
             chunk.Clear();
 
-            while ((thisTimestamp = streamInlet.PullSample(sample)) != 0.0)
+            while ((thisTimestamp = streamInlet.PullSample(sample, 0.0)) != 0.0)
             {
                 chunk.Add(sample);
                 timestamp = thisTimestamp;

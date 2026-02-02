@@ -147,15 +147,6 @@ namespace SharpLSL
         /// double adjustedTimestamp = LSL.GetLocalClock() - sampleAge;
         /// </code>
         /// </remarks>
-        /// <seealso cref="StreamOutlet.PushSample(sbyte[], double)"/>
-        /// <seealso cref="StreamOutlet.PushSample(short[], double)"/>
-        /// <seealso cref="StreamOutlet.PushSample(int[], double)"/>
-        /// <seealso cref="StreamOutlet.PushSample(long[], double)"/>
-        /// <seealso cref="StreamOutlet.PushSample(float[], double)"/>
-        /// <seealso cref="StreamOutlet.PushSample(double[], double)"/>
-        /// <seealso cref="StreamOutlet.PushSample(string[], double)"/>
-        /// <seealso cref="StreamOutlet.PushSample(byte[], double)"/>
-        /// <seealso cref="StreamOutlet.PushSample(IntPtr, double)"/>
         /// <seealso cref="StreamOutlet.PushSample(sbyte[], double, bool)"/>
         /// <seealso cref="StreamOutlet.PushSample(short[], double, bool)"/>
         /// <seealso cref="StreamOutlet.PushSample(int[], double, bool)"/>
@@ -284,13 +275,10 @@ namespace SharpLSL
         /// have created one.
         /// </para>
         /// </remarks>
-        /// <exception cref="ArgumentNullException">
-        /// Thrown when <paramref name="value"/> is null.
-        /// </exception>
         /// <exception cref="ArgumentException">
-        /// Thrown when <paramref name="property"/> is null or an empty string,
-        /// or when <paramref name="minCount"/> is less than or equal to 0,
-        /// or when <paramref name="maxCount"/> is less than <paramref name="minCount"/>.
+        /// Thrown when <paramref name="minCount"/> is less than or equal to 0,
+        /// or when <paramref name="maxCount"/> is less than <paramref name="minCount"/>, 
+        /// or when <paramref name="timeout"/> is less than 0.0.
         /// </exception>
         /// <exception cref="LSLInternalException">
         /// Thrown when an internal LSL error occurs.
@@ -301,7 +289,7 @@ namespace SharpLSL
         /// <seealso cref="Resolve(int, double)"/>
         /// <seealso cref="Resolve(string, int, int, double)"/>
         /// <seealso cref="ContinuousResolver(string, string, double)"/>
-        public static StreamInfo[] Resolve(string property, string value, int minCount = 1, int maxCount = 1024, double timeout = Forever)
+        public static unsafe StreamInfo[] Resolve(string property, string value, int minCount = 1, int maxCount = 1024, double timeout = Forever)
         {
             if (minCount <= 0)
                 throw new ArgumentException(nameof(minCount));
@@ -309,41 +297,45 @@ namespace SharpLSL
             if (maxCount < minCount)
                 throw new ArgumentException(nameof(maxCount));
 
-            var propertyBytes = StringToBytes(property);
-            if (propertyBytes == null)
-                throw new ArgumentException(nameof(property));
+            if (timeout < 0)
+                throw new ArgumentException(nameof(timeout));
 
+            var propertyBytes = StringToBytes(property);
             var valueBytes = StringToBytes(value);
-            if (valueBytes == null)
-                throw new ArgumentException(nameof(value));
 
             var streamInfoPointers = new IntPtr[maxCount];
 
             int result;
 
-            unsafe
+            fixed (IntPtr* streamInfoPointersBuffer = streamInfoPointers)
+            fixed (byte* propertyBuffer = propertyBytes)
+            fixed (byte* valueBuffer = valueBytes)
             {
-                fixed (IntPtr* streamInfoPointersBuffer = streamInfoPointers)
-                fixed (byte* propertyBuffer = propertyBytes)
-                fixed (byte* valueBuffer = valueBytes)
-                {
-                    result = lsl_resolve_byprop(
-                        streamInfoPointersBuffer,
-                        (uint)streamInfoPointers.Length,
-                        (sbyte*)propertyBuffer,
-                        (sbyte*)valueBuffer,
-                        minCount,
-                        timeout);
-                }
+                result = lsl_resolve_byprop(
+                    streamInfoPointersBuffer,
+                    (uint)streamInfoPointers.Length,
+                    (sbyte*)propertyBuffer,
+                    (sbyte*)valueBuffer,
+                    minCount,
+                    timeout);
             }
 
             CheckError(result);
 
-            var streamInfos = new StreamInfo[result];
-            for (int i = 0; i < result; ++i)
-                streamInfos[i] = new StreamInfo(streamInfoPointers[i], true);
+            if (result > 0)
+            {
+                var streamInfos = new StreamInfo[result];
+                for (int i = 0; i < result; ++i)
+                    streamInfos[i] = new StreamInfo(streamInfoPointers[i], true);
 
-            return streamInfos;
+                return streamInfos;
+            }
+
+#if NET35 || NET45
+            return new StreamInfo[0];
+#else
+            return Array.Empty<StreamInfo>();
+#endif
         }
 
         /// <summary>
@@ -384,8 +376,7 @@ namespace SharpLSL
         /// </para>
         /// </remarks>
         /// <exception cref="ArgumentException">
-        /// Thrown when <paramref name="predicate"/> is null or an empty string,
-        /// or when <paramref name="minCount"/> is less than or equal to 0,
+        /// Thrown when <paramref name="minCount"/> is less than or equal to 0,
         /// or when <paramref name="maxCount"/> is less than <paramref name="minCount"/>.
         /// </exception>
         /// <exception cref="LSLInternalException">
@@ -397,7 +388,7 @@ namespace SharpLSL
         /// <seealso cref="Resolve(int, double)"/>
         /// <seealso cref="Resolve(string, string, int, int, double)"/>
         /// <seealso cref="ContinuousResolver(string, double)"/>
-        public static StreamInfo[] Resolve(string predicate, int minCount = 1, int maxCount = 1024, double timeout = Forever)
+        public static unsafe StreamInfo[] Resolve(string predicate, int minCount = 1, int maxCount = 1024, double timeout = Forever)
         {
             if (minCount <= 0)
                 throw new ArgumentException(nameof(minCount));
@@ -406,34 +397,38 @@ namespace SharpLSL
                 throw new ArgumentException(nameof(maxCount));
 
             var predicateBytes = StringToBytes(predicate);
-            if (predicateBytes == null)
-                throw new ArgumentNullException(nameof(predicate));
 
             var streamInfoPointers = new IntPtr[maxCount];
 
             int result;
 
-            unsafe
+            fixed (IntPtr* streamInfoPointersBuffer = streamInfoPointers)
+            fixed (byte* predicateBuffer = predicateBytes)
             {
-                fixed (IntPtr* streamInfoPointersBuffer = streamInfoPointers)
-                fixed (byte* predicateBuffer = predicateBytes)
-                {
-                    result = lsl_resolve_bypred(
-                        streamInfoPointersBuffer,
-                        (uint)streamInfoPointers.Length,
-                        (sbyte*)predicateBuffer,
-                        minCount,
-                        timeout);
-                }
+                result = lsl_resolve_bypred(
+                    streamInfoPointersBuffer,
+                    (uint)streamInfoPointers.Length,
+                    (sbyte*)predicateBuffer,
+                    minCount,
+                    timeout);
             }
 
             CheckError(result);
 
-            var streamInfos = new StreamInfo[result];
-            for (int i = 0; i < result; ++i)
-                streamInfos[i] = new StreamInfo(streamInfoPointers[i], true);
+            if (result > 0)
+            {
+                var streamInfos = new StreamInfo[result];
+                for (int i = 0; i < result; ++i)
+                    streamInfos[i] = new StreamInfo(streamInfoPointers[i], true);
 
-            return streamInfos;
+                return streamInfos;
+            }
+
+#if NET35 || NET45
+            return new StreamInfo[0];
+#else
+            return Array.Empty<StreamInfo>();
+#endif
         }
 
 #if !NET35
@@ -466,17 +461,16 @@ namespace SharpLSL
             if (str == null)
                 return null;
 
-            var chars = str.ToCharArray();
-
 #if NET6_0_OR_GREATER
             var encoding = UseUTF8 ? Encoding.UTF8 : Encoding.Default;
 #else
             var encoding = Encoding.Default;
 #endif
 
-            var length = encoding.GetByteCount(chars);
+            // var length = encoding.GetByteCount(str + '\0');
+            var length = encoding.GetByteCount(str);
             var bytes = new byte[length + 1];
-            encoding.GetBytes(chars, 0, chars.Length, bytes, 0);
+            encoding.GetBytes(str, 0, str.Length, bytes, 0);
             Debug.Assert(bytes[bytes.Length - 1] == 0);
 
             return bytes;
@@ -490,6 +484,8 @@ namespace SharpLSL
 #if NET6_0_OR_GREATER
             var encoding = UseUTF8 ? Encoding.UTF8 : Encoding.Default;
 #else
+            // TODO:
+            // return Marshal.StringToHGlobalAnsi(str);
             var encoding = Encoding.Default;
 #endif
 

@@ -13,7 +13,7 @@ namespace SharpLSL.Examples
 
                 var srate = 1000;
                 if (args.Length > 1 &&
-                    int.TryParse(args[0], out var srateArg) &&
+                    int.TryParse(args[1], out var srateArg) &&
                     srateArg >= 0)
                     srate = srateArg;
 

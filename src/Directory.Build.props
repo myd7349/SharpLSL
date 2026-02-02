@@ -10,6 +10,7 @@
   </PropertyGroup>
 
   <PropertyGroup Label="Package">
+    <IsPackable>true</IsPackable>
     <!--
     <PackageIcon>Icon.png</PackageIcon>
     -->

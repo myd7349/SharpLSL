@@ -7,7 +7,7 @@ namespace SharpLSL.Examples
         {
             try
             {
-                using (var streamInfo = new StreamInfo("SyncTest", "Test", 1, LSL.IrregularRate, ChannelFormat.Int16, "id9527"))
+                using (var streamInfo = new StreamInfo("SyncTest", "Test", 1, LSL.IrregularRate, ChannelFormat.Int16, "id23443"))
                 using (var streamOutlet = new StreamOutlet(streamInfo))
                 {
                     var foundStreamInfos = LSL.Resolve("name", "SyncTest");
@@ -31,7 +31,7 @@ namespace SharpLSL.Examples
                             try
                             {
                                 Console.WriteLine($"Got time correction data: {streamInlet.TimeCorrection(1)}.");
-                                Thread.Sleep(1);
+                                Thread.Sleep(1000);
                             }
                             catch (Exception ex2)
                             {

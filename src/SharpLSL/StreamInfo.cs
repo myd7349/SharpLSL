@@ -1,4 +1,5 @@
 using System;
+using System.Runtime.CompilerServices;
 
 using static SharpLSL.Interop.LSL;
 using static SharpLSL.LSL;
@@ -6,8 +7,8 @@ using static SharpLSL.LSL;
 namespace SharpLSL
 {
     /// <summary>
-    /// Represents a stream info object which keeps a stream's metadata and connection
-    /// settings.
+    /// Represents a stream information object which keeps a stream's metadata and
+    /// connection settings.
     /// </summary>
     /// <remarks>
     /// Whenever a program wants to provide a new stream on the lab network, it will
@@ -53,7 +54,8 @@ namespace SharpLSL
         /// The data format (type) of each channel.
         /// <para>
         /// If your channels have different formats, consider supplying multiple
-        /// streams or use the largest type that can hold them all (such as <see cref="ChannelFormat.Double"/>).
+        /// streams or use the largest type that can hold them all (such as
+        /// <see cref="ChannelFormat.Double"/>).
         /// A good default is <see cref="ChannelFormat.Float"/>.
         /// </para>
         /// </param>
@@ -69,6 +71,13 @@ namespace SharpLSL
         /// source id may in some cases also be constructed from device settings.
         /// </para>
         /// </param>
+        /// <exception cref="ArgumentException">
+        /// Thrown when <paramref name="name"/> is <c>null</c> or empty,
+        /// when <paramref name="channelCount"/> is less than 0,
+        /// when <paramref name="nominalSrate"/> is less than 0,
+        /// or when <paramref name="channelFormat"/> is not a valid value defined in
+        /// the <see cref="ChannelFormat"/> enumeration.
+        /// </exception>
         /// <exception cref="LSLException">
         /// Thrown when creating a new instance of <see cref="StreamInfo"/> fails.
         /// </exception>
@@ -82,7 +91,7 @@ namespace SharpLSL
             int channelCount = 1,
             double nominalSrate = IrregularRate,
             ChannelFormat channelFormat = ChannelFormat.Float,
-            string sourceId = "")
+            string sourceId = null)
             : this(CreateStreamInfo(
                 name,
                 type,
@@ -123,11 +132,11 @@ namespace SharpLSL
         /// The stream name is a human-readable name.
         /// </para>
         /// <para>
-        /// This is a human-readable name. For streams offered by device modules, it
-        /// refers to the type of device or product series that is generating the data
-        /// of the stream. If the source is an application, the name may be a more generic
-        /// or specific identifier. Multiple streams with the same name can coexist, though
-        /// potentially at the cost of ambiguity (for the recording app or experimenter).
+        /// For streams offered by device modules, it refers to the type of device or
+        /// product series that is generating the data of the stream. If the source
+        /// is an application, the name may be a more generic or specific identifier.
+        /// Multiple streams with the same name can coexist, though potentially at the
+        /// cost of ambiguity (for the recording app or experimenter).
         /// </para>
         /// </remarks>
         public string Name
@@ -150,8 +159,8 @@ namespace SharpLSL
         /// the content carried by the channel (if known). If a stream contains mixed
         /// content, this value need not be assigned but may instead be stored in the
         /// description of channel types. To be useful to applications and automated
-        /// processing systems, using the recommended content types is preferred. Content
-        /// types usually follow those pre-defined in the
+        /// processing systems, using the recommended content types is preferred.
+        /// Content types usually follow those pre-defined in the
         /// <see href="https://github.com/sccn/xdf/wiki/Meta-Data">wiki</see>.
         /// </remarks>
         public string Type
@@ -238,6 +247,12 @@ namespace SharpLSL
             get
             {
                 ThrowIfInvalid();
+
+                // TODO: Workaround for liblsl returning incorrect byte counts for string channels.
+                // Remove this once https://github.com/sccn/liblsl/pull/261 is landed.
+                if (ChannelFormat == ChannelFormat.String)
+                    return 0;
+
                 return lsl_get_channel_bytes(handle);
             }
         }
@@ -256,6 +271,12 @@ namespace SharpLSL
             get
             {
                 ThrowIfInvalid();
+
+                // TODO: Workaround for liblsl returning incorrect byte counts for string channels.
+                // Remove this once https://github.com/sccn/liblsl/pull/261 is landed.
+                if (ChannelFormat == ChannelFormat.String)
+                    return 0;
+
                 return lsl_get_sample_bytes(handle);
             }
         }
@@ -432,24 +453,32 @@ namespace SharpLSL
 
         /// <summary>
         /// Tests whether the current <see cref="StreamInfo"/> object matches the given
-        /// query string.
+        /// XPath 1.0 query string.
         /// </summary>
         /// <param name="query">The query string.</param>
-        /// <returns>True if the stream info matches the query string; otherwise, false.</returns>
+        /// <returns>
+        /// <c>true</c> if the stream info matches the query string; otherwise, <c>false</c>.
+        /// </returns>
         /// <exception cref="InvalidOperationException">
         /// Thrown if this stream info object is invalid.
         /// </exception>
         /// <exception cref="ArgumentException">
-        /// Thrown if the query string is null or empty.
+        /// Thrown if the query string is null.
         /// </exception>
         /// <remarks>
         /// The <paramref name="query"/> represents an XPath 1.0 query string.
         /// Here are some examples:
-        /// <code>
-        /// channel_count>5 and type='EEG'
-        /// type='TestStream' or contains(name,'Brain')
-        /// name='ExampleStream'
-        /// </code>
+        /// <list type="bullet">
+        /// <item>
+        /// <description><c>channel_count&gt;5 and type='EEG'</c></description>
+        /// </item>
+        /// <item>
+        /// <description><c>type='TestStream' or contains(name, 'Brain')</c></description>
+        /// </item>
+        /// <item>
+        /// <description><c>name='ExampleStream'</c></description>
+        /// </item>
+        /// </list>
         /// </remarks>
         public bool MatcheQuery(string query)
         {
@@ -477,9 +506,6 @@ namespace SharpLSL
         /// </returns>
         /// <exception cref="InvalidOperationException">
         /// Thrown if this stream info object is invalid.
-        /// </exception>
-        /// <exception cref="LSLException">
-        /// Thrown when retrieving the entire <see cref="StreamInfo"/> in XML format fails.
         /// </exception>
         /// <remarks>
         /// This method yields an XML document (as a string) with the top-level element
@@ -523,6 +549,19 @@ namespace SharpLSL
         }
 
         /// <summary>
+        /// Returns a string that represents the current object.
+        /// </summary>
+        /// <returns>
+        /// The XML representation of the <see cref="StreamInfo"/> object as a string,
+        /// or null if an error occurs.
+        /// </returns>
+        /// <seealso cref="ToXML"/>
+        public override string ToString()
+        {
+            return ToXML();
+        }
+
+        /// <summary>
         /// Constructs a new instance of <see cref="StreamInfo"/> from an XML
         /// representation.
         /// </summary>
@@ -563,7 +602,10 @@ namespace SharpLSL
             lsl_destroy_streaminfo(handle);
         }
 
-        private static IntPtr CreateStreamInfo(
+#if !NET35
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+#endif
+        private static unsafe IntPtr CreateStreamInfo(
             string name,
             string type,
             int channelCount,
@@ -571,11 +613,14 @@ namespace SharpLSL
             Interop.lsl_channel_format_t channelFormat,
             string sourceId)
         {
+            if (string.IsNullOrEmpty(name))
+                throw new ArgumentException(nameof(name));
+
             var nameBytes = StringToBytes(name);
             if (nameBytes == null)
                 throw new ArgumentException(nameof(name));
 
-            var typeBytes = StringToBytes(type);
+            var typeBytes = StringToBytes(type ?? "");
             if (typeBytes == null)
                 throw new ArgumentException(nameof(type));
 
@@ -583,20 +628,17 @@ namespace SharpLSL
             if (sourceIdBytes == null)
                 throw new ArgumentException(nameof(sourceId));
 
-            unsafe
+            fixed (byte* nameBuffer = nameBytes)
+            fixed (byte* typeBuffer = typeBytes)
+            fixed (byte* sourceIdBuffer = sourceIdBytes)
             {
-                fixed (byte* nameBuffer = nameBytes)
-                fixed (byte* typeBuffer = typeBytes)
-                fixed (byte* sourceIdBuffer = sourceIdBytes)
-                {
-                    return lsl_create_streaminfo(
-                        (IntPtr)nameBuffer,
-                        (IntPtr)typeBuffer,
-                        channelCount,
-                        nominalSrate,
-                        channelFormat,
-                        (IntPtr)sourceIdBuffer);
-                }
+                return lsl_create_streaminfo(
+                    (IntPtr)nameBuffer,
+                    (IntPtr)typeBuffer,
+                    channelCount,
+                    nominalSrate,
+                    channelFormat,
+                    (IntPtr)sourceIdBuffer);
             }
         }
     }
