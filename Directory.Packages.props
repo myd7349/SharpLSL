@@ -2,7 +2,7 @@
 
   <PropertyGroup>
     <ManagePackageVersionsCentrally>true</ManagePackageVersionsCentrally>
-    <SharpLSLNativePackageVersion>1.16.2.5</SharpLSLNativePackageVersion>
+    <SharpLSLNativePackageVersion>1.16.2.7</SharpLSLNativePackageVersion>
   </PropertyGroup>
 
   <ItemGroup>
