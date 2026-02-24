@@ -2,13 +2,13 @@
 
   <PropertyGroup>
     <ManagePackageVersionsCentrally>true</ManagePackageVersionsCentrally>
-    <SharpLSLNativePackageVersion>1.16.2.5</SharpLSLNativePackageVersion>
+    <SharpLSLNativePackageVersion>1.16.2.7</SharpLSLNativePackageVersion>
   </PropertyGroup>
 
   <ItemGroup>
-    <PackageVersion Include="coverlet.collector" Version="6.0.4" />
+    <PackageVersion Include="coverlet.collector" Version="8.0.0" />
     <PackageVersion Include="Microsoft.NET.Test.Sdk" Version="18.0.1" />
-    <PackageVersion Include="Microsoft.SourceLink.GitHub" Version="8.0.0" />
+    <PackageVersion Include="Microsoft.SourceLink.GitHub" Version="10.0.103" />
     <PackageVersion Include="Moq" Version="4.20.72" />
     <!--
     <PackageVersion Include="SharpLSL.Native.all" Version="$(SharpLSLNativePackageVersion)" />
