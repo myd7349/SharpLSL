@@ -24,8 +24,39 @@
       <PrivateAssets>all</PrivateAssets>
       <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
     </PackageReference>
-    <PackageReference Include="System.Memory"
-                      Condition="'$(TargetFramework)' == 'net45' Or '$(TargetFramework)' == 'netstandard2.0'" />
+    <PackageReference Include="System.Memory" Condition="'$(TargetFramework)' == 'net45' Or '$(TargetFramework)' == 'netstandard2.0'" />
+  </ItemGroup>
+
+  <!--
+  https://github.com/Cysharp/MessagePipe/blob/master/src/MessagePipe/MessagePipe.csproj
+  [Design-Time Code Generation by using T4 Text Templates](https://learn.microsoft.com/en-us/visualstudio/modeling/design-time-code-generation-by-using-t4-text-templates?view=visualstudio&tabs=csharp)
+  -->
+  <ItemGroup>
+    <None Update="StreamInlet.tt">
+      <Generator>TextTemplatingFileGenerator</Generator>
+      <LastGenOutput>StreamInlet.g.cs</LastGenOutput>
+    </None>
+
+    <Compile Update="StreamInlet.g.cs">
+      <DesignTime>True</DesignTime>
+      <AutoGen>True</AutoGen>
+      <DependentUpon>StreamInlet.tt</DependentUpon>
+    </Compile>
+
+    <None Update="StreamOutlet.tt">
+      <Generator>TextTemplatingFileGenerator</Generator>
+      <LastGenOutput>StreamOutlet.g.cs</LastGenOutput>
+    </None>
+
+    <Compile Update="StreamOutlet.g.cs">
+      <DesignTime>True</DesignTime>
+      <AutoGen>True</AutoGen>
+      <DependentUpon>StreamOutlet.tt</DependentUpon>
+    </Compile>
+  </ItemGroup>
+
+  <ItemGroup>
+    <Service Include="{508349b6-6b84-4df5-91f0-309beebad82d}" />
   </ItemGroup>
 
   <ItemGroup>

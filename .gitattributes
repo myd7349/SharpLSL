@@ -1,3 +1,4 @@
 binding/SharpLSL.Header.cs text eol=lf
 src/SharpLSL/Interop/*.g.cs text eol=lf
 src/SharpLSL/Interop/*.g.cs linguist-generated=true
+src/SharpLSL/*.g.cs linguist-generated=true
