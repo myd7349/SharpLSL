@@ -2,9 +2,9 @@
   <Import Project="$([MSBuild]::GetPathOfFileAbove('Directory.Build.props', '$(MSBuildThisFileDirectory)../'))" />
 
   <PropertyGroup>
-    <LSLTagVersion>1.17.4</LSLTagVersion>
+    <LSLTagVersion>1.17.5</LSLTagVersion>
     <Version>$(LSLTagVersion).0</Version>
-    <LSLBuildCITagVersion>2026.01.17</LSLBuildCITagVersion>
+    <LSLBuildCITagVersion>2026.01.28</LSLBuildCITagVersion>
   </PropertyGroup>
 
   <PropertyGroup Label="Build">
