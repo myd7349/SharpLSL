@@ -1,0 +1,14 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <PublishAot>true</PublishAot>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <Compile Include="..\LSLVer\Program.cs" Link="Program.cs" />
+  </ItemGroup>
+
+  <!--
+  https://github.com/dotnet/Nerdbank.Streams/tree/main/test/NativeAOTCompatibility
+  -->
+</Project>

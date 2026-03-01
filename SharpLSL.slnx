@@ -6,6 +6,7 @@
     <Project Path="examples/GetTimeCorrection/GetTimeCorrection.csproj" />
     <Project Path="examples/HandleMetaData/HandleMetaData.csproj" />
     <Project Path="examples/LSLVer/LSLVer.csproj" />
+    <Project Path="examples/LSLVerNativeAOT/LSLVerNativeAOT.csproj" />
     <Project Path="examples/ReceiveData/ReceiveData.csproj" />
     <Project Path="examples/ReceiveDataCI/ReceiveDataCI.csproj" />
     <Project Path="examples/ReceiveDataInChunks/ReceiveDataInChunks.csproj" />

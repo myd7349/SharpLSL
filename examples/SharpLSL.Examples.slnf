@@ -8,6 +8,7 @@
       "examples\\GetTimeCorrection\\GetTimeCorrection.csproj",
       "examples\\HandleMetaData\\HandleMetaData.csproj",
       "examples\\LSLVer\\LSLVer.csproj",
+      "examples\\LSLVerNativeAOT\\LSLVerNativeAOT.csproj",
       "examples\\ReceiveDataCI\\ReceiveDataCI.csproj",
       "examples\\ReceiveDataInChunks\\ReceiveDataInChunks.csproj",
       "examples\\ReceiveDataSample\\ReceiveDataSample.csproj",
