@@ -19,6 +19,30 @@
     <AllowedOutputExtensionsInPackageBuildOutputFolder>$(AllowedOutputExtensionsInPackageBuildOutputFolder);.pdb</AllowedOutputExtensionsInPackageBuildOutputFolder>
   </PropertyGroup>
 
+  <PropertyGroup>
+    <IsNet7OrGreater>false</IsNet7OrGreater>
+  </PropertyGroup>
+  
+  <PropertyGroup Condition="$([MSBuild]::IsTargetFrameworkCompatible('$(TargetFramework)', 'net7.0'))">
+    <DefineConstants>$(DefineConstants);USE_LIBRARY_IMPORT</DefineConstants>
+    <!--
+    [Native AOT deployment](https://learn.microsoft.com/en-us/dotnet/core/deploying/native-aot/)
+    -->
+    <IsAotCompatible Condition="$([MSBuild]::IsTargetFrameworkCompatible('$(TargetFramework)', 'net8.0'))">true</IsAotCompatible>
+    <IsNet7OrGreater>true</IsNet7OrGreater>
+    <LangVersion>12.0</LangVersion>
+    <VerifyReferenceAotCompatibility>true</VerifyReferenceAotCompatibility>
+  </PropertyGroup>
+
+  <ItemGroup Condition="'$(IsNet7OrGreater)' == 'true'">
+    <Compile Remove="Interop/Common.g.cs" />
+    <Compile Remove="Interop/Inlet.g.cs" />
+    <Compile Remove="Interop/Outlet.g.cs" />
+    <Compile Remove="Interop/Resolver.g.cs" />
+    <Compile Remove="Interop/StreamInfo.g.cs" />
+    <Compile Remove="Interop/XML.g.cs" />
+  </ItemGroup>
+
   <ItemGroup Label="Package References">
     <PackageReference Include="Microsoft.SourceLink.GitHub">
       <PrivateAssets>all</PrivateAssets>
