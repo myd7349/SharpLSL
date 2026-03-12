@@ -20,6 +20,4 @@ updates:
     directory: "/"
     registries: '*'
     schedule:
-      interval: "weekly"
-    cooldown:
-      default-days: 7
+      interval: "monthly"
