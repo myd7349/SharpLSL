@@ -1,6 +1,6 @@
-# [SharpLSL](https://github.com/myd7349/SharpLSL)
+# [SharpLSL](https://github.com/SharpLSL/SharpLSL)
 
-[![NuGet](https://img.shields.io/nuget/v/SharpLSL.svg)](https://www.nuget.org/packages/SharpLSL/) [![Downloads](https://img.shields.io/nuget/dt/SharpLSL)](https://www.nuget.org/packages/SharpLSL) [![Build](https://github.com/myd7349/SharpLSL/actions/workflows/build.yml/badge.svg)](https://github.com/myd7349/SharpLSL/actions) ![GitHub code size in bytes](https://img.shields.io/github/languages/code-size/myd7349/SharpLSL) ![GitHub repo size](https://img.shields.io/github/repo-size/myd7349/SharpLSL) [![License](https://img.shields.io/github/license/myd7349/SharpLSL)](https://github.com/myd7349/SharpLSL/blob/main/LICENSE)
+[![NuGet](https://img.shields.io/nuget/v/SharpLSL.svg)](https://www.nuget.org/packages/SharpLSL/) [![Downloads](https://img.shields.io/nuget/dt/SharpLSL)](https://www.nuget.org/packages/SharpLSL) [![Build](https://github.com/SharpLSL/SharpLSL/actions/workflows/build.yml/badge.svg)](https://github.com/SharpLSL/SharpLSL/actions) ![GitHub code size in bytes](https://img.shields.io/github/languages/code-size/SharpLSL/SharpLSL) ![GitHub repo size](https://img.shields.io/github/repo-size/SharpLSL/SharpLSL) [![License](https://img.shields.io/github/license/SharpLSL/SharpLSL)](https://github.com/SharpLSL/SharpLSL/blob/main/LICENSE)
 
 SharpLSL is a cross-platform C# binding of [**L**ab **S**treaming **L**ayer](https://github.com/sccn/labstreaminglayer).
 
@@ -28,7 +28,7 @@ PackageReference:
 
 Replace `<version>` with the specific version number of SharpLSL you wish to use.
 
-In addition to installing SharpLSL, you will need to install the appropriate native liblsl binary package(s) for your target platform(s). SharpLSL offers separate NuGet packages for these binaries, named `SharpLSL.Native.[RID]`, where `[RID]` represents the runtime identifier for the specific platform. For details on runtime identifiers, refer to the [RID catalog](https://learn.microsoft.com/en-us/dotnet/core/rid-catalog). You can find the list of available native packages and their platform mappings in the [SharpLSL.Native README](https://github.com/myd7349/SharpLSL/blob/main/src/SharpLSL.Native/README.md).
+In addition to installing SharpLSL, you will need to install the appropriate native liblsl binary package(s) for your target platform(s). SharpLSL offers separate NuGet packages for these binaries, named `SharpLSL.Native.[RID]`, where `[RID]` represents the runtime identifier for the specific platform. For details on runtime identifiers, refer to the [RID catalog](https://learn.microsoft.com/en-us/dotnet/core/rid-catalog). You can find the list of available native packages and their platform mappings in the [SharpLSL.Native README](https://github.com/SharpLSL/SharpLSL/blob/main/src/SharpLSL.Native/README.md).
 
 If your application is cross-platform, you can opt for the `SharpLSL.Native.all` package. This meta-package references all the other platform-specific liblsl packages, making it easier to manage dependencies for different operating systems.
 

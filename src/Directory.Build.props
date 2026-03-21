@@ -18,15 +18,15 @@
     <PackageLicenseExpression>MIT</PackageLicenseExpression>
     -->
     <PackageLicenseFile>LICENSE</PackageLicenseFile>
-    <PackageProjectUrl>https://github.com/myd7349/SharpLSL</PackageProjectUrl>
+    <PackageProjectUrl>https://github.com/SharpLSL/SharpLSL</PackageProjectUrl>
     <PackageReadmeFile>README.md</PackageReadmeFile>
-    <PackageReleaseNotes>https://github.com/myd7349/SharpLSL/releases</PackageReleaseNotes>
+    <PackageReleaseNotes>https://github.com/SharpLSL/SharpLSL/releases</PackageReleaseNotes>
     <!--
     <PackageRequireLicenseAcceptance>true</PackageRequireLicenseAcceptance>
     -->
     <PackageTags>labstreaminglayer;lsl;liblsl</PackageTags>
     <PublishRepositoryUrl>true</PublishRepositoryUrl>
-    <RepositoryUrl>https://github.com/myd7349/SharpLSL.git</RepositoryUrl>
+    <RepositoryUrl>https://github.com/SharpLSL/SharpLSL.git</RepositoryUrl>
     <RepositoryType>git</RepositoryType>
   </PropertyGroup>
 </Project>

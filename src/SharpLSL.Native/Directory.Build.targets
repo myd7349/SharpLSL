@@ -13,7 +13,7 @@
   <PropertyGroup Condition="'$(IsUmbrellaPackage)' == 'false'">
     <NativeAssetTitle>liblsl-v$(LSLTagVersion)-$(RID)-dynamic</NativeAssetTitle>
     <NativeAssetArchive>$(NativeAssetTitle).zip</NativeAssetArchive>
-    <NativeAssetUrl>https://github.com/myd7349/liblsl-ci-build/releases/download/$(LSLBuildCITagVersion)/$(NativeAssetArchive)</NativeAssetUrl>
+    <NativeAssetUrl>https://github.com/SharpLSL/liblsl-ci-build/releases/download/$(LSLBuildCITagVersion)/$(NativeAssetArchive)</NativeAssetUrl>
     <NativeLibFile>$(NativeLibPrefix)lsl.$(NativeLibExt)</NativeLibFile>
     <NativeLibUnpackDir>$(ProjectDir)$(BaseIntermediateOutputPath)$(NativeAssetTitle)/</NativeLibUnpackDir>
   </PropertyGroup>
