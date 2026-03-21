@@ -1,0 +1,11 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <RID>linux-musl-x64</RID>
+    <NativeLibBaseDir>lib</NativeLibBaseDir>
+    <NativeLibPrefix>lib</NativeLibPrefix>
+    <NativeLibExt>so</NativeLibExt>
+    <DebugSymbolExt></DebugSymbolExt>
+  </PropertyGroup>
+
+</Project>

@@ -35,6 +35,8 @@
     <Project Path="src/SharpLSL.Native/iossimulator-x64/SharpLSL.Native.iossimulator-x64.csproj" />
     <Project Path="src/SharpLSL.Native/linux-arm/SharpLSL.Native.linux-arm.csproj" />
     <Project Path="src/SharpLSL.Native/linux-arm64/SharpLSL.Native.linux-arm64.csproj" />
+    <Project Path="src/SharpLSL.Native/linux-musl-arm64/SharpLSL.Native.linux-musl-arm64.csproj" />
+    <Project Path="src/SharpLSL.Native/linux-musl-x64/SharpLSL.Native.linux-musl-x64.csproj" />
     <Project Path="src/SharpLSL.Native/linux-x64/SharpLSL.Native.linux-x64.csproj" />
     <Project Path="src/SharpLSL.Native/osx-arm64/SharpLSL.Native.osx-arm64.csproj" />
     <Project Path="src/SharpLSL.Native/osx-x64/SharpLSL.Native.osx-x64.csproj" />
