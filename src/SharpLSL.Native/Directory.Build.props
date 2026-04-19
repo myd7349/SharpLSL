@@ -3,7 +3,6 @@
 
   <PropertyGroup>
     <LSLTagVersion>1.17.5</LSLTagVersion>
-    <Version>$(LSLTagVersion).0</Version>
     <LSLBuildCITagVersion>2026.03.12</LSLBuildCITagVersion>
   </PropertyGroup>
 

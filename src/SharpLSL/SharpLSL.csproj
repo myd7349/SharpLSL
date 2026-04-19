@@ -6,7 +6,6 @@
     <ImplicitUsings>enable</ImplicitUsings>
     <Nullable>enable</Nullable>
     -->
-    <Version>1.17.5-rc.1</Version>
   </PropertyGroup>
 
   <PropertyGroup Label="Package">
