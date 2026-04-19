@@ -1,16 +1,6 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
-
-  <PropertyGroup>
-    <RID>win-x64</RID>
-    <NativeLibBaseDir>bin</NativeLibBaseDir>
-    <NativeLibPrefix></NativeLibPrefix>
-    <NativeLibExt>dll</NativeLibExt>
-    <DebugSymbolExt>pdb</DebugSymbolExt>
-  </PropertyGroup>
-
   <PropertyGroup>
     <SuppressDependenciesWhenPacking>false</SuppressDependenciesWhenPacking>
     <TargetsForTfmSpecificContentInPackage>$(TargetsForTfmSpecificContentInPackage);IncludeAdditionalTfmSpecificPackageFiles</TargetsForTfmSpecificContentInPackage>
   </PropertyGroup>
-
 </Project>

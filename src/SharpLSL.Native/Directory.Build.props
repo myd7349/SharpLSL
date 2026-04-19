@@ -2,6 +2,7 @@
   <Import Project="$([MSBuild]::GetPathOfFileAbove('Directory.Build.props', '$(MSBuildThisFileDirectory)../'))" />
 
   <PropertyGroup>
+    <RID Condition="'$(RID)' == ''">$([System.IO.Path]::GetFileName('$(MSBuildProjectDirectory.TrimEnd(`\/`))'))</RID>
     <LSLTagVersion>1.17.5</LSLTagVersion>
     <LSLBuildCITagVersion>2026.03.12</LSLBuildCITagVersion>
   </PropertyGroup>

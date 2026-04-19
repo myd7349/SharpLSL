@@ -10,6 +10,27 @@
     <IsUmbrellaPackage>true</IsUmbrellaPackage>
   </PropertyGroup>
 
+  <PropertyGroup Condition="$(RID.StartsWith('android')) Or $(RID.StartsWith('linux'))">
+    <NativeLibBaseDir>lib</NativeLibBaseDir>
+    <NativeLibPrefix>lib</NativeLibPrefix>
+    <NativeLibExt>so</NativeLibExt>
+    <DebugSymbolExt></DebugSymbolExt>
+  </PropertyGroup>
+
+  <PropertyGroup Condition="$(RID.StartsWith('ios')) Or $(RID.StartsWith('osx'))">
+    <NativeLibBaseDir>lib</NativeLibBaseDir>
+    <NativeLibPrefix>lib</NativeLibPrefix>
+    <NativeLibExt>dylib</NativeLibExt>
+    <DebugSymbolExt></DebugSymbolExt>
+  </PropertyGroup>
+
+  <PropertyGroup Condition="$(RID.StartsWith('win'))">
+    <NativeLibBaseDir>bin</NativeLibBaseDir>
+    <NativeLibPrefix></NativeLibPrefix>
+    <NativeLibExt>dll</NativeLibExt>
+    <DebugSymbolExt>pdb</DebugSymbolExt>
+  </PropertyGroup>
+
   <PropertyGroup Condition="'$(IsUmbrellaPackage)' == 'false'">
     <NativeAssetTitle>liblsl-v$(LSLTagVersion)-$(RID)-dynamic</NativeAssetTitle>
     <NativeAssetArchive>$(NativeAssetTitle).zip</NativeAssetArchive>

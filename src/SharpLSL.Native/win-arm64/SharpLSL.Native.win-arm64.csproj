@@ -1,11 +1,1 @@
-﻿<Project Sdk="Microsoft.NET.Sdk">
-
-  <PropertyGroup>
-    <RID>win-arm64</RID>
-    <NativeLibBaseDir>bin</NativeLibBaseDir>
-    <NativeLibPrefix></NativeLibPrefix>
-    <NativeLibExt>dll</NativeLibExt>
-    <DebugSymbolExt>pdb</DebugSymbolExt>
-  </PropertyGroup>
-
-</Project>
+﻿<Project Sdk="Microsoft.NET.Sdk" />
