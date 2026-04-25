@@ -1,4 +1,10 @@
-# [SharpLSL](https://github.com/SharpLSL/SharpLSL)
+<p align="center">
+  <a href="https://github.com/SharpLSL/SharpLSL">
+    <img src="https://raw.githubusercontent.com/SharpLSL/SharpLSL/main/docs/images/icon_medium.png" alt="SharpLSL icon" width="256" />
+  </a>
+</p>
+
+# SharpLSL
 
 [![NuGet](https://img.shields.io/nuget/v/SharpLSL.svg)](https://www.nuget.org/packages/SharpLSL/) [![Downloads](https://img.shields.io/nuget/dt/SharpLSL)](https://www.nuget.org/packages/SharpLSL) [![Build](https://github.com/SharpLSL/SharpLSL/actions/workflows/build.yml/badge.svg)](https://github.com/SharpLSL/SharpLSL/actions) ![GitHub code size in bytes](https://img.shields.io/github/languages/code-size/SharpLSL/SharpLSL) ![GitHub repo size](https://img.shields.io/github/repo-size/SharpLSL/SharpLSL) [![License](https://img.shields.io/github/license/SharpLSL/SharpLSL)](https://github.com/SharpLSL/SharpLSL/blob/main/LICENSE)
 

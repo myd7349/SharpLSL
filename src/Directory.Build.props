@@ -12,9 +12,7 @@
 
   <PropertyGroup Label="Package">
     <IsPackable>true</IsPackable>
-    <!--
-    <PackageIcon>Icon.png</PackageIcon>
-    -->
+    <PackageIcon>icon.png</PackageIcon>
     <!--
     <PackageLicenseExpression>MIT</PackageLicenseExpression>
     -->
