@@ -1,9 +1,4 @@
 <Project Sdk="Microsoft.NET.Sdk">
-
-  <PropertyGroup>
-    <RID>all</RID>
-  </PropertyGroup>
-
   <PropertyGroup>
     <SuppressDependenciesWhenPacking>false</SuppressDependenciesWhenPacking>
     <TargetsForTfmSpecificContentInPackage>$(TargetsForTfmSpecificContentInPackage);_IncludeAdditionalTfmSpecificPackageFilesPrepare</TargetsForTfmSpecificContentInPackage>
