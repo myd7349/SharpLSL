@@ -57,9 +57,16 @@ If your application is cross-platform, you can opt for the `SharpLSL.Native.all`
 | [LSL4Unity](https://github.com/labstreaminglayer/LSL4Unity)  | [![GitHub stars](https://img.shields.io/github/stars/labstreaminglayer/LSL4Unity?style=social)](https://github.com/labstreaminglayer/LSL4Unity/stargazers) | A integration approach of the LSL framework for Unity3D. | [![MIT-badge]][MIT-link] |
 | [lsl_archived](https://github.com/sccn/lsl_archived)  | [![GitHub stars](https://img.shields.io/github/stars/sccn/lsl_archived?style=social)](https://github.com/sccn/lsl_archived/stargazers) | Archived lsl repository. | |
 | [lsl_in_unity](https://github.com/mvidaldp/lsl_in_unity)  | [![GitHub stars](https://img.shields.io/github/stars/mvidaldp/lsl_in_unity?style=social)](https://github.com/mvidaldp/lsl_in_unity/stargazers) | Simple Unity 2D project with changing background color and click audio playing using LabStreamingLayer. | [![MIT-badge]][MIT-link] |
+| [Neuracle.LSLSample](https://github.com/neuracle/Neuracle.LSLSample)  | [![GitHub stars](https://img.shields.io/github/stars/neuracle/Neuracle.LSLSample?style=social)](https://github.com/neuracle/Neuracle.LSLSample/stargazers) | Neuracle LSL sample. |  |
+| [PolarBLE](https://github.com/markspan/PolarBLE)  | [![GitHub stars](https://img.shields.io/github/stars/markspan/PolarBLE?style=social)](https://github.com/markspan/PolarBLE/stargazers) | Polar H10 ECG LabstreamingLayer relay. | [![LGPL-2.1-badge]][LGPL-2.1-link] |
+| [TimeShot](https://github.com/markspan/TimeShot)  | [![GitHub stars](https://img.shields.io/github/stars/markspan/TimeShot?style=social)](https://github.com/markspan/TimeShot/stargazers) | Video recorder with Labstreaminglayer integration. | [![GPL-2.0-badge]][GPL-2.0-link] |
 
-[GPL-3.0-badge]: https://img.shields.io/badge/License-GPL%20v3-blue.svg
+[GPL-2.0-badge]: https://img.shields.io/badge/License-GPL%202.0-green.svg
+[GPL-2.0-link]: https://opensource.org/licenses/GPL-2.0
+[GPL-3.0-badge]: https://img.shields.io/badge/License-GPL%203.0-green.svg
 [GPL-3.0-link]: https://www.gnu.org/licenses/gpl-3.0.en.html
+[LGPL-2.1-badge]: https://img.shields.io/badge/License-LGPL%202.1-green.svg
+[LGPL-2.1-link]: https://opensource.org/license/LGPL-2.1
 [MIT-badge]: https://img.shields.io/badge/License-MIT-blue.svg
 [MIT-link]: https://opensource.org/licenses/MIT
 
