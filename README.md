@@ -6,7 +6,13 @@
 
 # SharpLSL
 
-[![NuGet](https://img.shields.io/nuget/v/SharpLSL.svg)](https://www.nuget.org/packages/SharpLSL/) [![Downloads](https://img.shields.io/nuget/dt/SharpLSL)](https://www.nuget.org/packages/SharpLSL) [![Build](https://github.com/SharpLSL/SharpLSL/actions/workflows/build.yml/badge.svg)](https://github.com/SharpLSL/SharpLSL/actions) ![GitHub code size in bytes](https://img.shields.io/github/languages/code-size/SharpLSL/SharpLSL) ![GitHub repo size](https://img.shields.io/github/repo-size/SharpLSL/SharpLSL) [![License](https://img.shields.io/github/license/SharpLSL/SharpLSL)](https://github.com/SharpLSL/SharpLSL/blob/main/LICENSE)
+[![NuGet](https://img.shields.io/nuget/v/SharpLSL.svg)](https://www.nuget.org/packages/SharpLSL/)
+[![Downloads](https://img.shields.io/nuget/dt/SharpLSL)](https://www.nuget.org/packages/SharpLSL)
+[![Build](https://github.com/SharpLSL/SharpLSL/actions/workflows/build.yml/badge.svg)](https://github.com/SharpLSL/SharpLSL/actions)
+![GitHub code size in bytes](https://img.shields.io/github/languages/code-size/SharpLSL/SharpLSL)
+![GitHub repo size](https://img.shields.io/github/repo-size/SharpLSL/SharpLSL)
+[![License](https://img.shields.io/github/license/SharpLSL/SharpLSL)](https://github.com/SharpLSL/SharpLSL/blob/main/LICENSE)
+[![](https://deepwiki.com/badge.svg)](https://deepwiki.com/SharpLSL/SharpLSL)
 
 SharpLSL is a cross-platform C# binding of [**L**ab **S**treaming **L**ayer](https://github.com/sccn/labstreaminglayer).
 
