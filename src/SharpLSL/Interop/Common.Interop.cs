@@ -37,6 +37,14 @@ namespace SharpLSL.Interop
         [UnmanagedCallConv(CallConvs = [typeof(CallConvCdecl)])]
         public static partial void lsl_destroy_string([NativeTypeName("char *")] IntPtr s);
 
+        [LibraryImport("lsl")]
+        [UnmanagedCallConv(CallConvs = [typeof(CallConvCdecl)])]
+        public static partial void lsl_set_config_filename([NativeTypeName("const char *")] IntPtr filename);
+
+        [LibraryImport("lsl")]
+        [UnmanagedCallConv(CallConvs = [typeof(CallConvCdecl)])]
+        public static partial void lsl_set_config_content([NativeTypeName("const char *")] IntPtr content);
+
         [NativeTypeName("#define LSL_IRREGULAR_RATE 0.0")]
         public const double LSL_IRREGULAR_RATE = 0.0;
 

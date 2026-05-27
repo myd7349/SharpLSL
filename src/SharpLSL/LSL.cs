@@ -159,6 +159,62 @@ namespace SharpLSL
         public static double GetLocalClock() => lsl_local_clock();
 
         /// <summary>
+        /// Sets the path of the configuration file to be used by liblsl.
+        /// </summary>
+        /// <param name="filePath">
+        /// The path to the configuration file.
+        /// </param>
+        /// <exception cref="ArgumentException">
+        /// Thrown when <paramref name="filePath"/> is <c>null</c> or empty.
+        /// </exception>
+        /// <remarks>
+        /// This method must be called before any other LSL function; otherwise the
+        /// setting has no effect because the configuration is loaded lazily on first
+        /// use.
+        /// </remarks>
+        /// <seealso cref="SetConfigContent"/>
+        public static unsafe void SetConfigFilePath(string filePath)
+        {
+            if (string.IsNullOrEmpty(filePath))
+                throw new ArgumentException(nameof(filePath));
+
+            var filePathBytes = StringToBytes(filePath);
+
+            fixed (byte* filePathBuffer = filePathBytes)
+            {
+                lsl_set_config_filename((IntPtr)filePathBuffer);
+            }
+        }
+
+        /// <summary>
+        /// Sets the configuration content to be used by liblsl.
+        /// </summary>
+        /// <param name="content">
+        /// The INI-formatted configuration content.
+        /// </param>
+        /// <exception cref="ArgumentNullException">
+        /// Thrown when <paramref name="content"/> is <c>null</c>.
+        /// </exception>
+        /// <remarks>
+        /// This method must be called before any other LSL function; otherwise the
+        /// setting has no effect because the configuration is loaded lazily on first
+        /// use. When set, this content takes precedence over any configuration file.
+        /// </remarks>
+        /// <seealso cref="SetConfigFilePath"/>
+        public static unsafe void SetConfigContent(string content)
+        {
+            if (content == null)
+                throw new ArgumentNullException(nameof(content));
+
+            var contentBytes = StringToBytes(content);
+
+            fixed (byte* contentBuffer = contentBytes)
+            {
+                lsl_set_config_content((IntPtr)contentBuffer);
+            }
+        }
+
+        /// <summary>
         /// Resolves all streams on the network.
         /// </summary>
         /// <param name="maxCount">

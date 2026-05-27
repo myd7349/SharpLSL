@@ -1,3 +1,5 @@
+using System;
+
 using Xunit;
 
 using static SharpLSL.Interop.LSL;
@@ -16,5 +18,17 @@ public class CommonTest
     public void TestChannelFormat()
     {
         Assert.Equal(4, sizeof(ChannelFormat));
+    }
+
+    [Fact]
+    public void SetConfigFilePathThrowsOnNull()
+    {
+        Assert.Throws<ArgumentException>(() => LSL.SetConfigFilePath(null));
+    }
+
+    [Fact]
+    public void SetConfigContentThrowsOnNull()
+    {
+        Assert.Throws<ArgumentNullException>(() => LSL.SetConfigContent(null));
     }
 }
