@@ -13,6 +13,7 @@
     <ProjectReference Include="..\iossimulator-arm64\SharpLSL.Native.iossimulator-arm64.csproj" />
     <ProjectReference Include="..\iossimulator-x64\SharpLSL.Native.iossimulator-x64.csproj" />
     <ProjectReference Include="..\linux-arm64\SharpLSL.Native.linux-arm64.csproj" />
+    <ProjectReference Include="..\linux-loongarch64\SharpLSL.Native.linux-loongarch64.csproj" />
     <ProjectReference Include="..\linux-musl-arm64\SharpLSL.Native.linux-musl-arm64.csproj" />
     <ProjectReference Include="..\linux-musl-x64\SharpLSL.Native.linux-musl-x64.csproj" />
     <ProjectReference Include="..\linux-arm\SharpLSL.Native.linux-arm.csproj" />
