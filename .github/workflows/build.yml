@@ -37,7 +37,7 @@ jobs:
           fetch-depth: 0
 
       - name: Install .NET SDK
-        uses: actions/setup-dotnet@v5
+        uses: actions/setup-dotnet@v5.2.0
         with:
           dotnet-version: |
             6.0.x
@@ -90,7 +90,7 @@ jobs:
     if: github.event_name == 'release'
     steps:
       - name: Install .NET SDK
-        uses: actions/setup-dotnet@v5
+        uses: actions/setup-dotnet@v5.2.0
         with:
           dotnet-version: ${{ env.DOTNET_VERSION }}
 
