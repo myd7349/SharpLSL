@@ -32,12 +32,12 @@ jobs:
         os: [ macOS-latest, ubuntu-24.04-arm, ubuntu-latest, windows-11-arm, windows-latest ]
     steps:
       - name: Checkout
-        uses: actions/checkout@v6.0.2
+        uses: actions/checkout@v6.0.3
         with:
           fetch-depth: 0
 
       - name: Install .NET SDK
-        uses: actions/setup-dotnet@v5.2.0
+        uses: actions/setup-dotnet@v5.3.0
         with:
           dotnet-version: |
             6.0.x
@@ -90,7 +90,7 @@ jobs:
     if: github.event_name == 'release'
     steps:
       - name: Install .NET SDK
-        uses: actions/setup-dotnet@v5.2.0
+        uses: actions/setup-dotnet@v5.3.0
         with:
           dotnet-version: ${{ env.DOTNET_VERSION }}
 
