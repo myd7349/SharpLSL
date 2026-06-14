@@ -17,7 +17,6 @@
       <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
     </PackageReference>
     <PackageReference Include="Microsoft.NET.Test.Sdk" />
-    <PackageReference Include="Moq" />
     <PackageReference Include="SharpLSL.Native.linux-arm64" Condition="$([MSBuild]::IsOsPlatform('Linux'))" />
     <PackageReference Include="SharpLSL.Native.linux-x64" Condition="$([MSBuild]::IsOsPlatform('Linux'))" />
     <PackageReference Include="SharpLSL.Native.osx" Condition="$([MSBuild]::IsOsPlatform('OSX'))" />

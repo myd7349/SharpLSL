@@ -47,6 +47,6 @@
     <Project Path="src/SharpLSL.Native/win-x86/SharpLSL.Native.win-x86.csproj" />
   </Folder>
   <Folder Name="/tests/">
-    <Project Path="tests/SharpLSL.Test/SharpLSL.Test.csproj" />
+    <Project Path="tests/SharpLSL.Tests/SharpLSL.Tests.csproj" />
   </Folder>
 </Solution>

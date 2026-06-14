@@ -1,6 +1,6 @@
 using Xunit;
 
-namespace SharpLSL.Test;
+namespace SharpLSL.Tests;
 
 public class StreamInfoTest
 {

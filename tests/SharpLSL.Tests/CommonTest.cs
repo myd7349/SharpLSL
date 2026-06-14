@@ -4,7 +4,7 @@ using Xunit;
 
 using static SharpLSL.Interop.LSL;
 
-namespace SharpLSL.Test;
+namespace SharpLSL.Tests;
 
 public class CommonTest
 {
