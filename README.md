@@ -9,10 +9,10 @@
 [![NuGet](https://img.shields.io/nuget/v/SharpLSL.svg)](https://www.nuget.org/packages/SharpLSL/)
 [![Downloads](https://img.shields.io/nuget/dt/SharpLSL)](https://www.nuget.org/packages/SharpLSL)
 [![Build](https://github.com/SharpLSL/SharpLSL/actions/workflows/build.yml/badge.svg)](https://github.com/SharpLSL/SharpLSL/actions)
-![GitHub code size in bytes](https://img.shields.io/github/languages/code-size/SharpLSL/SharpLSL)
+![GitHub code size](https://img.shields.io/github/languages/code-size/SharpLSL/SharpLSL)
 ![GitHub repo size](https://img.shields.io/github/repo-size/SharpLSL/SharpLSL)
-[![License](https://img.shields.io/github/license/SharpLSL/SharpLSL)](https://github.com/SharpLSL/SharpLSL/blob/main/LICENSE)
-[![](https://deepwiki.com/badge.svg)](https://deepwiki.com/SharpLSL/SharpLSL)
+[![License: MIT](https://img.shields.io/github/license/SharpLSL/SharpLSL)](https://github.com/SharpLSL/SharpLSL/blob/main/LICENSE)
+[![Ask DeepWiki](https://deepwiki.com/badge.svg)](https://deepwiki.com/SharpLSL/SharpLSL)
 
 SharpLSL is a cross-platform C# binding of [**L**ab **S**treaming **L**ayer](https://github.com/sccn/labstreaminglayer).
 
@@ -55,6 +55,7 @@ If your application is cross-platform, you can opt for the `SharpLSL.Native.all`
 | [liblsl-Csharp](https://github.com/labstreaminglayer/liblsl-Csharp)  | [![GitHub stars](https://img.shields.io/github/stars/labstreaminglayer/liblsl-Csharp?style=social)](https://github.com/labstreaminglayer/liblsl-Csharp/stargazers) | C# bindings for liblsl. | [![MIT-badge]][MIT-link] |
 | [lsl](https://github.com/emotional-cities/lsl)  | [![GitHub stars](https://img.shields.io/github/stars/emotional-cities/lsl?style=social)](https://github.com/emotional-cities/lsl/stargazers) | Bonsai library containing interfaces for streaming data from devices implementing the LSL protocol. | [![MIT-badge]][MIT-link] |
 | [LSL4Unity](https://github.com/labstreaminglayer/LSL4Unity)  | [![GitHub stars](https://img.shields.io/github/stars/labstreaminglayer/LSL4Unity?style=social)](https://github.com/labstreaminglayer/LSL4Unity/stargazers) | A integration approach of the LSL framework for Unity3D. | [![MIT-badge]][MIT-link] |
+| [LSL4VVVV](https://github.com/jfrey-xx/LSL4VVVV)  | [![GitHub stars](https://img.shields.io/github/stars/jfrey-xx/LSL4VVVV?style=social)](https://github.com/jfrey-xx/LSL4VVVV/stargazers) | LSL wrapper for visual programming envirornment vvvv gamma. |  |
 | [lsl_archived](https://github.com/sccn/lsl_archived)  | [![GitHub stars](https://img.shields.io/github/stars/sccn/lsl_archived?style=social)](https://github.com/sccn/lsl_archived/stargazers) | Archived lsl repository. | |
 | [lsl_in_unity](https://github.com/mvidaldp/lsl_in_unity)  | [![GitHub stars](https://img.shields.io/github/stars/mvidaldp/lsl_in_unity?style=social)](https://github.com/mvidaldp/lsl_in_unity/stargazers) | Simple Unity 2D project with changing background color and click audio playing using LabStreamingLayer. | [![MIT-badge]][MIT-link] |
 | [Neuracle.LSLSample](https://github.com/neuracle/Neuracle.LSLSample)  | [![GitHub stars](https://img.shields.io/github/stars/neuracle/Neuracle.LSLSample?style=social)](https://github.com/neuracle/Neuracle.LSLSample/stargazers) | Neuracle LSL sample. |  |
