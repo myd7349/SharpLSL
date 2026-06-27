@@ -12,7 +12,7 @@ on:
   workflow_dispatch:
 
 env:
-  DOTNET_VERSION: 8.0.x
+  DOTNET_VERSION: 10.0.x
   # Disable the .NET logo in the console output.
   DOTNET_NOLOGO: true
   # Disable the .NET first time experience to skip caching NuGet packages and speed up the build.
@@ -32,12 +32,12 @@ jobs:
         os: [ macOS-latest, ubuntu-24.04-arm, ubuntu-latest, windows-11-arm, windows-latest ]
     steps:
       - name: Checkout
-        uses: actions/checkout@v6.0.3
+        uses: actions/checkout@v7.0.0
         with:
           fetch-depth: 0
 
       - name: Install .NET SDK
-        uses: actions/setup-dotnet@v5.3.0
+        uses: actions/setup-dotnet@v5.4.0
         with:
           dotnet-version: |
             6.0.x
@@ -76,7 +76,7 @@ jobs:
 
       - name: Upload artifacts
         if: ${{ matrix.os == 'windows-latest' }}
-        uses: actions/upload-artifact@v7
+        uses: actions/upload-artifact@v7.0.1
         with:
           name: nuget-packages
           path: |
@@ -93,12 +93,12 @@ jobs:
     if: github.event_name == 'release'
     steps:
       - name: Install .NET SDK
-        uses: actions/setup-dotnet@v5.3.0
+        uses: actions/setup-dotnet@v5.4.0
         with:
           dotnet-version: ${{ env.DOTNET_VERSION }}
 
       - name: Download artifacts
-        uses: actions/download-artifact@v8
+        uses: actions/download-artifact@v8.0.1
         with:
           name: nuget-packages
 
@@ -113,7 +113,7 @@ jobs:
           dotnet nuget push **/*.nupkg --skip-duplicate --api-key ${{ steps.login.outputs.NUGET_API_KEY }} --source https://api.nuget.org/v3/index.json
 
       - name: Release
-        uses: softprops/action-gh-release@v3
+        uses: softprops/action-gh-release@v3.0.1
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         with:
