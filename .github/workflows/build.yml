@@ -65,6 +65,9 @@ jobs:
           wait
         shell: bash
 
+      - name: Run benchmark
+        run: dotnet run --project ./tests/SharpLSL.Benchmark/SharpLSL.Benchmark.csproj -c Release -f net10.0
+
       - name: Run unit tests
         run: dotnet test ./SharpLSL.slnx -c Release
 
