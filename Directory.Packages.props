@@ -1,7 +1,7 @@
 <Project>
   <PropertyGroup>
     <ManagePackageVersionsCentrally>true</ManagePackageVersionsCentrally>
-    <SharpLSLNativePackageVersion>1.17.5</SharpLSLNativePackageVersion>
+    <SharpLSLNativePackageVersion>1.17.6</SharpLSLNativePackageVersion>
   </PropertyGroup>
 
   <ItemGroup>
