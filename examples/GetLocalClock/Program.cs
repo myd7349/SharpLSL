@@ -16,8 +16,15 @@ namespace SharpLSL.Examples
                 var timestamp2 = Stopwatch.GetTimestamp();
                 var elapsedTime2 = stopwatch.Elapsed;
 
+                stopwatch = Stopwatch.StartNew();
+                var timestamp3 = GetTimestamp();
+                var elapsedTime3 = stopwatch.Elapsed;
+
                 Console.WriteLine($"{timestamp:F7} {elapsedTime} <- LSL.GetLocalClock()");
                 Console.WriteLine($"{TimestampToSeconds(timestamp2):F7} {elapsedTime2} <- TimestampToSeconds(Stopwatch.GetTimestamp())");
+                Console.WriteLine($"{timestamp3:F7} {elapsedTime3} <- Stopwatch.GetElapsedTime(0).TotalSeconds");
+
+                Console.WriteLine();
             }
 
             Console.WriteLine($"Is high resolution? {Stopwatch.IsHighResolution}.");
@@ -40,6 +47,11 @@ namespace SharpLSL.Examples
         {
             var tickFrequency = (double)TimeSpan.TicksPerSecond / Stopwatch.Frequency;
             return timestamp * tickFrequency / TimeSpan.TicksPerMillisecond;
+        }
+
+        static double GetTimestamp()
+        {
+            return Stopwatch.GetElapsedTime(0).TotalSeconds;
         }
     }
 }
