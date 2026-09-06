@@ -4,7 +4,6 @@
 // `Description` property of the stream information object.
 // Note that the timer used in the send loop of this program is not particularly accurate.
 using System.Diagnostics;
-using System.Formats.Asn1;
 
 namespace SharpLSL.Examples
 {

@@ -25,5 +25,11 @@ namespace SharpLSL.Benchmark
         {
             return Stopwatch.GetTimestamp() / (double)Stopwatch.Frequency;
         }
+
+        [Benchmark]
+        public double GetLocalClockManagedV2()
+        {
+            return Stopwatch.GetElapsedTime(0).TotalSeconds;
+        }
     }
 }
